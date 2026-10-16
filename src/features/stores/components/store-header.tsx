@@ -10,15 +10,12 @@ import type { StoreHeaderProps } from '@/types/store';
 export async function StoreHeader({ store }: StoreHeaderProps) {
   const t = await getTranslations();
 
-  const name = store.displayName || store.name || 'Shop';
+  const name = store.displayName || store.name || t('common.appName');
   const phoneNumber = store.phoneNumber || store.whatsappNumber || '';
   const phoneHref = phoneNumber ? `tel:${phoneNumber}` : undefined;
   const whatsappNumber = store.whatsappNumber || store.phoneNumber || '';
   const whatsappHref = whatsappNumber
-    ? buildWhatsAppLink(
-        whatsappNumber,
-        `Hello ${name}, I am contacting you from your Ronaq Store page.`
-      )
+    ? buildWhatsAppLink(whatsappNumber, t('whatsapp.contactShop', { storeName: name }))
     : undefined;
 
   const location = store.address

@@ -20,7 +20,11 @@ export function ProductDetailModal({
   if (!product) return null;
 
   const formattedPrice = formatPrice(product.retailPrice);
-  const whatsappMessage = `Hello ${storeName}, I am interested in buying "${product.name}" (${formattedPrice}) listed on your Ronaq Store.`;
+  const whatsappMessage = t('whatsapp.inquireProductShort', {
+    storeName,
+    productName: product.name,
+    price: formattedPrice
+  });
   const whatsappHref = buildWhatsAppLink(storePhone, whatsappMessage);
 
   return (

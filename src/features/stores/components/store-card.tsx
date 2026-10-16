@@ -12,10 +12,10 @@ import type { StoreCardProps } from '@/types/store';
 export async function StoreCard({ store, priority = false }: StoreCardProps) {
   const t = await getTranslations();
 
-  const name = store.displayName || store.name || 'Shop';
+  const name = store.displayName || store.name || t('common.appName');
   const phone = store.phone || store.phoneNumber || store.whatsappNumber || '';
   const whatsappHref = phone
-    ? buildWhatsAppLink(phone, `Hello ${name}, I found your shop on Ronaq Store.`)
+    ? buildWhatsAppLink(phone, t('whatsapp.foundShop', { storeName: name }))
     : undefined;
 
   const productCount = store.productCount ?? store.totalProducts ?? 0;

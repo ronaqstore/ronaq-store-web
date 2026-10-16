@@ -21,7 +21,11 @@ export function ProductCard({
 
   const formattedPrice = formatPrice(product.retailPrice);
 
-  const whatsappMessage = `Hello ${storeName}, I am interested in buying "${product.name}" (${formattedPrice}) listed on your Ronaq Store. Is it available in stock?`;
+  const whatsappMessage = t('whatsapp.inquireProduct', {
+    storeName,
+    productName: product.name,
+    price: formattedPrice
+  });
   const whatsappHref = buildWhatsAppLink(storePhone, whatsappMessage);
 
   const getPtaBadge = () => {

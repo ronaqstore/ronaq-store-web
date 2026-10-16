@@ -13,11 +13,15 @@ export async function ProductDetailView({
   storePhone,
   product
 }: ProductDetailViewProps) {
-  const t = await getTranslations('catalog');
+  const t = await getTranslations();
   const formattedPrice = formatPrice(product.retailPrice);
   const whatsappHref = buildWhatsAppLink(
     storePhone,
-    `Hello ${storeName}, I want to buy "${product.name}" (${formattedPrice}).`
+    t('whatsapp.buyProduct', {
+      storeName,
+      productName: product.name,
+      price: formattedPrice
+    })
   );
 
   return (
@@ -37,14 +41,14 @@ export async function ProductDetailView({
             <Badge variant='outline'>{formatEmpty(product.categoryName)}</Badge>
             <Badge variant='secondary'>{formatEmpty(product.brandName)}</Badge>
             {product.ptaStatus === 'APPROVED' ? (
-              <Badge variant='success'>{t('ptaApproved')}</Badge>
+              <Badge variant='success'>{t('catalog.ptaApproved')}</Badge>
             ) : null}
             {product.inStock ? (
               <Badge variant='outline' className='text-emerald-600 border-emerald-500/30'>
-                {t('inStock')}
+                {t('catalog.inStock')}
               </Badge>
             ) : (
-              <Badge variant='destructive'>{t('outOfStock')}</Badge>
+              <Badge variant='destructive'>{t('catalog.outOfStock')}</Badge>
             )}
           </div>
 
@@ -56,7 +60,7 @@ export async function ProductDetailView({
 
           <div className='space-y-1.5 pt-2 border-t border-border/50'>
             <h2 className='text-xs font-semibold uppercase tracking-wider text-muted-foreground'>
-              {t('description')}
+              {t('catalog.description')}
             </h2>
             <p className='text-sm text-foreground/90 whitespace-pre-line leading-relaxed'>
               {formatEmpty(product.description)}
@@ -65,13 +69,13 @@ export async function ProductDetailView({
 
           <div className='grid grid-cols-2 gap-3 pt-3 border-t border-border/50 text-xs'>
             <div className='rounded-lg bg-muted/40 p-2.5'>
-              <span className='text-muted-foreground'>{t('condition')}: </span>
+              <span className='text-muted-foreground'>{t('catalog.condition')}: </span>
               <span className='font-semibold text-foreground'>
                 {formatEmpty(product.condition)}
               </span>
             </div>
             <div className='rounded-lg bg-muted/40 p-2.5'>
-              <span className='text-muted-foreground'>{t('warranty')}: </span>
+              <span className='text-muted-foreground'>{t('catalog.warranty')}: </span>
               <span className='font-semibold text-foreground'>
                 {formatEmpty(product.warrantyType)}
               </span>
@@ -86,7 +90,8 @@ export async function ProductDetailView({
             className='w-full gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold'
           >
             <Icons.whatsapp className='h-5 w-5' />
-            {t('orderWhatsApp')}
+            {t('catalog.orderWhatsApp')}
+
           </Button>
         </a>
       </div>

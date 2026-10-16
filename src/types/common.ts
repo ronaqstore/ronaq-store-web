@@ -1,8 +1,15 @@
 import type { ReactNode } from 'react';
+import type { AbstractIntlMessages } from 'next-intl';
 
 export interface LocaleLayoutProps {
   children: ReactNode;
   params: Promise<{ locale: string }>;
+}
+
+export interface I18nProviderProps {
+  locale: string;
+  messages: AbstractIntlMessages;
+  children: ReactNode;
 }
 
 export interface HomePageProps {
