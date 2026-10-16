@@ -1,45 +1,77 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import dynamic from 'next/dynamic';
+import { useEffect, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import { ProductFilters } from '@/components/products/product-filters';
 import { ProductGrid } from '@/components/products/product-grid';
-import { ProductDetailModal } from '@/components/products/product-detail-modal';
-import type { StoreCatalogClientProps } from '@/types/store';
+import { Spinner } from '@/components/ui/spinner';
+import { usePathname, useRouter } from '@/i18n/navigation';
+import { useDebouncedValue } from '@/hooks/use-debounced-value';
+import type { StoreCatalogClientProps, StoreCatalogFilters } from '@/types/store';
 import type { StoreProductListItem, StoreProductDetail } from '@/types/product';
+
+const ProductDetailModal = dynamic(
+  () =>
+    import('@/components/products/product-detail-modal').then((mod) => mod.ProductDetailModal),
+  { ssr: false }
+);
+
+function buildQuery(filters: StoreCatalogFilters): Record<string, string> {
+  const query: Record<string, string> = {};
+  if (filters.q) query.q = filters.q;
+  if (filters.category) query.category = filters.category;
+  if (filters.inStock) query.inStock = '1';
+  return query;
+}
 
 export function StoreCatalogClient({
   store,
-  initialCategories,
-  initialProducts
+  categories,
+  products,
+  filters
 }: StoreCatalogClientProps) {
   const t = useTranslations();
-  const [selectedCategoryId, setSelectedCategoryId] = useState('');
-  const [inStockOnly, setInStockOnly] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isPending, startTransition] = useTransition();
+  const [searchQuery, setSearchQuery] = useState(filters.q);
+  const debouncedSearch = useDebouncedValue(searchQuery, 400);
   const [selectedProduct, setSelectedProduct] = useState<StoreProductDetail | null>(null);
 
-  const filteredProducts = useMemo(() => {
-    return initialProducts.filter((product) => {
-      if (selectedCategoryId && product.categoryId !== selectedCategoryId) {
-        return false;
+  useEffect(() => {
+    setSearchQuery(filters.q);
+  }, [filters.q]);
+
+  const replaceFilters = (next: StoreCatalogFilters) => {
+    const query = buildQuery(next);
+    startTransition(() => {
+      if (Object.keys(query).length > 0) {
+        router.replace({ pathname, query });
+      } else {
+        router.replace(pathname);
       }
-      if (inStockOnly && !product.inStock) {
-        return false;
-      }
-      if (searchQuery.trim()) {
-        const query = searchQuery.toLowerCase();
-        const matchesName = product.name.toLowerCase().includes(query);
-        const matchesBrand = product.brandName?.toLowerCase().includes(query);
-        const matchesCategory = product.categoryName.toLowerCase().includes(query);
-        const matchesSku = product.sku.toLowerCase().includes(query);
-        if (!matchesName && !matchesBrand && !matchesCategory && !matchesSku) {
-          return false;
-        }
-      }
-      return true;
     });
-  }, [initialProducts, selectedCategoryId, inStockOnly, searchQuery]);
+  };
+
+  useEffect(() => {
+    const trimmed = debouncedSearch.trim();
+    if (trimmed === filters.q) return;
+
+    const query = buildQuery({
+      q: trimmed,
+      category: filters.category,
+      inStock: filters.inStock
+    });
+
+    startTransition(() => {
+      if (Object.keys(query).length > 0) {
+        router.replace({ pathname, query });
+      } else {
+        router.replace(pathname);
+      }
+    });
+  }, [debouncedSearch, filters.q, filters.category, filters.inStock, pathname, router]);
 
   const handleSelectProduct = (product: StoreProductListItem) => {
     const detail: StoreProductDetail = {
@@ -52,24 +84,47 @@ export function StoreCatalogClient({
     setSelectedProduct(detail);
   };
 
+  const handleCloseModal = () => {
+    setSelectedProduct(null);
+  };
+
   return (
     <div className='mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 py-8 space-y-6'>
       <ProductFilters
-        categories={initialCategories}
-        selectedCategoryId={selectedCategoryId}
-        inStockOnly={inStockOnly}
+        categories={categories}
+        selectedCategoryId={filters.category}
+        inStockOnly={filters.inStock}
         searchQuery={searchQuery}
-        onCategorySelect={setSelectedCategoryId}
-        onInStockToggle={setInStockOnly}
+        onCategorySelect={(category) =>
+          replaceFilters({
+            q: searchQuery.trim(),
+            category,
+            inStock: filters.inStock
+          })
+        }
+        onInStockToggle={(inStock) =>
+          replaceFilters({
+            q: searchQuery.trim(),
+            category: filters.category,
+            inStock
+          })
+        }
         onSearchChange={setSearchQuery}
       />
 
       <div className='flex items-center justify-between text-xs text-muted-foreground'>
-        <span>{t('stores.productsAvailable', { count: filteredProducts.length })}</span>
+        {isPending ? (
+          <span className='inline-flex items-center gap-2'>
+            <Spinner className='size-3.5 text-primary' />
+            {t('common.loading')}
+          </span>
+        ) : (
+          <span>{t('stores.productsAvailable', { count: products.length })}</span>
+        )}
       </div>
 
       <ProductGrid
-        products={filteredProducts}
+        products={products}
         storeName={store.displayName}
         storePhone={store.phoneNumber}
         onSelectProduct={handleSelectProduct}
@@ -79,7 +134,7 @@ export function StoreCatalogClient({
         product={selectedProduct}
         storeName={store.displayName}
         storePhone={store.phoneNumber}
-        onClose={() => setSelectedProduct(null)}
+        onClose={handleCloseModal}
       />
     </div>
   );

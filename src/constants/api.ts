@@ -3,13 +3,16 @@ export const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhos
   ''
 );
 
+export const APP_BASE_URL = (process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3007').replace(
+  /\/+$/,
+  ''
+);
+
 export const ADMIN_BASE_URL = (
   process.env.NEXT_PUBLIC_ADMIN_URL ?? 'http://localhost:3006'
 ).replace(/\/+$/, '');
 
 export const WHATSAPP_BASE_URL = 'https://wa.me';
-
-export const GOOGLE_MAPS_BASE_URL = 'https://maps.google.com';
 
 export const SOCIAL_URLS = {
   whatsapp: 'https://wa.me/923001234567?text=Assalam-o-Alaikum%20Ronaq%20Store',

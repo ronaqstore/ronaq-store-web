@@ -19,7 +19,8 @@
     "lint:fix": "oxlint --fix && npm run format",
     "lint:strict": "oxlint --deny-warnings",
     "format": "oxfmt --write . '!**/*.md' '!**/*.mdc' '!**/*.mdx' '!**/*.yml' '!**/*.yaml'",
-    "format:check": "oxfmt --check . '!**/*.md' '!**/*.mdc' '!**/*.mdx' '!**/*.yml' '!**/*.yaml'"
+    "format:check": "oxfmt --check . '!**/*.md' '!**/*.mdc' '!**/*.mdx' '!**/*.yml' '!**/*.yaml'",
+    "generate:icons": "node scripts/generate-icons.mjs"
   },
   "dependencies": {
     "@tabler/icons-react": "^3.49.0",
@@ -47,7 +48,8 @@
     "jscpd": "^5.4.0",
     "knip": "^6.40.0",
     "oxfmt": "^0.72.0",
-    "oxlint": "^1.87.0"
+    "oxlint": "^1.87.0",
+    "sharp": "^0.35.5"
   },
   "overrides": {
     "@types/react": "19.3.0",

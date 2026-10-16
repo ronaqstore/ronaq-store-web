@@ -2,6 +2,7 @@
 @import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant standalone (@media (display-mode: standalone));
 
 @theme {
   --font-sans: var(--font-poppins), 'Poppins', system-ui, -apple-system, sans-serif;
@@ -58,13 +59,31 @@
   * {
     border-color: var(--border);
   }
+  html {
+    overscroll-behavior: none;
+  }
   body {
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-poppins), 'Poppins', system-ui, -apple-system, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
+    overscroll-behavior-y: none;
+    min-height: 100dvh;
+  }
+  @media (display-mode: standalone) {
+    html,
+    body {
+      overscroll-behavior: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+  }
+  button,
+  a,
+  [role='button'] {
+    touch-action: manipulation;
   }
 }
+
 
 .font-urdu {
   font-family: var(--font-urdu);

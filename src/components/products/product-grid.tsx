@@ -25,14 +25,16 @@ export function ProductGrid({
   }
 
   return (
-    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6'>
-      {products.map((product) => (
+    <div className='grid grid-cols-1 min-[480px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6'>
+
+      {products.map((product, index) => (
         <ProductCard
           key={product.id}
           product={product}
           storeName={storeName}
           storePhone={storePhone}
           onSelectProduct={onSelectProduct}
+          priority={index < 2}
         />
       ))}
     </div>

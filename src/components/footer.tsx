@@ -45,8 +45,9 @@ export function Footer() {
   const t = useTranslations();
 
   return (
-    <footer className='border-t border-border bg-card/60 backdrop-blur-sm mt-24 text-card-foreground'>
-      <div className='mx-auto max-w-[1600px] px-4 py-12 sm:px-6 lg:px-8'>
+    <footer className='border-t border-border bg-card/60 backdrop-blur-sm mt-16 sm:mt-24 text-card-foreground pb-[env(safe-area-inset-bottom)]'>
+      <div className='mx-auto max-w-[1600px] px-3 min-[390px]:px-4 py-10 sm:px-6 sm:py-12 lg:px-8'>
+
         <div className='grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-12'>
           <div className='md:col-span-2 space-y-4'>
             <Link href='/' className='inline-flex items-center gap-2.5 group'>

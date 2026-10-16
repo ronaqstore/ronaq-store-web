@@ -6,10 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import type { StoreHeroProps } from '@/types/store';
 
-export function StoreHero({
-  initialSearch = '',
-  onSearchChange
-}: StoreHeroProps) {
+export function StoreHero({ searchQuery, onSearchChange }: StoreHeroProps) {
   const t = useTranslations();
 
   return (
@@ -30,12 +27,12 @@ export function StoreHero({
             <Icons.search className='pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground' />
             <Input
               type='text'
-              value={initialSearch}
+              value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder={t('hero.searchPlaceholder')}
               className='h-13 w-full rounded-2xl bg-card border-border shadow-lg ps-12 pe-12 text-base text-foreground placeholder:text-muted-foreground outline-none focus:outline-none focus:ring-2 focus:ring-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 transition-all'
             />
-            {initialSearch ? (
+            {searchQuery ? (
               <Button
                 type='button'
                 variant='ghost'
