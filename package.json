@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start -p 3007",
     "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test src/lib/money/index.test.ts",
     "check": "node scripts/run-checks.mjs",
     "knip": "knip --reporter compact",
     "check:unused": "node scripts/code/check-unused.cjs",

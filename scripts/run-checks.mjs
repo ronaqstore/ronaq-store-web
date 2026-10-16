@@ -17,10 +17,12 @@
  *  13. duplicates       — copy-paste detection via jscpd (.jscpd.json)
  *  14. duplicate-audit  — full clone cluster breakdown (check-duplicates.cjs)
  *  15. knip             — dead code and unused dependency detection (knip.json)
+ *  16. lint             — fast linter rules via oxlint (npm run lint)
+ *  17. typecheck        — strict TypeScript verification (npm run typecheck)
+ *  18. test             — unit tests via node test runner (npm run test)
+ *  19. build            — production Next.js build verification (npm run build)
  *
  * Usage:
-
-
  *   npm run check
  *   npm run check -- --only types,arch-rules
  */
@@ -63,6 +65,10 @@ const CHECKS = [
   { id: 'duplicates',         cmd: ['npx', '--yes', 'jscpd', '--config', '.jscpd.json'] },
   { id: 'duplicate-audit',    cmd: ['node', 'scripts/code/check-duplicates.cjs'] },
   { id: 'knip',               cmd: ['npx', '--yes', 'knip', '--include', 'files,dependencies,unlisted,unresolved,exports,nsExports,types,nsTypes,enumMembers,duplicates,cycles', '--reporter', 'compact'] },
+  { id: 'lint',               cmd: ['npm', 'run', 'lint'] },
+  { id: 'typecheck',          cmd: ['npm', 'run', 'typecheck'] },
+  { id: 'test',               cmd: ['npm', 'run', 'test'] },
+  { id: 'build',              cmd: ['npm', 'run', 'build'] },
 ];
 
 
