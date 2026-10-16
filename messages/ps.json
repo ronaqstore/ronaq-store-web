@@ -1,0 +1,102 @@
+{
+  "common": {
+    "appName": "دوکان پرو",
+    "search": "لټون",
+    "all": "ټول",
+    "loading": "بارېږي...",
+    "error": "ستونزه رامنځته شوه",
+    "retry": "بیا هڅه وکړئ",
+    "viewAll": "ټول وګورئ",
+    "close": "بندول",
+    "verified": "تایید شوی دوکان",
+    "phone": "تلیفون",
+    "address": "پته",
+    "city": "ښار"
+  },
+  "nav": {
+    "home": "کور",
+    "stores": "دوکانونه لټول",
+    "forOwners": "د دوکاندارانو لپاره",
+    "openDukan": "خپل دوکان جوړ کړئ",
+    "login": "ننوتل"
+  },
+  "hero": {
+    "title": "په ټول پاکستان کې د موبایل او ټیکنالوژۍ دوکانونه ومومئ",
+    "subtitle": "تایید شوي دوکانونه وګورئ، ژوندی سټاک وګورئ، د پی ټي اې تصدیق شوي تلیفونونه او لوازم پرتله کړئ — مستقیم په واټس اپ اړیکه ونیسئ.",
+    "searchPlaceholder": "لټون",
+    "popularCities": "مشهور ښارونه:"
+  },
+  "stores": {
+    "allShops": "تایید شوي دوکانونه",
+    "shopsFound": "{count} دوکانونه وموندل شول",
+    "noShopsFound": "ستاسو د لټون سره سم کوم دوکان ونه موندل شو.",
+    "productsAvailable": "{count} توکي شتون لري",
+    "viewShop": "دوکان او کتلاګ وګورئ",
+    "directions": "لارښوونه",
+    "whatsapp": "واټس اپ",
+    "call": "تلیفون",
+    "timing": "وختونه",
+    "search": "دوکانونه لټول..."
+  },
+  "catalog": {
+    "allCategories": "ټولې کټګورۍ",
+    "allBrands": "ټول برانډونه",
+    "inStockOnly": "یوازې شته توکي",
+    "searchInShop": "په دې دوکان کې توکي لټول...",
+    "inStock": "په سټاک کې شته",
+    "outOfStock": "ختم شوی",
+    "ptaApproved": "پی ټي اې تایید شوی",
+    "ptaNon": "غیر پی ټي اې",
+    "ptaJv": "جې وي",
+    "brandNew": "نوې",
+    "used": "استعمال شوی",
+    "condition": "حالت",
+    "warranty": "تضمین",
+    "specs": "مشخصات",
+    "noProducts": "په دې دوکان کې تر اوسه کوم توکي نشته.",
+    "inquireWhatsApp": "په واټس اپ اړیکه",
+    "orderWhatsApp": "په واټس اپ امر",
+    "productDetails": "د توکي تفصیلات",
+    "price": "بیه",
+    "category": "کټګوري",
+    "brand": "برانډ",
+    "description": "تفصیل"
+  },
+  "footer": {
+    "tagline": "په ټول پاکستان کې تایید شوي د موبایل دوکانونه ومومئ او مستقیم په واټس اپ امر وکړئ.",
+    "ownersTitle": "د دوکاندارانو لپاره",
+    "registerDukan": "خپل دوکان جوړ کړئ",
+    "login": "پورټل ته ننوتل",
+    "helpTitle": "مرسته او ملاتړ",
+    "whatsappSupport": "د واټس اپ لارښود",
+    "directCall": "+92 300 1234567",
+    "verifiedBadge": "100% تایید شوي محلي دوکانونه",
+    "allRightsReserved": "ټول حقونه خوندي دي."
+  },
+  "metadata": {
+    "title": "دوکان پرو — د پاکستان د موبایل دوکانونو ډایرکټري",
+    "description": "په پاکستان کې د موبایل او لوازمو دوکانونه ومومئ."
+  },
+  "errors": {
+    "notFoundTitle": "پاڼه ونه موندل شوه",
+    "notFoundDescription": "هغه پاڼه چې تاسو یې ګورئ شتون نلري.",
+    "errorTitle": "ستونزه رامنځته شوه",
+    "goBack": "شاته تګ",
+    "backHome": "کور ته ورګرځېدل",
+    "retry": "بیا هڅه وکړئ"
+  },
+  "aria": {
+    "toggleNavigation": "د مینو بدلول",
+    "toggleTheme": "رنګ بدلول",
+    "closeModal": "بندول",
+    "clearSearch": "لټون پاکول",
+    "directions": "لارښوونه",
+    "whatsapp": "په واټس اپ اړیکه ونیسئ",
+    "facebook": "په فیسبوک تعقیب کړئ",
+    "instagram": "په انسټاګرام تعقیب کړئ",
+    "twitter": "په ایکس تعقیب کړئ",
+    "youtube": "په یوټیوب وګورئ",
+    "call": "ټلیفون وکړئ"
+  }
+}
+

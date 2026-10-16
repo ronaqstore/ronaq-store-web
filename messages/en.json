@@ -1,0 +1,102 @@
+{
+  "common": {
+    "appName": "DukanPro",
+    "search": "Search",
+    "all": "All",
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Try again",
+    "viewAll": "View all",
+    "close": "Close",
+    "verified": "Verified Dukan",
+    "phone": "Phone",
+    "address": "Address",
+    "city": "City"
+  },
+  "nav": {
+    "home": "Home",
+    "stores": "Explore Shops",
+    "forOwners": "Shop Owners",
+    "openDukan": "Open Your Dukan",
+    "login": "Login"
+  },
+  "hero": {
+    "title": "Discover Local Mobile & Tech Shops Across Pakistan",
+    "subtitle": "Browse verified smartphone shops, check live stock, compare PTA approved devices, chargers, and accessories — connect directly on WhatsApp.",
+    "searchPlaceholder": "Search...",
+    "popularCities": "Popular Cities:"
+  },
+  "stores": {
+    "allShops": "Verified Shops",
+    "shopsFound": "{count} shops found",
+    "noShopsFound": "No shops found matching your search.",
+    "productsAvailable": "{count} products listed",
+    "viewShop": "View Catalog",
+    "directions": "Directions",
+    "whatsapp": "WhatsApp",
+    "call": "Call Shop",
+    "timing": "Hours",
+    "search": "Search shops..."
+  },
+  "catalog": {
+    "allCategories": "All Categories",
+    "allBrands": "All Brands",
+    "inStockOnly": "In Stock Only",
+    "searchInShop": "Search products in this shop...",
+    "inStock": "In Stock",
+    "outOfStock": "Out of Stock",
+    "ptaApproved": "PTA Approved",
+    "ptaNon": "Non-PTA",
+    "ptaJv": "JV",
+    "brandNew": "Brand New",
+    "used": "Used",
+    "condition": "Condition",
+    "warranty": "Warranty",
+    "specs": "Specifications",
+    "noProducts": "No products listed in this shop yet.",
+    "inquireWhatsApp": "Inquire via WhatsApp",
+    "orderWhatsApp": "Order via WhatsApp",
+    "productDetails": "Product Details",
+    "price": "Price",
+    "category": "Category",
+    "brand": "Brand",
+    "description": "Description"
+  },
+  "footer": {
+    "tagline": "Discover verified local mobile and tech shops across Pakistan. Compare live stock, check PTA status, and order directly on WhatsApp.",
+    "ownersTitle": "Shop Owners",
+    "registerDukan": "Open Your Dukan",
+    "login": "Login to Portal",
+    "helpTitle": "Help & Support",
+    "whatsappSupport": "WhatsApp Helpdesk",
+    "directCall": "+92 300 1234567",
+    "verifiedBadge": "100% Verified Local Dukans",
+    "allRightsReserved": "All rights reserved."
+  },
+  "metadata": {
+    "title": "DukanPro — Pakistan's Mobile & Electronics Store Directory",
+    "description": "Find local mobile and electronics shops in Lahore, Karachi, Islamabad and all cities of Pakistan. View stock, phones, chargers, and accessories."
+  },
+  "errors": {
+    "notFoundTitle": "Page Not Found",
+    "notFoundDescription": "The page you are looking for does not exist.",
+    "errorTitle": "Something went wrong",
+    "goBack": "Go Back",
+    "backHome": "Back to Home",
+    "retry": "Try again"
+  },
+  "aria": {
+    "toggleNavigation": "Toggle navigation",
+    "toggleTheme": "Toggle theme",
+    "closeModal": "Close modal",
+    "clearSearch": "Clear search",
+    "directions": "Directions",
+    "whatsapp": "Chat on WhatsApp",
+    "facebook": "Follow on Facebook",
+    "instagram": "Follow on Instagram",
+    "twitter": "Follow on X",
+    "youtube": "Watch on YouTube",
+    "call": "Call Phone"
+  }
+}
+
