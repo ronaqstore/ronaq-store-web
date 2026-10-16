@@ -67,6 +67,7 @@ export interface ProductCardProps {
   storeName: string;
   storePhone: string;
   onSelectProduct?: (product: StoreProductListItem) => void;
+  priority?: boolean;
 }
 
 export interface ProductGridProps {
@@ -91,5 +92,17 @@ export interface ProductDetailModalProps {
   storeName: string;
   storePhone: string;
   onClose: () => void;
+}
+
+export interface ProductImageGalleryProps {
+  images: StoreProductImage[];
+  productName: string;
+}
+
+export interface ProductDetailViewProps {
+  slug: string;
+  storeName: string;
+  storePhone: string;
+  product: StoreProductDetail;
 }
 

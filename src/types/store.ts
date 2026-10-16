@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 export interface StoreListItem {
   id: string;
   name?: string;
@@ -49,10 +51,16 @@ export interface PaginatedStoresResponse {
 
 export interface StoreCardProps {
   store: StoreListItem;
+  priority?: boolean;
+}
+
+export interface StoreDiscoveryShellProps {
+  searchQuery: string;
+  children: ReactNode;
 }
 
 export interface StoreHeroProps {
-  initialSearch?: string;
+  searchQuery: string;
   onSearchChange: (search: string) => void;
 }
 
@@ -60,14 +68,30 @@ export interface StoreHeaderProps {
   store: StoreProfile;
 }
 
-export interface StoreCatalogClientProps {
-  store: StoreProfile;
-  initialCategories: import('./product').StoreCategory[];
-  initialProducts: import('./product').StoreProductListItem[];
+export interface StoreCatalogFilters {
+  q: string;
+  category: string;
+  inStock: boolean;
 }
 
-export interface StoreDiscoveryClientProps {
-  initialStores: StoreListItem[];
+export interface StoreCatalogClientProps {
+  store: StoreProfile;
+  categories: import('./product').StoreCategory[];
+  products: import('./product').StoreProductListItem[];
+  filters: StoreCatalogFilters;
+}
+
+export interface StoreCatalogSectionProps {
+  store: StoreProfile;
+  filters: StoreCatalogFilters;
+}
+
+export interface StoreDiscoverySectionProps {
+  searchQuery: string;
+}
+
+export interface StoreDiscoveryResultsProps {
+  stores: StoreListItem[];
 }
 
 

@@ -1,8 +1,10 @@
-import Image from 'next/image';
+'use client';
+
 import { useTranslations } from 'next-intl';
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { SmartImage } from '@/components/media/smart-image';
 import { productImageSrc } from '@/constants/placeholders';
 import { formatPrice, buildWhatsAppLink, formatEmpty } from '@/lib/formatters';
 import type { ProductDetailModalProps } from '@/types/product';
@@ -37,11 +39,10 @@ export function ProductDetailModal({
 
         <div className='space-y-6'>
           <div className='relative h-64 sm:h-80 w-full bg-muted/30 rounded-2xl overflow-hidden flex items-center justify-center border border-border/50'>
-            <Image
+            <SmartImage
               src={productImageSrc(product.images?.[0]?.url)}
               alt={formatEmpty(product.name)}
               fill
-              unoptimized
               className='object-contain p-6'
               sizes='(max-width: 768px) 100vw, 600px'
             />

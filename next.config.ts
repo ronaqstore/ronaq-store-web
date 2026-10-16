@@ -6,15 +6,26 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 const baseConfig: NextConfig = {
   output: process.env.BUILD_STANDALONE === 'true' ? 'standalone' : undefined,
   images: {
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
+    minimumCacheTTL: 60 * 60 * 24 * 7,
     remotePatterns: [
-      { protocol: 'https', hostname: '**' },
+      { protocol: 'https', hostname: '**.r2.dev' },
       { protocol: 'http', hostname: 'localhost' },
-      { protocol: 'http', hostname: '127.0.0.1' }
+      { protocol: 'http', hostname: '127.0.0.1' },
+      { protocol: 'https', hostname: 'localhost' },
+      { protocol: 'https', hostname: '127.0.0.1' }
     ]
+  },
+
+  experimental: {
+    optimizePackageImports: ['@tabler/icons-react']
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production'
   },
+
   async headers() {
     return [
       {

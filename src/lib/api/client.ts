@@ -12,7 +12,7 @@ export async function publicApiRequest<T>(endpoint: string): Promise<T | null> {
         'Content-Type': 'application/json',
         Accept: 'application/json'
       },
-      next: { revalidate: 30 }
+      next: { revalidate: 120 }
     });
 
     if (!response.ok) {

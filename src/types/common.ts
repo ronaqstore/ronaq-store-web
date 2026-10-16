@@ -5,8 +5,19 @@ export interface LocaleLayoutProps {
   params: Promise<{ locale: string }>;
 }
 
+export interface HomePageProps {
+  searchParams: Promise<{ q?: string }>;
+}
+
+export interface CatalogSearchParams {
+  q?: string;
+  category?: string;
+  inStock?: string;
+}
+
 export interface StorePageProps {
   params: Promise<{ locale: string; slug: string }>;
+  searchParams: Promise<CatalogSearchParams>;
 }
 
 export interface ProductPageProps {

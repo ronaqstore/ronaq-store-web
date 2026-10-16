@@ -1,59 +1,77 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { useEffect, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import { ProductFilters } from '@/components/products/product-filters';
 import { ProductGrid } from '@/components/products/product-grid';
-import { ProductDetailModal } from '@/components/products/product-detail-modal';
 import { Spinner } from '@/components/ui/spinner';
-import { getStoreProducts } from '@/features/products/api/service';
-import type { StoreCatalogClientProps } from '@/types/store';
+import { usePathname, useRouter } from '@/i18n/navigation';
+import { useDebouncedValue } from '@/hooks/use-debounced-value';
+import type { StoreCatalogClientProps, StoreCatalogFilters } from '@/types/store';
 import type { StoreProductListItem, StoreProductDetail } from '@/types/product';
+
+const ProductDetailModal = dynamic(
+  () =>
+    import('@/components/products/product-detail-modal').then((mod) => mod.ProductDetailModal),
+  { ssr: false }
+);
+
+function buildQuery(filters: StoreCatalogFilters): Record<string, string> {
+  const query: Record<string, string> = {};
+  if (filters.q) query.q = filters.q;
+  if (filters.category) query.category = filters.category;
+  if (filters.inStock) query.inStock = '1';
+  return query;
+}
 
 export function StoreCatalogClient({
   store,
-  initialCategories,
-  initialProducts
+  categories,
+  products,
+  filters
 }: StoreCatalogClientProps) {
   const t = useTranslations();
-  const [selectedCategoryId, setSelectedCategoryId] = useState('');
-  const [inStockOnly, setInStockOnly] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [products, setProducts] = useState(initialProducts);
-  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isPending, startTransition] = useTransition();
+  const [searchQuery, setSearchQuery] = useState(filters.q);
+  const debouncedSearch = useDebouncedValue(searchQuery, 400);
   const [selectedProduct, setSelectedProduct] = useState<StoreProductDetail | null>(null);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setDebouncedSearch(searchQuery.trim()), 300);
-    return () => window.clearTimeout(timer);
-  }, [searchQuery]);
+    setSearchQuery(filters.q);
+  }, [filters.q]);
+
+  const replaceFilters = (next: StoreCatalogFilters) => {
+    const query = buildQuery(next);
+    startTransition(() => {
+      if (Object.keys(query).length > 0) {
+        router.replace({ pathname, query });
+      } else {
+        router.replace(pathname);
+      }
+    });
+  };
 
   useEffect(() => {
-    let cancelled = false;
+    const trimmed = debouncedSearch.trim();
+    if (trimmed === filters.q) return;
 
-    const hasFilters = Boolean(selectedCategoryId || inStockOnly || debouncedSearch);
-    if (!hasFilters) {
-      setProducts(initialProducts);
-      return;
-    }
-
-    setIsLoading(true);
-    void getStoreProducts(store.slug, {
-      q: debouncedSearch || undefined,
-      category: selectedCategoryId || undefined,
-      inStock: inStockOnly || undefined,
-      limit: 50
-    }).then((response) => {
-      if (cancelled) return;
-      setProducts(response?.items ?? []);
-      setIsLoading(false);
+    const query = buildQuery({
+      q: trimmed,
+      category: filters.category,
+      inStock: filters.inStock
     });
 
-    return () => {
-      cancelled = true;
-    };
-  }, [store.slug, selectedCategoryId, inStockOnly, debouncedSearch, initialProducts]);
+    startTransition(() => {
+      if (Object.keys(query).length > 0) {
+        router.replace({ pathname, query });
+      } else {
+        router.replace(pathname);
+      }
+    });
+  }, [debouncedSearch, filters.q, filters.category, filters.inStock, pathname, router]);
 
   const handleSelectProduct = (product: StoreProductListItem) => {
     const detail: StoreProductDetail = {
@@ -66,20 +84,36 @@ export function StoreCatalogClient({
     setSelectedProduct(detail);
   };
 
+  const handleCloseModal = () => {
+    setSelectedProduct(null);
+  };
+
   return (
     <div className='mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 py-8 space-y-6'>
       <ProductFilters
-        categories={initialCategories}
-        selectedCategoryId={selectedCategoryId}
-        inStockOnly={inStockOnly}
+        categories={categories}
+        selectedCategoryId={filters.category}
+        inStockOnly={filters.inStock}
         searchQuery={searchQuery}
-        onCategorySelect={setSelectedCategoryId}
-        onInStockToggle={setInStockOnly}
+        onCategorySelect={(category) =>
+          replaceFilters({
+            q: searchQuery.trim(),
+            category,
+            inStock: filters.inStock
+          })
+        }
+        onInStockToggle={(inStock) =>
+          replaceFilters({
+            q: searchQuery.trim(),
+            category: filters.category,
+            inStock
+          })
+        }
         onSearchChange={setSearchQuery}
       />
 
       <div className='flex items-center justify-between text-xs text-muted-foreground'>
-        {isLoading ? (
+        {isPending ? (
           <span className='inline-flex items-center gap-2'>
             <Spinner className='size-3.5 text-primary' />
             {t('common.loading')}
@@ -100,7 +134,7 @@ export function StoreCatalogClient({
         product={selectedProduct}
         storeName={store.displayName}
         storePhone={store.phoneNumber}
-        onClose={() => setSelectedProduct(null)}
+        onClose={handleCloseModal}
       />
     </div>
   );

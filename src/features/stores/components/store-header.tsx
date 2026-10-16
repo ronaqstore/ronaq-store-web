@@ -1,14 +1,14 @@
-import Image from 'next/image';
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { SmartImage } from '@/components/media/smart-image';
 import { shopLogoSrc } from '@/constants/placeholders';
 import { buildWhatsAppLink, formatEmpty, formatPhone } from '@/lib/formatters';
 import type { StoreHeaderProps } from '@/types/store';
 
-export function StoreHeader({ store }: StoreHeaderProps) {
-  const t = useTranslations();
+export async function StoreHeader({ store }: StoreHeaderProps) {
+  const t = await getTranslations();
 
   const name = store.displayName || store.name || 'Shop';
   const phoneNumber = store.phoneNumber || store.whatsappNumber || '';
@@ -35,11 +35,11 @@ export function StoreHeader({ store }: StoreHeaderProps) {
         <div className='relative -mt-16 sm:-mt-20 flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8'>
           <div className='flex flex-col sm:flex-row items-start sm:items-end gap-4'>
             <div className='relative h-24 w-24 sm:h-32 sm:w-32 overflow-hidden rounded-2xl bg-card border-4 border-background shadow-xl shrink-0'>
-              <Image
+              <SmartImage
                 src={shopLogoSrc(store.logoUrl)}
                 alt={formatEmpty(name)}
                 fill
-                unoptimized
+                priority
                 className='object-cover'
                 sizes='128px'
               />

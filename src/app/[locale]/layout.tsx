@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Poppins } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { getMessages, setRequestLocale } from 'next-intl/server';
@@ -9,13 +9,21 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
 import type { LocaleLayoutProps } from '@/types/common';
+import {
+  APP_DESCRIPTION,
+  APP_NAME,
+  PWA_THEME_COLOR_DARK,
+  PWA_THEME_COLOR_LIGHT
+} from '@/constants/site';
 import '@/styles/globals.css';
 
 const poppins = Poppins({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800'],
+  weight: ['400', '600', '700'],
   variable: '--font-poppins',
-  display: 'swap'
+  display: 'swap',
+  preload: true,
+  adjustFontFallback: true
 });
 
 export function generateStaticParams() {
@@ -23,11 +31,32 @@ export function generateStaticParams() {
 }
 
 export const metadata: Metadata = {
-  title: 'Ronaq Store — Discover Verified Local Mobile Shops',
-  description: 'Search local mobile phone and electronics shops across Pakistan. Check PTA status, live stock, and chat directly on WhatsApp.',
+  title: `${APP_NAME} — Discover Verified Local Mobile Shops`,
+  description: APP_DESCRIPTION,
+  applicationName: APP_NAME,
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: APP_NAME
+  },
+  formatDetection: {
+    telephone: false
+  },
   icons: {
-    icon: '/favicon.ico'
+    icon: '/placeholders/shop-logo.svg',
+    apple: '/placeholders/shop-logo.svg'
   }
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: 'cover',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: PWA_THEME_COLOR_LIGHT },
+    { media: '(prefers-color-scheme: dark)', color: PWA_THEME_COLOR_DARK }
+  ]
 };
 
 export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {
@@ -46,14 +75,14 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
       suppressHydrationWarning
     >
       <body
-        className={`${poppins.className} min-h-screen bg-background font-sans antialiased text-foreground selection:bg-primary/20 selection:text-primary flex flex-col justify-between`}
+        className={`${poppins.className} min-h-dvh bg-background font-sans antialiased text-foreground selection:bg-primary/20 selection:text-primary flex flex-col justify-between overscroll-none`}
         suppressHydrationWarning
       >
         <NextTopLoader color='var(--primary)' showSpinner={false} />
         <ThemeProvider>
           <NextIntlClientProvider locale={locale} messages={messages}>
             <Navbar />
-            <main className='flex-1'>{children}</main>
+            <main className='flex-1 min-w-0'>{children}</main>
             <Footer />
           </NextIntlClientProvider>
         </ThemeProvider>

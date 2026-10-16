@@ -1,16 +1,16 @@
-import Image from 'next/image';
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
+import { SmartImage } from '@/components/media/smart-image';
 import { shopLogoSrc } from '@/constants/placeholders';
 import { buildWhatsAppLink, formatEmpty } from '@/lib/formatters';
 import type { StoreCardProps } from '@/types/store';
 
-export function StoreCard({ store }: StoreCardProps) {
-  const t = useTranslations();
+export async function StoreCard({ store, priority = false }: StoreCardProps) {
+  const t = await getTranslations();
 
   const name = store.displayName || store.name || 'Shop';
   const phone = store.phone || store.phoneNumber || store.whatsappNumber || '';
@@ -27,11 +27,11 @@ export function StoreCard({ store }: StoreCardProps) {
           <div className='absolute inset-0 bg-gradient-to-t from-background/90 to-transparent' />
           <div className='absolute bottom-3 start-4 flex items-center gap-3'>
             <div className='relative h-12 w-12 overflow-hidden rounded-xl bg-background border border-border/80 shadow-md shrink-0'>
-              <Image
+              <SmartImage
                 src={shopLogoSrc(store.logoUrl)}
                 alt={formatEmpty(name)}
                 fill
-                unoptimized
+                priority={priority}
                 className='object-cover'
                 sizes='48px'
               />
@@ -52,14 +52,10 @@ export function StoreCard({ store }: StoreCardProps) {
         </div>
 
         <div className='p-4 space-y-3'>
-          <p className='text-xs text-muted-foreground line-clamp-1'>
-            {formatEmpty(store.address)}
-          </p>
-
+          <p className='text-xs text-muted-foreground line-clamp-1'>{formatEmpty(store.address)}</p>
           <p className='text-xs text-foreground/80 line-clamp-2 leading-relaxed'>
             {formatEmpty(store.description)}
           </p>
-
           <div className='flex items-center gap-2 pt-1'>
             <Badge variant='success' className='gap-1 text-[11px]'>
               <Icons.mobile className='h-3 w-3' />
@@ -71,12 +67,7 @@ export function StoreCard({ store }: StoreCardProps) {
 
       <div className='p-4 pt-0 grid grid-cols-2 gap-2 mt-2'>
         {whatsappHref ? (
-          <a
-            href={whatsappHref}
-            target='_blank'
-            rel='noopener noreferrer'
-            className='w-full'
-          >
+          <a href={whatsappHref} target='_blank' rel='noopener noreferrer' className='w-full'>
             <Button
               type='button'
               variant='outline'

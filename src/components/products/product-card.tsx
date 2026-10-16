@@ -1,9 +1,11 @@
-import Image from 'next/image';
+'use client';
+
 import { useTranslations } from 'next-intl';
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
+import { SmartImage } from '@/components/media/smart-image';
 import { productImageSrc } from '@/constants/placeholders';
 import { formatPrice, buildWhatsAppLink, formatEmpty } from '@/lib/formatters';
 import type { ProductCardProps } from '@/types/product';
@@ -12,7 +14,8 @@ export function ProductCard({
   product,
   storeName,
   storePhone,
-  onSelectProduct
+  onSelectProduct,
+  priority = false
 }: ProductCardProps) {
   const t = useTranslations();
 
@@ -54,11 +57,11 @@ export function ProductCard({
         onClick={() => onSelectProduct?.(product)}
       >
         <div className='relative h-48 w-full bg-muted/40 flex items-center justify-center overflow-hidden border-b border-border/50'>
-          <Image
+          <SmartImage
             src={productImageSrc(product.primaryImageUrl)}
             alt={formatEmpty(product.name)}
             fill
-            unoptimized
+            priority={priority}
             className='object-contain p-4 group-hover:scale-105 transition-transform duration-300'
             sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
           />

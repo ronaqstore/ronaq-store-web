@@ -14,8 +14,8 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className='sticky top-0 z-40 w-full border-b border-border/70 bg-background/80 backdrop-blur-md'>
-      <div className='mx-auto flex h-16 max-w-[1600px] items-center justify-between px-4 sm:px-6 lg:px-8'>
+    <header className='sticky top-0 z-40 w-full border-b border-border/70 bg-background/80 backdrop-blur-md pt-[env(safe-area-inset-top)]'>
+      <div className='mx-auto flex h-14 min-[390px]:h-16 max-w-[1600px] items-center justify-between px-3 min-[390px]:px-4 sm:px-6 lg:px-8'>
         <div className='flex items-center gap-6'>
           <Link href='/' className='flex items-center gap-2.5 group'>
             <div className='flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm transition-transform group-hover:scale-105'>
