@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "DukanPro",
+    "appName": "Ronaq Store",
     "search": "Search",
     "all": "All",
     "loading": "Loading...",
@@ -8,7 +8,7 @@
     "retry": "Try again",
     "viewAll": "View all",
     "close": "Close",
-    "verified": "Verified Dukan",
+    "verified": "Verified Store",
     "phone": "Phone",
     "address": "Address",
     "city": "City"
@@ -17,7 +17,7 @@
     "home": "Home",
     "stores": "Explore Shops",
     "forOwners": "Shop Owners",
-    "openDukan": "Open Your Dukan",
+    "openDukan": "Open Your Store",
     "login": "Login"
   },
   "hero": {
@@ -65,16 +65,16 @@
   "footer": {
     "tagline": "Discover verified local mobile and tech shops across Pakistan. Compare live stock, check PTA status, and order directly on WhatsApp.",
     "ownersTitle": "Shop Owners",
-    "registerDukan": "Open Your Dukan",
+    "registerDukan": "Open Your Store",
     "login": "Login to Portal",
     "helpTitle": "Help & Support",
     "whatsappSupport": "WhatsApp Helpdesk",
     "directCall": "+92 300 1234567",
-    "verifiedBadge": "100% Verified Local Dukans",
+    "verifiedBadge": "100% Verified Local Stores",
     "allRightsReserved": "All rights reserved."
   },
   "metadata": {
-    "title": "DukanPro — Pakistan's Mobile & Electronics Store Directory",
+    "title": "Ronaq Store — Pakistan's Mobile & Electronics Store Directory",
     "description": "Find local mobile and electronics shops in Lahore, Karachi, Islamabad and all cities of Pakistan. View stock, phones, chargers, and accessories."
   },
   "errors": {

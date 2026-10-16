@@ -13,7 +13,7 @@ import type { ProductPageProps } from '@/types/common';
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug, productId } = await params;
   const product = await getStoreProductDetail(slug, productId);
-  const title = product ? `${product.name} — DukanPro` : 'Product Details — DukanPro';
+  const title = product ? `${product.name} — Ronaq Store` : 'Product Details — Ronaq Store';
 
   return {
     title,

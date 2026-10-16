@@ -13,7 +13,7 @@ export function StoreCard({ store }: StoreCardProps) {
   const name = store.displayName || store.name || 'Shop';
   const phone = store.phone || store.phoneNumber || store.whatsappNumber || '';
   const whatsappHref = phone
-    ? buildWhatsAppLink(phone, `Hello ${name}, I found your shop on DukanPro.`)
+    ? buildWhatsAppLink(phone, `Hello ${name}, I found your shop on Ronaq Store.`)
     : '#';
 
   const productCount = store.productCount ?? store.totalProducts ?? 0;

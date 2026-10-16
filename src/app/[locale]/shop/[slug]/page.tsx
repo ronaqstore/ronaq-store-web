@@ -14,7 +14,7 @@ import type { StorePageProps } from '@/types/common';
 export async function generateMetadata({ params }: StorePageProps): Promise<Metadata> {
   const { slug } = await params;
   const store = (await getPublicStoreProfile(slug)) ?? getSeedStoreProfile(slug);
-  const title = `${store.displayName} — DukanPro`;
+  const title = `${store.displayName} — Ronaq Store`;
   const description = `Shop mobile phones, chargers and accessories at ${store.displayName} in ${store.city}. View live prices and chat on WhatsApp.`;
 
   return {

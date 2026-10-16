@@ -15,7 +15,7 @@ export function StoreHeader({ store }: StoreHeaderProps) {
   const whatsappHref = whatsappNumber
     ? buildWhatsAppLink(
         whatsappNumber,
-        `Hello ${name}, I am contacting you from your DukanPro store page.`
+        `Hello ${name}, I am contacting you from your Ronaq Store page.`
       )
     : '#';
 

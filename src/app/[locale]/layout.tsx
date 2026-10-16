@@ -23,7 +23,7 @@ export function generateStaticParams() {
 }
 
 export const metadata: Metadata = {
-  title: 'DukanPro — Discover Verified Local Mobile Shops',
+  title: 'Ronaq Store — Discover Verified Local Mobile Shops',
   description: 'Search local mobile phone and electronics shops across Pakistan. Check PTA status, live stock, and chat directly on WhatsApp.',
   icons: {
     icon: '/favicon.ico'

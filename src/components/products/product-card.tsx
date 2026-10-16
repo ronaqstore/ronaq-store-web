@@ -17,7 +17,7 @@ export function ProductCard({
 
   const formattedPrice = formatPrice(product.retailPrice);
 
-  const whatsappMessage = `Hello ${storeName}, I am interested in buying "${product.name}" (${formattedPrice}) listed on your DukanPro store. Is it available in stock?`;
+  const whatsappMessage = `Hello ${storeName}, I am interested in buying "${product.name}" (${formattedPrice}) listed on your Ronaq Store. Is it available in stock?`;
   const whatsappHref = buildWhatsAppLink(storePhone, whatsappMessage);
 
   const getPtaBadge = () => {
