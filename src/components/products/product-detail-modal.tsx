@@ -41,6 +41,7 @@ export function ProductDetailModal({
                 src={product.images[0].url}
                 alt={product.name}
                 fill
+                unoptimized
                 className='object-contain p-6'
                 sizes='(max-width: 768px) 100vw, 600px'
               />

@@ -26,14 +26,14 @@ export function StoreHero({
         </p>
 
         <div className='mx-auto max-w-3xl pt-4'>
-          <div className='relative flex items-center shadow-lg rounded-2xl bg-card border border-border p-1.5 focus-within:ring-2 focus-within:ring-primary'>
-            <Icons.search className='ms-3 h-5 w-5 text-muted-foreground shrink-0' />
+          <div className='relative flex items-center'>
+            <Icons.search className='pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground' />
             <Input
               type='text'
               value={initialSearch}
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder={t('hero.searchPlaceholder')}
-              className='border-0 bg-transparent shadow-none focus-visible:ring-0 text-base h-11'
+              className='h-13 w-full rounded-2xl bg-card border-border shadow-lg ps-12 pe-12 text-base text-foreground placeholder:text-muted-foreground outline-none focus:outline-none focus:ring-2 focus:ring-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 transition-all'
             />
             {initialSearch ? (
               <Button
@@ -41,7 +41,7 @@ export function StoreHero({
                 variant='ghost'
                 size='sm'
                 onClick={() => onSearchChange('')}
-                className='h-8 w-8 p-0 text-muted-foreground me-1'
+                className='absolute end-3 top-1/2 -translate-y-1/2 h-8 w-8 p-0 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full'
                 aria-label={t('aria.clearSearch')}
               >
                 <Icons.close className='h-4 w-4' />

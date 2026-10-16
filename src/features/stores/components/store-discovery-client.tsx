@@ -56,8 +56,8 @@ export function StoreDiscoveryClient({ initialStores }: StoreDiscoveryClientProp
           </div>
         ) : (
           <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5'>
-            {filteredStores.map((store) => (
-              <StoreCard key={store.id} store={store} />
+            {filteredStores.map((store, index) => (
+              <StoreCard key={store.slug || store.id || `store-${index}`} store={store} />
             ))}
           </div>
         )}
