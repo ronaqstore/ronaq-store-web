@@ -34,7 +34,7 @@ export default async function ShopPage({ params }: StorePageProps) {
   const [profileResult, categoriesResult, productsResult] = await Promise.all([
     getPublicStoreProfile(slug),
     getStoreCategories(slug),
-    getStoreProducts(slug, { limit: 100 })
+    getStoreProducts(slug, { limit: 50 })
   ]);
 
   const store = profileResult ?? getSeedStoreProfile(slug);

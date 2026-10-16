@@ -48,7 +48,7 @@ export interface StoreProductDetail {
 
 export interface ProductListQuery {
   q?: string;
-  categoryId?: string;
+  category?: string;
   inStock?: boolean;
   page?: number;
   limit?: number;

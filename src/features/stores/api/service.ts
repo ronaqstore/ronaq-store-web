@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { publicApiRequest } from '@/lib/api/client';
 import type {
   StoreListQuery,
@@ -18,6 +19,6 @@ export async function getPublicStores(
   return publicApiRequest<PaginatedStoresResponse>(`stores${qs}`);
 }
 
-export async function getPublicStoreProfile(slug: string): Promise<StoreProfile | null> {
+export const getPublicStoreProfile = cache(async (slug: string): Promise<StoreProfile | null> => {
   return publicApiRequest<StoreProfile>(`stores/${slug}`);
-}
+});

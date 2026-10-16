@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { ProductFilters } from '@/components/products/product-filters';
 import { ProductGrid } from '@/components/products/product-grid';
 import { ProductDetailModal } from '@/components/products/product-detail-modal';
+import { Spinner } from '@/components/ui/spinner';
+import { getStoreProducts } from '@/features/products/api/service';
 import type { StoreCatalogClientProps } from '@/types/store';
 import type { StoreProductListItem, StoreProductDetail } from '@/types/product';
 
@@ -17,29 +19,41 @@ export function StoreCatalogClient({
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
   const [inStockOnly, setInStockOnly] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [products, setProducts] = useState(initialProducts);
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<StoreProductDetail | null>(null);
 
-  const filteredProducts = useMemo(() => {
-    return initialProducts.filter((product) => {
-      if (selectedCategoryId && product.categoryId !== selectedCategoryId) {
-        return false;
-      }
-      if (inStockOnly && !product.inStock) {
-        return false;
-      }
-      if (searchQuery.trim()) {
-        const query = searchQuery.toLowerCase();
-        const matchesName = product.name.toLowerCase().includes(query);
-        const matchesBrand = product.brandName?.toLowerCase().includes(query);
-        const matchesCategory = product.categoryName.toLowerCase().includes(query);
-        const matchesSku = product.sku.toLowerCase().includes(query);
-        if (!matchesName && !matchesBrand && !matchesCategory && !matchesSku) {
-          return false;
-        }
-      }
-      return true;
+  useEffect(() => {
+    const timer = window.setTimeout(() => setDebouncedSearch(searchQuery.trim()), 300);
+    return () => window.clearTimeout(timer);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const hasFilters = Boolean(selectedCategoryId || inStockOnly || debouncedSearch);
+    if (!hasFilters) {
+      setProducts(initialProducts);
+      return;
+    }
+
+    setIsLoading(true);
+    void getStoreProducts(store.slug, {
+      q: debouncedSearch || undefined,
+      category: selectedCategoryId || undefined,
+      inStock: inStockOnly || undefined,
+      limit: 50
+    }).then((response) => {
+      if (cancelled) return;
+      setProducts(response?.items ?? []);
+      setIsLoading(false);
     });
-  }, [initialProducts, selectedCategoryId, inStockOnly, searchQuery]);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [store.slug, selectedCategoryId, inStockOnly, debouncedSearch, initialProducts]);
 
   const handleSelectProduct = (product: StoreProductListItem) => {
     const detail: StoreProductDetail = {
@@ -65,11 +79,18 @@ export function StoreCatalogClient({
       />
 
       <div className='flex items-center justify-between text-xs text-muted-foreground'>
-        <span>{t('stores.productsAvailable', { count: filteredProducts.length })}</span>
+        {isLoading ? (
+          <span className='inline-flex items-center gap-2'>
+            <Spinner className='size-3.5 text-primary' />
+            {t('common.loading')}
+          </span>
+        ) : (
+          <span>{t('stores.productsAvailable', { count: products.length })}</span>
+        )}
       </div>
 
       <ProductGrid
-        products={filteredProducts}
+        products={products}
         storeName={store.displayName}
         storePhone={store.phoneNumber}
         onSelectProduct={handleSelectProduct}

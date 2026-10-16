@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
+import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
 
 export const buttonVariants = cva(
@@ -30,18 +31,51 @@ export const buttonVariants = cva(
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {}
+    VariantProps<typeof buttonVariants> {
+  isLoading?: boolean;
+  loading?: boolean;
+}
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, type = 'button', ...props }, ref) => {
+  (
+    {
+      className,
+      variant,
+      size,
+      type = 'button',
+      isLoading = false,
+      loading = false,
+      disabled,
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    const busy = isLoading || loading;
     return (
       <button
         type={type}
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(
+          buttonVariants({ variant, size, className }),
+          busy && 'relative disabled:opacity-100'
+        )}
         ref={ref}
+        disabled={disabled || busy}
+        aria-busy={busy || undefined}
         suppressHydrationWarning
         {...props}
-      />
+      >
+        {busy ? (
+          <>
+            <span className='invisible inline-flex items-center gap-[inherit]' aria-hidden>
+              {children}
+            </span>
+            <Spinner aria-hidden className='absolute inset-0 m-auto' />
+          </>
+        ) : (
+          children
+        )}
+      </button>
     );
   }
 );
