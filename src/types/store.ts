@@ -1,16 +1,20 @@
 export interface StoreListItem {
   id: string;
-  name: string;
+  name?: string;
   city: string;
   address: string | null;
-  phone: string;
+  phone?: string | null;
+  phoneNumber?: string | null;
+  whatsappNumber?: string | null;
   slug: string;
   displayName: string;
   description: string | null;
   heroBannerUrl: string | null;
   logoUrl: string | null;
-  productCount: number;
+  productCount?: number;
+  totalProducts?: number;
 }
+
 
 export interface StoreProfile {
   id: string;

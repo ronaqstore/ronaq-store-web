@@ -8,12 +8,16 @@ import type { StoreHeaderProps } from '@/types/store';
 export function StoreHeader({ store }: StoreHeaderProps) {
   const t = useTranslations();
 
-  const phoneHref = `tel:${store.phoneNumber}`;
-  const whatsappNumber = store.whatsappNumber || store.phoneNumber;
-  const whatsappHref = buildWhatsAppLink(
-    whatsappNumber,
-    `Hello ${store.displayName}, I am contacting you from your DukanPro store page.`
-  );
+  const name = store.displayName || store.name || 'Shop';
+  const phoneNumber = store.phoneNumber || store.whatsappNumber || '';
+  const phoneHref = phoneNumber ? `tel:${phoneNumber}` : '#';
+  const whatsappNumber = store.whatsappNumber || store.phoneNumber || '';
+  const whatsappHref = whatsappNumber
+    ? buildWhatsAppLink(
+        whatsappNumber,
+        `Hello ${name}, I am contacting you from your DukanPro store page.`
+      )
+    : '#';
 
   return (
     <div className='relative overflow-hidden border-b border-border/70 bg-gradient-to-b from-muted/30 via-background to-background'>
@@ -25,7 +29,7 @@ export function StoreHeader({ store }: StoreHeaderProps) {
         <div className='relative -mt-16 sm:-mt-20 flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8'>
           <div className='flex flex-col sm:flex-row items-start sm:items-end gap-4'>
             <div className='flex h-24 w-24 sm:h-32 sm:w-32 items-center justify-center rounded-2xl bg-card border-4 border-background shadow-xl text-primary font-black text-3xl sm:text-4xl shrink-0'>
-              {store.displayName.slice(0, 1).toUpperCase()}
+              {(name || 'S').slice(0, 1).toUpperCase()}
             </div>
 
             <div className='space-y-1.5'>
