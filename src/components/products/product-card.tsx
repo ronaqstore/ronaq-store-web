@@ -4,7 +4,8 @@ import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-import { formatPrice, buildWhatsAppLink } from '@/lib/formatters';
+import { productImageSrc } from '@/constants/placeholders';
+import { formatPrice, buildWhatsAppLink, formatEmpty } from '@/lib/formatters';
 import type { ProductCardProps } from '@/types/product';
 
 export function ProductCard({
@@ -53,23 +54,14 @@ export function ProductCard({
         onClick={() => onSelectProduct?.(product)}
       >
         <div className='relative h-48 w-full bg-muted/40 flex items-center justify-center overflow-hidden border-b border-border/50'>
-          {product.primaryImageUrl ? (
-            <Image
-              src={product.primaryImageUrl}
-              alt={product.name}
-              fill
-              unoptimized
-              className='object-contain p-4 group-hover:scale-105 transition-transform duration-300'
-              sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-            />
-          ) : (
-            <div className='flex flex-col items-center justify-center text-muted-foreground/60 gap-2'>
-              <Icons.mobile className='h-12 w-12 stroke-[1.25]' />
-              <span className='text-[11px] font-medium tracking-wide uppercase'>
-                {product.brandName || product.categoryName}
-              </span>
-            </div>
-          )}
+          <Image
+            src={productImageSrc(product.primaryImageUrl)}
+            alt={formatEmpty(product.name)}
+            fill
+            unoptimized
+            className='object-contain p-4 group-hover:scale-105 transition-transform duration-300'
+            sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+          />
 
           <div className='absolute top-2.5 start-2.5 flex flex-col gap-1'>
             {getPtaBadge()}
@@ -90,13 +82,13 @@ export function ProductCard({
 
         <div className='p-4 space-y-2'>
           <div className='flex items-center gap-1.5 text-xs text-muted-foreground'>
-            {product.brandName ? <span>{product.brandName}</span> : null}
-            {product.brandName && product.categoryName ? <span>•</span> : null}
-            <span>{product.categoryName}</span>
+            <span>{formatEmpty(product.brandName)}</span>
+            <span>•</span>
+            <span>{formatEmpty(product.categoryName)}</span>
           </div>
 
           <h4 className='font-bold text-foreground text-sm line-clamp-2 leading-snug group-hover:text-primary transition-colors'>
-            {product.name}
+            {formatEmpty(product.name)}
           </h4>
 
           <div className='pt-1 flex items-baseline justify-between'>

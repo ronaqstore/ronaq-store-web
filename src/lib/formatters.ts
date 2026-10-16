@@ -1,16 +1,28 @@
 import { fromPaisa } from '@/lib/money';
 import { WHATSAPP_BASE_URL } from '@/constants/api';
 
+export const EMPTY_DISPLAY = '—';
+
+export function formatEmpty(
+  value: string | number | null | undefined,
+  fallback: string = EMPTY_DISPLAY
+): string {
+  if (value === null || value === undefined) return fallback;
+  if (typeof value === 'string' && value.trim() === '') return fallback;
+  return String(value);
+}
+
 export function formatPrice(paisa?: string | number | null): string {
-  if (paisa == null) return 'Rs. 0';
+  if (paisa == null) return EMPTY_DISPLAY;
   const numericPaisa = typeof paisa === 'string' ? Number(paisa) : paisa;
-  if (Number.isNaN(numericPaisa)) return 'Rs. 0';
+  if (Number.isNaN(numericPaisa)) return EMPTY_DISPLAY;
   return `Rs. ${Math.round(fromPaisa(numericPaisa)).toLocaleString('en-PK')}`;
 }
 
 export function formatPhone(phone?: string | null): string {
-  if (!phone || typeof phone !== 'string') return '';
+  if (!phone || typeof phone !== 'string') return EMPTY_DISPLAY;
   const digits = phone.replace(/\D/g, '');
+  if (!digits) return EMPTY_DISPLAY;
   if (digits.length === 11 && digits.startsWith('03')) {
     return `${digits.slice(0, 4)}-${digits.slice(4)}`;
   }

@@ -3,7 +3,8 @@ import { useTranslations } from 'next-intl';
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { formatPrice, buildWhatsAppLink } from '@/lib/formatters';
+import { productImageSrc } from '@/constants/placeholders';
+import { formatPrice, buildWhatsAppLink, formatEmpty } from '@/lib/formatters';
 import type { ProductDetailModalProps } from '@/types/product';
 
 export function ProductDetailModal({
@@ -36,24 +37,20 @@ export function ProductDetailModal({
 
         <div className='space-y-6'>
           <div className='relative h-64 sm:h-80 w-full bg-muted/30 rounded-2xl overflow-hidden flex items-center justify-center border border-border/50'>
-            {product.images && product.images.length > 0 ? (
-              <Image
-                src={product.images[0].url}
-                alt={product.name}
-                fill
-                unoptimized
-                className='object-contain p-6'
-                sizes='(max-width: 768px) 100vw, 600px'
-              />
-            ) : (
-              <Icons.mobile className='h-16 w-16 text-muted-foreground/50' />
-            )}
+            <Image
+              src={productImageSrc(product.images?.[0]?.url)}
+              alt={formatEmpty(product.name)}
+              fill
+              unoptimized
+              className='object-contain p-6'
+              sizes='(max-width: 768px) 100vw, 600px'
+            />
           </div>
 
           <div className='space-y-3'>
             <div className='flex flex-wrap items-center gap-2'>
-              <Badge variant='outline'>{product.categoryName}</Badge>
-              {product.brandName ? <Badge variant='secondary'>{product.brandName}</Badge> : null}
+              <Badge variant='outline'>{formatEmpty(product.categoryName)}</Badge>
+              <Badge variant='secondary'>{formatEmpty(product.brandName)}</Badge>
               {product.ptaStatus === 'APPROVED' ? (
                 <Badge variant='success'>{t('catalog.ptaApproved')}</Badge>
               ) : null}
@@ -66,36 +63,34 @@ export function ProductDetailModal({
               )}
             </div>
 
-            <h2 className='text-2xl font-bold text-foreground'>{product.name}</h2>
+            <h2 className='text-2xl font-bold text-foreground'>{formatEmpty(product.name)}</h2>
 
             <div className='text-3xl font-extrabold text-primary'>
               {formattedPrice}
             </div>
 
-            {product.description ? (
-              <div className='space-y-1.5 pt-2 border-t border-border/50'>
-                <h4 className='text-xs font-semibold uppercase tracking-wider text-muted-foreground'>
-                  {t('catalog.description')}
-                </h4>
-                <p className='text-sm text-foreground/90 whitespace-pre-line leading-relaxed'>
-                  {product.description}
-                </p>
-              </div>
-            ) : null}
+            <div className='space-y-1.5 pt-2 border-t border-border/50'>
+              <h4 className='text-xs font-semibold uppercase tracking-wider text-muted-foreground'>
+                {t('catalog.description')}
+              </h4>
+              <p className='text-sm text-foreground/90 whitespace-pre-line leading-relaxed'>
+                {formatEmpty(product.description)}
+              </p>
+            </div>
 
             <div className='grid grid-cols-2 gap-3 pt-3 border-t border-border/50 text-xs'>
-              {product.condition ? (
-                <div className='rounded-lg bg-muted/40 p-2.5'>
-                  <span className='text-muted-foreground'>{t('catalog.condition')}: </span>
-                  <span className='font-semibold text-foreground'>{product.condition}</span>
-                </div>
-              ) : null}
-              {product.warrantyType ? (
-                <div className='rounded-lg bg-muted/40 p-2.5'>
-                  <span className='text-muted-foreground'>{t('catalog.warranty')}: </span>
-                  <span className='font-semibold text-foreground'>{product.warrantyType}</span>
-                </div>
-              ) : null}
+              <div className='rounded-lg bg-muted/40 p-2.5'>
+                <span className='text-muted-foreground'>{t('catalog.condition')}: </span>
+                <span className='font-semibold text-foreground'>
+                  {formatEmpty(product.condition)}
+                </span>
+              </div>
+              <div className='rounded-lg bg-muted/40 p-2.5'>
+                <span className='text-muted-foreground'>{t('catalog.warranty')}: </span>
+                <span className='font-semibold text-foreground'>
+                  {formatEmpty(product.warrantyType)}
+                </span>
+              </div>
             </div>
           </div>
 
