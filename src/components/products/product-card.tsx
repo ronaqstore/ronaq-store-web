@@ -116,18 +116,20 @@ export function ProductCard({
         </button>
       )}
 
-      <div className='p-4 pt-0'>
-        <a href={whatsappHref} target='_blank' rel='noopener noreferrer' className='w-full block'>
-          <Button
-            type='button'
-            size='sm'
-            className='w-full gap-2 text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm'
-          >
-            <Icons.whatsapp className='h-4 w-4' />
-            {t('catalog.orderWhatsApp')}
-          </Button>
-        </a>
-      </div>
+      {product.contactForPrice ? (
+        <div className='p-4 pt-0'>
+          <a href={whatsappHref} target='_blank' rel='noopener noreferrer' className='w-full block'>
+            <Button
+              type='button'
+              size='sm'
+              className='w-full gap-2 text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm'
+            >
+              <Icons.whatsapp className='h-4 w-4' />
+              {t('catalog.inquireWhatsApp')}
+            </Button>
+          </a>
+        </div>
+      ) : null}
     </Card>
   );
 }

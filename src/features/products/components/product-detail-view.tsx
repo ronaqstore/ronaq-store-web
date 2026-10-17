@@ -9,7 +9,12 @@ import { Breadcrumbs } from '@/components/seo/breadcrumbs';
 import { JsonLd } from '@/components/seo/json-ld';
 import { breadcrumbJsonLd, productJsonLd } from '@/lib/seo/json-ld';
 import { productPath } from '@/lib/seo/slug';
-import { formatPrice, buildWhatsAppLink, formatEmpty } from '@/lib/formatters';
+import {
+  formatPrice,
+  buildWhatsAppLink,
+  formatEmpty,
+  resolveStoreWhatsAppNumber
+} from '@/lib/formatters';
 import { StockBadge } from '@/components/products/stock-badge';
 import type { ProductDetailViewProps } from '@/types/product';
 
@@ -22,7 +27,7 @@ export async function ProductDetailView({
 }: ProductDetailViewProps) {
   const t = await getTranslations();
   const storeName = store.displayName;
-  const storePhone = store.phoneNumber;
+  const storePhone = resolveStoreWhatsAppNumber(store);
   const path = productPath(slug, product.name, product.id);
   const crumbs = [
     { name: t('nav.home'), path: '/' },
@@ -116,16 +121,18 @@ export async function ProductDetailView({
           </div>
         </div>
 
-        <a href={whatsappHref} target='_blank' rel='noopener noreferrer' className='block'>
-          <Button
-            type='button'
-            size='lg'
-            className='w-full gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold'
-          >
-            <Icons.whatsapp className='h-5 w-5' />
-            {t('catalog.orderWhatsApp')}
-          </Button>
-        </a>
+        {product.contactForPrice ? (
+          <a href={whatsappHref} target='_blank' rel='noopener noreferrer' className='block'>
+            <Button
+              type='button'
+              size='lg'
+              className='w-full gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold'
+            >
+              <Icons.whatsapp className='h-5 w-5' />
+              {t('catalog.inquireWhatsApp')}
+            </Button>
+          </a>
+        ) : null}
       </div>
 
       {relatedProducts.length > 0 ? (

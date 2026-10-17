@@ -5,14 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { SmartImage } from '@/components/media/smart-image';
 import { shopLogoSrc } from '@/constants/placeholders';
-import { buildWhatsAppLink, formatEmpty } from '@/lib/formatters';
+import { buildWhatsAppLink, formatEmpty, resolveStoreWhatsAppNumber } from '@/lib/formatters';
 import type { StoreCardProps } from '@/types/store';
 
 export async function StoreCard({ store, priority = false }: StoreCardProps) {
   const t = await getTranslations();
 
   const name = store.displayName || store.name || t('common.appName');
-  const phone = store.phone || store.phoneNumber || store.whatsappNumber || '';
+  const phone = resolveStoreWhatsAppNumber(store);
   const whatsappHref = phone
     ? buildWhatsAppLink(phone, t('whatsapp.foundShop', { storeName: name }))
     : undefined;

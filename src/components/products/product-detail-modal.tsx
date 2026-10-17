@@ -96,23 +96,25 @@ export function ProductDetailModal({
             </div>
           </div>
 
-          <div className='pt-2'>
-            <a
-              href={whatsappHref}
-              target='_blank'
-              rel='noopener noreferrer'
-              className='w-full block'
-            >
-              <Button
-                type='button'
-                size='lg'
-                className='w-full gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-md'
+          {product.contactForPrice ? (
+            <div className='pt-2'>
+              <a
+                href={whatsappHref}
+                target='_blank'
+                rel='noopener noreferrer'
+                className='w-full block'
               >
-                <Icons.whatsapp className='h-5 w-5' />
-                {t('catalog.inquireWhatsApp')}
-              </Button>
-            </a>
-          </div>
+                <Button
+                  type='button'
+                  size='lg'
+                  className='w-full gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-md'
+                >
+                  <Icons.whatsapp className='h-5 w-5' />
+                  {t('catalog.inquireWhatsApp')}
+                </Button>
+              </a>
+            </div>
+          ) : null}
         </div>
       </div>
     </div>

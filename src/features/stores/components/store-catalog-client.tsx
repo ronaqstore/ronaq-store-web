@@ -10,6 +10,7 @@ import { usePathname, useRouter } from '@/i18n/navigation';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import type { StoreCatalogClientProps, StoreCatalogFilters } from '@/types/store';
 import type { StoreProductListItem, StoreProductDetail } from '@/types/product';
+import { resolveStoreWhatsAppNumber } from '@/lib/formatters';
 
 const ProductDetailModal = dynamic(
   () =>
@@ -127,14 +128,14 @@ export function StoreCatalogClient({
         products={products}
         storeSlug={store.slug}
         storeName={store.displayName}
-        storePhone={store.phoneNumber}
+        storePhone={resolveStoreWhatsAppNumber(store)}
         onSelectProduct={handleSelectProduct}
       />
 
       <ProductDetailModal
         product={selectedProduct}
         storeName={store.displayName}
-        storePhone={store.phoneNumber}
+        storePhone={resolveStoreWhatsAppNumber(store)}
         onClose={handleCloseModal}
       />
     </div>

@@ -1,5 +1,11 @@
 import type { ReactNode } from 'react';
 
+export interface StoreWhatsAppContact {
+  whatsappNumber?: string | null;
+  phoneNumber?: string | null;
+  phone?: string | null;
+}
+
 export interface StoreListItem {
   id: string;
   name?: string;

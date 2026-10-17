@@ -3,7 +3,12 @@ import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { SmartImage } from '@/components/media/smart-image';
 import { shopLogoSrc } from '@/constants/placeholders';
-import { buildWhatsAppLink, formatEmpty, formatPhone } from '@/lib/formatters';
+import {
+  buildWhatsAppLink,
+  formatEmpty,
+  formatPhone,
+  resolveStoreWhatsAppNumber
+} from '@/lib/formatters';
 import type { StoreHeaderProps } from '@/types/store';
 
 export async function StoreHeader({ store }: StoreHeaderProps) {
@@ -12,7 +17,7 @@ export async function StoreHeader({ store }: StoreHeaderProps) {
   const name = store.displayName || store.name || t('common.appName');
   const phoneNumber = store.phoneNumber || store.whatsappNumber || '';
   const phoneHref = phoneNumber ? `tel:${phoneNumber}` : undefined;
-  const whatsappNumber = store.whatsappNumber || store.phoneNumber || '';
+  const whatsappNumber = resolveStoreWhatsAppNumber(store);
   const whatsappHref = whatsappNumber
     ? buildWhatsAppLink(whatsappNumber, t('whatsapp.contactShop', { storeName: name }))
     : undefined;
