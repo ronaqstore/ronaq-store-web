@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import { Poppins } from 'next/font/google';
 import { notFound } from 'next/navigation';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import NextTopLoader from 'nextjs-toploader';
 import { isLocale, isRtlLocale, locales, type AppLocale } from '@/i18n/request';
@@ -10,13 +12,12 @@ import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
 import type { LocaleLayoutProps } from '@/types/common';
 import {
-  APP_DESCRIPTION,
   APP_NAME,
   PWA_THEME_COLOR_DARK,
   PWA_THEME_COLOR_LIGHT
 } from '@/constants/site';
+import { defaultRootMetadata } from '@/lib/seo/metadata';
 import '@/styles/globals.css';
-
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -32,16 +33,11 @@ export function generateStaticParams() {
 }
 
 export const metadata: Metadata = {
-  title: `${APP_NAME} — Discover Verified Local Mobile Shops`,
-  description: APP_DESCRIPTION,
-  applicationName: APP_NAME,
+  ...defaultRootMetadata(),
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
     title: APP_NAME
-  },
-  formatDetection: {
-    telephone: false
   },
   icons: {
     icon: [
@@ -88,12 +84,14 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
         <ThemeProvider>
           <I18nProvider locale={locale} messages={messages}>
             <Navbar />
-            <main className='flex-1 min-w-0'>{children}</main>
+            <main id='main-content' className='flex-1 min-w-0'>
+              {children}
+            </main>
             <Footer />
           </I18nProvider>
-
-
         </ThemeProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

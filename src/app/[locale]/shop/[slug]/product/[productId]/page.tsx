@@ -1,60 +1,53 @@
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
+import { setRequestLocale } from 'next-intl/server';
 import { getPublicStoreProfile } from '@/features/stores/api/service';
-import { getStoreProductDetail } from '@/features/products/api/service';
+import { getStoreProductDetail, getStoreProducts } from '@/features/products/api/service';
 import { ProductDetailView } from '@/features/products/components/product-detail-view';
-import { absoluteProductImageUrl } from '@/constants/placeholders';
-import { formatEmpty } from '@/lib/formatters';
+import { buildProductMetadata } from '@/features/products/lib/product-metadata';
+import { buildProductStaticParams } from '@/features/products/lib/product-static-params';
+import { extractProductId, productPath, toProductKey } from '@/lib/seo/slug';
 import type { ProductPageProps } from '@/types/common';
 
+export const revalidate = 120;
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  return buildProductStaticParams();
+}
+
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
-  const { slug, productId } = await params;
-  const [store, product] = await Promise.all([
-    getPublicStoreProfile(slug),
-    getStoreProductDetail(slug, productId)
-  ]);
-
-  const productName = formatEmpty(product?.name, 'Product');
-  const storeName = formatEmpty(store?.displayName, 'Ronaq Store');
-  const title = product ? `${productName} — ${storeName}` : 'Product Details — Ronaq Store';
-  const description =
-    product?.description?.trim() ||
-    `View ${productName} at ${storeName}. Check price, PTA status, and order on WhatsApp.`;
-  const imageUrl = absoluteProductImageUrl(product?.images?.[0]?.url);
-
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      type: 'website',
-      images: [{ url: imageUrl, alt: productName }]
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-      images: [imageUrl]
-    }
-  };
+  const { locale, slug, productId } = await params;
+  return buildProductMetadata(locale, slug, productId);
 }
 
 export default async function ProductDetailPage({ params }: ProductPageProps) {
-  const { slug, productId } = await params;
+  const { locale, slug, productId } = await params;
+  setRequestLocale(locale);
+
   const [store, product] = await Promise.all([
     getPublicStoreProfile(slug),
     getStoreProductDetail(slug, productId)
   ]);
-
   if (!store || !product) notFound();
+
+  const canonicalKey = toProductKey(product.name, product.id);
+  if (productId !== canonicalKey && extractProductId(productId) === product.id) {
+    permanentRedirect(`/${locale}${productPath(slug, product.name, product.id)}`);
+  }
+
+  const relatedProducts = ((await getStoreProducts(slug, { limit: 12 }))?.items ?? [])
+    .filter((item) => item.id !== product.id)
+    .filter((item) => (product.categoryName ? item.categoryName === product.categoryName : true))
+    .slice(0, 4);
 
   return (
     <ProductDetailView
+      locale={locale}
       slug={slug}
-      storeName={store.displayName}
-      storePhone={store.phoneNumber}
+      store={store}
       product={product}
+      relatedProducts={relatedProducts}
     />
   );
 }

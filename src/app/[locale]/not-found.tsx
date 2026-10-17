@@ -1,25 +1,35 @@
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 
-export default function NotFound() {
-  const t = useTranslations();
+export default async function NotFound() {
+  const t = await getTranslations();
 
   return (
-    <div className='flex min-h-[60vh] flex-col items-center justify-center p-6 text-center space-y-4'>
+    <div className='flex min-h-[60vh] flex-col items-center justify-center p-6 text-center space-y-5'>
       <div className='flex h-16 w-16 items-center justify-center rounded-2xl bg-muted text-muted-foreground'>
         <Icons.info className='h-8 w-8' />
       </div>
-      <h2 className='text-2xl font-bold tracking-tight text-foreground'>
-        {t('stores.noShopsFound')}
-      </h2>
-      <Link href='/'>
-        <Button type='button' className='gap-2'>
-          <Icons.arrowLeft className='h-4 w-4' />
-          {t('nav.home')}
-        </Button>
-      </Link>
+      <div className='space-y-2 max-w-md'>
+        <h1 className='text-2xl font-bold tracking-tight text-foreground'>
+          {t('errors.notFoundTitle')}
+        </h1>
+        <p className='text-sm text-muted-foreground'>{t('errors.notFoundDescription')}</p>
+      </div>
+      <div className='flex flex-wrap items-center justify-center gap-3'>
+        <Link href='/'>
+          <Button type='button' className='gap-2'>
+            <Icons.arrowLeft className='h-4 w-4' />
+            {t('errors.backHome')}
+          </Button>
+        </Link>
+        <a href='#verified-shops'>
+          <Button type='button' variant='outline'>
+            {t('nav.stores')}
+          </Button>
+        </a>
+      </div>
     </div>
   );
 }

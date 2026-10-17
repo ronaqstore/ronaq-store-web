@@ -21,11 +21,25 @@ export async function StoreHeader({ store }: StoreHeaderProps) {
   const location = store.address
     ? `${store.address}${store.city ? `, ${store.city}` : ''}`
     : formatEmpty(store.city);
+  const banner = store.heroBannerUrl || store.bannerUrl;
+  const about = store.description || store.about;
 
   return (
     <div className='relative overflow-hidden border-b border-border/70 bg-gradient-to-b from-muted/30 via-background to-background'>
-      <div className='h-40 sm:h-52 w-full bg-gradient-to-r from-emerald-600/30 via-teal-500/20 to-sky-600/30 relative flex items-center justify-center overflow-hidden'>
-        <div className='absolute inset-0 bg-radial-gradient from-transparent to-background/90' />
+      <div className='relative flex h-40 w-full items-center justify-center overflow-hidden sm:h-52'>
+        {banner ? (
+          <SmartImage
+            src={banner}
+            alt={t('stores.bannerAlt', { store: formatEmpty(name) })}
+            fill
+            priority
+            className='object-cover'
+            sizes='100vw'
+          />
+        ) : (
+          <div className='absolute inset-0 bg-gradient-to-r from-emerald-600/30 via-teal-500/20 to-sky-600/30' />
+        )}
+        <div className='absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent' />
       </div>
 
       <div className='mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8'>
@@ -65,8 +79,8 @@ export async function StoreHeader({ store }: StoreHeaderProps) {
                 </span>
               </div>
 
-              <p className='text-xs sm:text-sm text-foreground/80 max-w-2xl pt-1 leading-relaxed'>
-                {formatEmpty(store.description)}
+              <p className='max-w-2xl pt-1 text-xs leading-relaxed text-foreground/80 sm:text-sm'>
+                {formatEmpty(about)}
               </p>
             </div>
           </div>

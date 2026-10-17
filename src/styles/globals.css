@@ -88,3 +88,24 @@
 .font-urdu {
   font-family: var(--font-urdu);
 }
+
+.hero-atmosphere {
+  background:
+    radial-gradient(ellipse at top, oklch(0.72 0.12 152 / 0.22), transparent 55%),
+    radial-gradient(ellipse at bottom right, oklch(0.7 0.08 220 / 0.18), transparent 50%),
+    linear-gradient(180deg, var(--background) 0%, oklch(0.97 0.01 152) 45%, var(--background) 100%);
+}
+
+.dark .hero-atmosphere {
+  background:
+    radial-gradient(ellipse at top, oklch(0.45 0.1 152 / 0.35), transparent 55%),
+    linear-gradient(180deg, var(--background), oklch(0.16 0.02 250));
+}
+
+.hero-grid {
+  background-image:
+    linear-gradient(to right, oklch(0.2 0.02 260 / 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, oklch(0.2 0.02 260 / 0.08) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+}

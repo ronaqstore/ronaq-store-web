@@ -125,6 +125,7 @@ export function StoreCatalogClient({
 
       <ProductGrid
         products={products}
+        storeSlug={store.slug}
         storeName={store.displayName}
         storePhone={store.phoneNumber}
         onSelectProduct={handleSelectProduct}

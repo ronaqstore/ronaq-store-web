@@ -36,12 +36,20 @@ export function StoreDiscoveryShell({ searchQuery: urlSearch, children }: StoreD
   return (
     <div>
       <StoreHero searchQuery={searchQuery} onSearchChange={setSearchQuery} />
-      <div className='mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 py-12 space-y-6'>
-        <div>
-          <h2 className='text-2xl font-bold tracking-tight text-foreground'>
-            {t('stores.allShops')}
-          </h2>
-          <p className='text-xs text-muted-foreground mt-0.5 inline-flex items-center gap-2 min-h-4'>
+      <section
+        id='verified-shops'
+        className='mx-auto max-w-[1600px] scroll-mt-24 px-4 py-14 sm:px-6 sm:py-16 lg:px-8'
+      >
+        <div className='mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between'>
+          <div>
+            <h2 className='text-2xl font-bold tracking-tight text-foreground sm:text-3xl'>
+              {t('stores.allShops')}
+            </h2>
+            <p className='mt-1 max-w-xl text-sm text-muted-foreground'>
+              {t('stores.sectionSubtitle')}
+            </p>
+          </div>
+          <p className='inline-flex min-h-5 items-center gap-2 text-xs text-muted-foreground'>
             {isPending ? (
               <>
                 <Spinner className='size-3.5 text-primary' />
@@ -51,7 +59,7 @@ export function StoreDiscoveryShell({ searchQuery: urlSearch, children }: StoreD
           </p>
         </div>
         {children}
-      </div>
+      </section>
     </div>
   );
 }

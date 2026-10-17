@@ -85,7 +85,7 @@ export function Footer() {
                 <a
                   href={`${ADMIN_BASE_URL}/login`}
                   target='_blank'
-                  rel='noopener noreferrer'
+                  rel='noopener noreferrer nofollow'
                   className='text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1.5'
                 >
                   <Icons.arrowRight className='h-3.5 w-3.5 text-muted-foreground/70 shrink-0' />

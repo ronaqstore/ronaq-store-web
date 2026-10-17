@@ -5,6 +5,7 @@ import type { ProductGridProps } from '@/types/product';
 
 export function ProductGrid({
   products,
+  storeSlug,
   storeName,
   storePhone,
   onSelectProduct
@@ -17,20 +18,18 @@ export function ProductGrid({
         <div className='flex h-14 w-14 items-center justify-center rounded-2xl bg-muted text-muted-foreground'>
           <Icons.mobile className='h-7 w-7' />
         </div>
-        <h3 className='font-semibold text-foreground text-base'>
-          {t('catalog.noProducts')}
-        </h3>
+        <h3 className='font-semibold text-foreground text-base'>{t('catalog.noProducts')}</h3>
       </div>
     );
   }
 
   return (
     <div className='grid grid-cols-1 min-[480px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6'>
-
       {products.map((product, index) => (
         <ProductCard
           key={product.id}
           product={product}
+          storeSlug={storeSlug}
           storeName={storeName}
           storePhone={storePhone}
           onSelectProduct={onSelectProduct}

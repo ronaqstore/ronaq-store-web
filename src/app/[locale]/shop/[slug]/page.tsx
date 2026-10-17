@@ -1,60 +1,41 @@
 import type { Metadata } from 'next';
-import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
-import { getPublicStoreProfile } from '@/features/stores/api/service';
-import { StoreHeader } from '@/features/stores/components/store-header';
-import { StoreCatalogSection } from '@/features/stores/components/store-catalog-section';
-import { StoreCatalogSkeleton } from '@/features/stores/components/store-catalog-skeleton';
-import type { CatalogSearchParams, StorePageProps } from '@/types/common';
-import type { StoreCatalogFilters } from '@/types/store';
+import { setRequestLocale } from 'next-intl/server';
+import { getPublicStoreProfile, getPublicStores } from '@/features/stores/api/service';
+import { ShopPageView } from '@/features/stores/components/shop-page-view';
+import { buildShopMetadata } from '@/features/stores/lib/shop-metadata';
+import { parseCatalogFilters } from '@/features/stores/lib/parse-catalog-filters';
+import { locales } from '@/i18n/request';
+import type { StorePageProps } from '@/types/common';
 
-export async function generateMetadata({ params }: StorePageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const store = await getPublicStoreProfile(slug);
-  if (!store) {
-    return { title: 'Shop — Ronaq Store' };
-  }
+export const revalidate = 120;
+export const dynamicParams = true;
 
-  const title = `${store.displayName} — Ronaq Store`;
-  const description = `Shop mobile phones, chargers and accessories at ${store.displayName} in ${store.city}. View live prices and chat on WhatsApp.`;
-
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description
-    }
-  };
+export async function generateStaticParams() {
+  const result = await getPublicStores({ limit: 50, page: 1 });
+  const stores = result?.items ?? [];
+  return locales.flatMap((locale) =>
+    stores.map((store) => ({
+      locale,
+      slug: store.slug
+    }))
+  );
 }
 
-function parseCatalogFilters(searchParams: CatalogSearchParams): StoreCatalogFilters {
-  return {
-    q: searchParams.q?.trim() ?? '',
-    category: searchParams.category?.trim() ?? '',
-    inStock: searchParams.inStock === '1' || searchParams.inStock === 'true'
-  };
+export async function generateMetadata({ params, searchParams }: StorePageProps): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const resolvedSearch = await searchParams;
+  return buildShopMetadata(locale, slug, resolvedSearch);
 }
 
 export default async function ShopPage({ params, searchParams }: StorePageProps) {
-  const { slug } = await params;
+  const { locale, slug } = await params;
+  setRequestLocale(locale);
   if (!slug) notFound();
 
-  const resolvedSearchParams = await searchParams;
-  const filters = parseCatalogFilters(resolvedSearchParams);
-
+  const filters = parseCatalogFilters(await searchParams);
   const store = await getPublicStoreProfile(slug);
   if (!store) notFound();
 
-  return (
-    <div>
-      <StoreHeader store={store} />
-      <Suspense
-        key={`${filters.q}|${filters.category}|${filters.inStock}`}
-        fallback={<StoreCatalogSkeleton />}
-      >
-        <StoreCatalogSection store={store} filters={filters} />
-      </Suspense>
-    </div>
-  );
+  return <ShopPageView locale={locale} store={store} filters={filters} />;
 }

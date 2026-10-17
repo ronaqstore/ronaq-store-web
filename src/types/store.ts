@@ -11,12 +11,13 @@ export interface StoreListItem {
   slug: string;
   displayName: string;
   description: string | null;
+  about?: string | null;
   heroBannerUrl: string | null;
+  bannerUrl?: string | null;
   logoUrl: string | null;
   productCount?: number;
   totalProducts?: number;
 }
-
 
 export interface StoreProfile {
   id: string;
@@ -28,8 +29,10 @@ export interface StoreProfile {
   phoneNumber: string;
   whatsappNumber: string | null;
   description: string | null;
+  about?: string | null;
   logoUrl: string | null;
   heroBannerUrl: string | null;
+  bannerUrl?: string | null;
   googleMapsUrl: string | null;
   openingHours: string | null;
 }
@@ -82,6 +85,12 @@ export interface StoreCatalogClientProps {
 }
 
 export interface StoreCatalogSectionProps {
+  store: StoreProfile;
+  filters: StoreCatalogFilters;
+}
+
+export interface ShopPageViewProps {
+  locale: string;
   store: StoreProfile;
   filters: StoreCatalogFilters;
 }

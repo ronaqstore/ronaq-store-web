@@ -13,41 +13,52 @@ export function Navbar() {
   const t = useTranslations();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const closeMobile = () => {
+    setMobileOpen(false);
+  };
+
+  const toggleMobile = () => {
+    setMobileOpen((open) => !open);
+  };
+
   return (
-    <header className='sticky top-0 z-40 w-full border-b border-border/70 bg-background/80 backdrop-blur-md pt-[env(safe-area-inset-top)]'>
-      <div className='mx-auto flex h-14 min-[390px]:h-16 max-w-[1600px] items-center justify-between px-3 min-[390px]:px-4 sm:px-6 lg:px-8'>
-        <div className='flex items-center gap-6'>
-          <Link href='/' className='flex items-center gap-2.5 group'>
-            <div className='flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm transition-transform group-hover:scale-105'>
+    <header className='sticky top-0 z-40 w-full border-b border-border/60 bg-background/75 pt-[env(safe-area-inset-top)] backdrop-blur-xl'>
+      <div className='mx-auto flex h-14 max-w-[1600px] items-center justify-between px-3 min-[390px]:h-16 min-[390px]:px-4 sm:px-6 lg:px-8'>
+        <div className='flex items-center gap-8'>
+          <Link href='/' className='group flex items-center gap-2.5'>
+            <div className='flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm transition-transform duration-300 group-hover:scale-105'>
               <Icons.store className='h-5 w-5' />
             </div>
-            <div className='flex flex-col'>
-              <span className='text-lg font-bold tracking-tight text-foreground'>
-                {t('common.appName')}
-              </span>
-            </div>
+            <span className='text-lg font-bold tracking-tight text-foreground'>
+              {t('common.appName')}
+            </span>
           </Link>
 
-          <nav className='hidden md:flex items-center gap-5 text-sm font-medium'>
+          <nav className='hidden items-center gap-6 text-sm font-medium md:flex'>
             <Link
               href='/'
-              className='text-muted-foreground hover:text-foreground transition-colors'
+              className='text-muted-foreground transition-colors hover:text-foreground'
             >
               {t('nav.home')}
             </Link>
+            <a
+              href='#verified-shops'
+              className='text-muted-foreground transition-colors hover:text-foreground'
+            >
+              {t('nav.stores')}
+            </a>
           </nav>
         </div>
 
-        <div className='hidden md:flex items-center gap-3'>
+        <div className='hidden items-center gap-2 md:flex'>
           <LanguageSwitcher />
           <ThemeToggle />
-
           <a
             href={`${ADMIN_BASE_URL}/login`}
             target='_blank'
-            rel='noopener noreferrer'
+            rel='noopener noreferrer nofollow'
           >
-            <Button type='button' size='sm' className='shadow-sm'>
+            <Button type='button' size='sm' className='ms-1 shadow-sm'>
               {t('nav.login')}
             </Button>
           </a>
@@ -59,7 +70,7 @@ export function Navbar() {
             type='button'
             variant='ghost'
             size='icon'
-            onClick={() => setMobileOpen(!mobileOpen)}
+            onClick={toggleMobile}
             aria-label={t('aria.toggleNavigation')}
           >
             {mobileOpen ? <Icons.close className='h-5 w-5' /> : <Icons.menu className='h-5 w-5' />}
@@ -68,33 +79,28 @@ export function Navbar() {
       </div>
 
       {mobileOpen ? (
-        <div className='border-b border-border bg-background px-4 py-4 md:hidden space-y-4 animate-in slide-in-from-top-2'>
+        <div className='animate-in slide-in-from-top-2 space-y-4 border-b border-border bg-background px-4 py-4 md:hidden'>
           <div className='flex flex-col space-y-3 text-sm font-medium'>
-            <Link
-              href='/'
-              onClick={() => setMobileOpen(false)}
-              className='text-foreground py-1'
-            >
+            <Link href='/' onClick={closeMobile} className='py-1 text-foreground'>
               {t('nav.home')}
             </Link>
-          </div>
-
-          <div className='pt-2 border-t border-border flex items-center justify-between'>
-            <LanguageSwitcher />
-          </div>
-
-          <div className='pt-2 flex flex-col gap-2'>
-            <a
-              href={`${ADMIN_BASE_URL}/login`}
-              target='_blank'
-              rel='noopener noreferrer'
-              className='w-full'
-            >
-              <Button type='button' className='w-full'>
-                {t('nav.login')}
-              </Button>
+            <a href='#verified-shops' onClick={closeMobile} className='py-1 text-foreground'>
+              {t('nav.stores')}
             </a>
           </div>
+          <div className='flex items-center justify-between border-t border-border pt-3'>
+            <LanguageSwitcher />
+          </div>
+          <a
+            href={`${ADMIN_BASE_URL}/login`}
+            target='_blank'
+            rel='noopener noreferrer nofollow'
+            className='block w-full'
+          >
+            <Button type='button' className='w-full'>
+              {t('nav.login')}
+            </Button>
+          </a>
         </div>
       ) : null}
     </header>

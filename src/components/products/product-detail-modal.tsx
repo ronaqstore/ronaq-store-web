@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { SmartImage } from '@/components/media/smart-image';
 import { productImageSrc } from '@/constants/placeholders';
 import { formatPrice, buildWhatsAppLink, formatEmpty } from '@/lib/formatters';
+import { StockBadge } from '@/components/products/stock-badge';
 import type { ProductDetailModalProps } from '@/types/product';
 
 export function ProductDetailModal({
@@ -19,7 +20,9 @@ export function ProductDetailModal({
 
   if (!product) return null;
 
-  const formattedPrice = formatPrice(product.retailPrice);
+  const formattedPrice = product.contactForPrice
+    ? t('catalog.contactForPrice')
+    : formatPrice(product.retailPrice);
   const whatsappMessage = t('whatsapp.inquireProductShort', {
     storeName,
     productName: product.name,
@@ -59,13 +62,7 @@ export function ProductDetailModal({
               {product.ptaStatus === 'APPROVED' ? (
                 <Badge variant='success'>{t('catalog.ptaApproved')}</Badge>
               ) : null}
-              {product.inStock ? (
-                <Badge variant='outline' className='text-emerald-600 dark:text-emerald-400 border-emerald-500/30'>
-                  {t('catalog.inStock')}
-                </Badge>
-              ) : (
-                <Badge variant='destructive'>{t('catalog.outOfStock')}</Badge>
-              )}
+              <StockBadge availability={product.availability} stockCount={product.stockCount} />
             </div>
 
             <h2 className='text-2xl font-bold text-foreground'>{formatEmpty(product.name)}</h2>
