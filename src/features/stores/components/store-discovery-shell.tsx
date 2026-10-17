@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
-import { Spinner } from '@/components/ui/spinner';
+import { Skeleton } from '@/components/ui/skeleton';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { StoreHero } from './store-hero';
@@ -49,14 +49,14 @@ export function StoreDiscoveryShell({ searchQuery: urlSearch, children }: StoreD
               {t('stores.sectionSubtitle')}
             </p>
           </div>
-          <p className='inline-flex min-h-5 items-center gap-2 text-xs text-muted-foreground'>
+          <div className='inline-flex min-h-5 items-center gap-2' aria-busy={isPending}>
             {isPending ? (
               <>
-                <Spinner className='size-3.5 text-primary' />
-                {t('common.loading')}
+                <Skeleton className='h-3 w-16' />
+                <Skeleton className='h-3 w-10' />
               </>
             ) : null}
-          </p>
+          </div>
         </div>
         {children}
       </section>

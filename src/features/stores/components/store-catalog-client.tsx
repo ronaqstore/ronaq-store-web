@@ -5,7 +5,7 @@ import { useEffect, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import { ProductFilters } from '@/components/products/product-filters';
 import { ProductGrid } from '@/components/products/product-grid';
-import { Spinner } from '@/components/ui/spinner';
+import { Skeleton } from '@/components/ui/skeleton';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import type { StoreCatalogClientProps, StoreCatalogFilters } from '@/types/store';
@@ -114,9 +114,9 @@ export function StoreCatalogClient({
 
       <div className='flex items-center justify-between text-xs text-muted-foreground'>
         {isPending ? (
-          <span className='inline-flex items-center gap-2'>
-            <Spinner className='size-3.5 text-primary' />
-            {t('common.loading')}
+          <span className='inline-flex items-center gap-2' aria-busy='true'>
+            <Skeleton className='h-3 w-24' />
+            <Skeleton className='h-3 w-12' />
           </span>
         ) : (
           <span>{t('stores.productsAvailable', { count: products.length })}</span>
