@@ -223,12 +223,27 @@ if (fs.existsSync(srcRoot)) {
         }
 
         if (name === "script" && !relPath.endsWith("src/app/layout.tsx")) {
-          r.addViolation(
-            relPath,
-            line,
-            "Forbidden raw `<script>` tag — use Next.js `<Script>` from `next/script` with an explicit loading strategy",
-            { fix: "Replace with `<Script>` from `next/script`." }
+          const typeAttr = (p.node.attributes || []).find(
+            (attr) =>
+              attr.type === "JSXAttribute" &&
+              attr.name &&
+              attr.name.name === "type" &&
+              attr.value &&
+              ((attr.value.type === "StringLiteral" &&
+                attr.value.value === "application/ld+json") ||
+                (attr.value.type === "JSXExpressionContainer" &&
+                  attr.value.expression &&
+                  attr.value.expression.type === "StringLiteral" &&
+                  attr.value.expression.value === "application/ld+json"))
           );
+          if (!typeAttr) {
+            r.addViolation(
+              relPath,
+              line,
+              "Forbidden raw `<script>` tag — use Next.js `<Script>` from `next/script` with an explicit loading strategy",
+              { fix: "Replace with `<Script>` from `next/script`." }
+            );
+          }
         }
 
         if (name === "head" || name === "title") {

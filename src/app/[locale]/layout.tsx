@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Poppins } from 'next/font/google';
+import localFont from 'next/font/local';
 import { notFound } from 'next/navigation';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
@@ -19,13 +19,16 @@ import {
 import { defaultRootMetadata } from '@/lib/seo/metadata';
 import '@/styles/globals.css';
 
-const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['400', '600', '700'],
+const poppins = localFont({
+  src: [
+    { path: '../../styles/fonts/poppins-400.woff2', weight: '400', style: 'normal' },
+    { path: '../../styles/fonts/poppins-600.woff2', weight: '600', style: 'normal' },
+    { path: '../../styles/fonts/poppins-700.woff2', weight: '700', style: 'normal' }
+  ],
   variable: '--font-poppins',
   display: 'swap',
   preload: true,
-  adjustFontFallback: true
+  adjustFontFallback: 'Arial'
 });
 
 export function generateStaticParams() {
