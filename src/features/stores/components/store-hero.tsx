@@ -42,14 +42,14 @@ export function StoreHero({ searchQuery, onSearchChange }: StoreHeroProps) {
           </p>
 
           <div className='animate-in fade-in slide-in-from-bottom-4 mx-auto mt-8 max-w-2xl duration-700 delay-200'>
-            <div className='relative flex items-center rounded-2xl border border-border/80 bg-card/90 shadow-[0_20px_50px_-24px_oklch(0.4_0.08_152/_0.45)] backdrop-blur-md'>
-              <Icons.search className='pointer-events-none absolute start-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground' />
+            <div className='relative flex items-center overflow-hidden rounded-2xl border border-border bg-card shadow-sm'>
+              <Icons.search className='pointer-events-none absolute start-4 top-1/2 z-10 h-5 w-5 -translate-y-1/2 text-muted-foreground' />
               <Input
                 type='search'
                 value={searchQuery}
                 onChange={handleSearchChange}
                 placeholder={t('hero.searchPlaceholder')}
-                className='h-14 w-full rounded-2xl border-0 bg-transparent ps-12 pe-12 text-base shadow-none focus-visible:ring-0'
+                className='h-14 w-full rounded-none border-0 bg-transparent ps-12 pe-12 text-base shadow-none outline-none ring-0 ring-offset-0 appearance-none focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden'
               />
               {searchQuery ? (
                 <Button
@@ -57,7 +57,7 @@ export function StoreHero({ searchQuery, onSearchChange }: StoreHeroProps) {
                   variant='ghost'
                   size='sm'
                   onClick={clearSearch}
-                  className='absolute end-3 top-1/2 h-8 w-8 -translate-y-1/2 rounded-full p-0'
+                  className='absolute end-3 top-1/2 z-10 h-8 w-8 -translate-y-1/2 rounded-full p-0'
                   aria-label={t('aria.clearSearch')}
                 >
                   <Icons.close className='h-4 w-4' />
