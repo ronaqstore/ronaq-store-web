@@ -27,31 +27,37 @@ export function ImageLightbox({ src, alt, open, onOpenChange }: ImageLightboxPro
 
   if (!open || !isPreviewableImageSrc(src)) return null;
 
+  const handleClose = () => {
+    onOpenChange(false);
+  };
+
   return (
     <div
       className='fixed inset-0 z-[80] flex items-center justify-center bg-background/90 p-4 backdrop-blur-sm animate-in fade-in'
       role='dialog'
       aria-modal='true'
       aria-label={alt}
-      onClick={() => onOpenChange(false)}
     >
+      <button
+        type='button'
+        className='absolute inset-0 cursor-zoom-out border-0 bg-transparent'
+        aria-label={t('aria.closeModal')}
+        onClick={handleClose}
+      />
       <Button
         type='button'
         variant='ghost'
         size='icon'
         className='absolute end-4 top-4 z-10 h-10 w-10 rounded-full bg-background/80'
-        onClick={() => onOpenChange(false)}
+        onClick={handleClose}
         aria-label={t('aria.closeModal')}
       >
         <Icons.close className='h-5 w-5' />
       </Button>
 
-      <div
-        className='relative h-[min(90vh,900px)] w-full max-w-5xl'
-        onClick={(event) => event.stopPropagation()}
-      >
+      <div className='relative z-10 h-[min(90vh,900px)] w-full max-w-5xl'>
         <SmartImage
-          src={src!}
+          src={src.trim()}
           alt={alt}
           fill
           priority

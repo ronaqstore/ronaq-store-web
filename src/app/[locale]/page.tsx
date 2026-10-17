@@ -7,10 +7,9 @@ import { StoreDiscoverySkeleton } from '@/features/stores/components/store-disco
 import { JsonLd } from '@/components/seo/json-ld';
 import { faqPageJsonLd, homeGraphJsonLd } from '@/lib/seo/json-ld';
 import { buildPageMetadata, isSearchNoIndex } from '@/lib/seo/metadata';
-import { PUBLIC_REVALIDATE_SECONDS } from '@/constants/site';
 import type { HomePageProps } from '@/types/common';
 
-export const revalidate = PUBLIC_REVALIDATE_SECONDS;
+export const revalidate = 30;
 
 export async function generateMetadata({ params, searchParams }: HomePageProps): Promise<Metadata> {
   const { locale } = await params;

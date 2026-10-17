@@ -28,6 +28,14 @@ export function SmartImage({
   const srcString = typeof activeSrc === 'string' ? activeSrc : '';
   const unoptimized = shouldSkipImageOptimization(srcString);
 
+  const handleError: NonNullable<SmartImageProps['onError']> = (event) => {
+    if (fallbackSrc && !failed && srcString !== fallbackSrc) {
+      setFailed(true);
+      setCurrentSrc(fallbackSrc);
+    }
+    onError?.(event);
+  };
+
   return (
     <Image
       src={activeSrc}
@@ -36,13 +44,7 @@ export function SmartImage({
       quality={unoptimized ? undefined : quality}
       loading={priority ? undefined : (loading ?? 'lazy')}
       unoptimized={unoptimized}
-      onError={(event) => {
-        if (fallbackSrc && !failed && srcString !== fallbackSrc) {
-          setFailed(true);
-          setCurrentSrc(fallbackSrc);
-        }
-        onError?.(event);
-      }}
+      onError={handleError}
       {...props}
     />
   );

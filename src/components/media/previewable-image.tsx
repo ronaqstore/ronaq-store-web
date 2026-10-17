@@ -20,7 +20,13 @@ export function PreviewableImage({
   const t = useTranslations();
   const [open, setOpen] = useState(false);
   const canPreview = isPreviewableImageSrc(src);
-  const displaySrc = canPreview ? src!.trim() : (fallbackSrc ?? src ?? '');
+  const displaySrc = canPreview ? src.trim() : (fallbackSrc ?? src ?? '');
+
+  const handleOpenPreview = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setOpen(true);
+  };
 
   if (!canPreview) {
     return (
@@ -46,11 +52,7 @@ export function PreviewableImage({
           'relative block w-full overflow-hidden border-0 bg-transparent p-0 cursor-zoom-in',
           className
         )}
-        onClick={(event) => {
-          event.preventDefault();
-          event.stopPropagation();
-          setOpen(true);
-        }}
+        onClick={handleOpenPreview}
         aria-label={t('aria.previewImage')}
       >
         <SmartImage
