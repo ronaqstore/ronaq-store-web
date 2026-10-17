@@ -109,7 +109,7 @@ export function defaultRootMetadata(): Metadata {
   return {
     metadataBase: rootMetadataBase(),
     title: {
-      default: `${APP_NAME} — Discover Verified Local Mobile Shops`,
+      default: `${APP_NAME} — Discover Local Mobile Shops`,
       template: `%s | ${APP_NAME}`
     },
     description: APP_DESCRIPTION,

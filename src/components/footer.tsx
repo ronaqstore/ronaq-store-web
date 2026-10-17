@@ -126,12 +126,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className='mt-12 pt-8 border-t border-border/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground'>
-          <div className='flex items-center gap-2'>
-            <Icons.shieldCheck className='h-4 w-4 text-primary' />
-            <span>{t('footer.verifiedBadge')}</span>
-          </div>
-
+        <div className='mt-12 pt-8 border-t border-border/80 flex flex-col sm:flex-row items-center justify-center sm:justify-end gap-4 text-xs text-muted-foreground'>
           <p className='text-center sm:text-end'>
             &copy; 2026 {t('common.appName')}. {t('footer.allRightsReserved')}
           </p>

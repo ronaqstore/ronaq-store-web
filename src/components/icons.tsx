@@ -28,7 +28,6 @@ import {
   IconChevronRight,
   IconChevronDown,
   IconSparkles,
-  IconRosetteDiscountCheck,
   IconShieldCheck,
   IconRefresh,
   IconLoader2
@@ -64,7 +63,6 @@ export const Icons = {
   info: IconInfoCircle,
   warning: IconAlertTriangle,
   sparkles: IconSparkles,
-  badgeCheck: IconRosetteDiscountCheck,
   shieldCheck: IconShieldCheck,
   refresh: IconRefresh,
   spinner: IconLoader2

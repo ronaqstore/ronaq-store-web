@@ -19,7 +19,7 @@ export function StoreHero({ searchQuery, onSearchChange }: StoreHeroProps) {
   };
 
   const scrollToShops = () => {
-    document.getElementById('verified-shops')?.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('shops')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (

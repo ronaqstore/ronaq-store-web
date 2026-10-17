@@ -8,7 +8,6 @@
     "retry": "Try again",
     "viewAll": "View all",
     "close": "Close",
-    "verified": "Verified Store",
     "phone": "Phone",
     "address": "Address",
     "city": "City"
@@ -22,7 +21,7 @@
   },
   "hero": {
     "title": "Find trusted mobile shops near you",
-    "subtitle": "Live stock, PTA status, and WhatsApp contact — from verified shops across Pakistan.",
+    "subtitle": "Live stock, PTA status, and WhatsApp contact — from local shops across Pakistan.",
     "searchPlaceholder": "Search shops, cities, or areas…",
     "popularCities": "Popular Cities:",
     "ctaExplore": "Browse shops",
@@ -31,7 +30,7 @@
     "trustWhatsapp": "Direct WhatsApp"
   },
   "stores": {
-    "allShops": "Verified shops",
+    "allShops": "Local shops",
     "sectionSubtitle": "Only online stores appear here — toggled off shops stay private.",
     "shopsFound": "{count} shops found",
     "noShopsFound": "No shops found matching your search.",
@@ -77,21 +76,20 @@
     "shopCatalogHeading": "{store} product catalog"
   },
   "footer": {
-    "tagline": "Discover verified local mobile and tech shops across Pakistan. Compare live stock, check PTA status, and order directly on WhatsApp.",
+    "tagline": "Discover local mobile and tech shops across Pakistan. Compare live stock, check PTA status, and order directly on WhatsApp.",
     "ownersTitle": "Shop Owners",
     "registerDukan": "Open Your Store",
     "login": "Login to Portal",
     "helpTitle": "Help & Support",
     "whatsappSupport": "WhatsApp Helpdesk",
     "directCall": "+92 300 1234567",
-    "verifiedBadge": "100% Verified Local Stores",
     "allRightsReserved": "All rights reserved."
   },
   "metadata": {
     "title": "Ronaq Store — Pakistan's Mobile & Electronics Store Directory",
     "description": "Find local mobile and electronics shops in Lahore, Karachi, Islamabad and all cities of Pakistan. View stock, phones, chargers, and accessories.",
-    "homeTitle": "Find Verified Mobile Shops in Pakistan",
-    "homeDescription": "Browse verified smartphone shops across Pakistan. Check live stock, PTA status, chargers and accessories — then order on WhatsApp.",
+    "homeTitle": "Find Mobile Shops in Pakistan",
+    "homeDescription": "Browse smartphone shops across Pakistan. Check live stock, PTA status, chargers and accessories — then order on WhatsApp.",
     "shopTitle": "{store} Mobile Shop in {city}",
     "shopDescription": "Shop phones and accessories at {store} in {city}. View live prices, stock status, and chat on WhatsApp via Ronaq Store.",
     "shopFallbackTitle": "Shop Not Found",
@@ -103,9 +101,9 @@
   },
   "faq": {
     "q1": "What is Ronaq Store?",
-    "a1": "Ronaq Store is a directory of verified local mobile and electronics shops across Pakistan where you can browse stock and contact shops on WhatsApp.",
+    "a1": "Ronaq Store is a directory of local mobile and electronics shops across Pakistan where you can browse stock and contact shops on WhatsApp.",
     "q2": "Are the shops verified?",
-    "a2": "Yes. Only verified shops that keep their store online appear in the public directory.",
+    "a2": "Yes. Only shops that pass review and keep their store online appear in the public directory.",
     "q3": "How do I buy a product?",
     "a3": "Open a shop or product page, then use Order via WhatsApp to message the shop directly about price and availability."
   },

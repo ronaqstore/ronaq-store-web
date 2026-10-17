@@ -42,7 +42,7 @@ export function Navbar() {
               {t('nav.home')}
             </Link>
             <a
-              href='#verified-shops'
+              href='#shops'
               className='text-muted-foreground transition-colors hover:text-foreground'
             >
               {t('nav.stores')}
@@ -84,7 +84,7 @@ export function Navbar() {
             <Link href='/' onClick={closeMobile} className='py-1 text-foreground'>
               {t('nav.home')}
             </Link>
-            <a href='#verified-shops' onClick={closeMobile} className='py-1 text-foreground'>
+            <a href='#shops' onClick={closeMobile} className='py-1 text-foreground'>
               {t('nav.stores')}
             </a>
           </div>

@@ -24,7 +24,7 @@ export default async function NotFound() {
             {t('errors.backHome')}
           </Button>
         </Link>
-        <a href='#verified-shops'>
+        <a href='#shops'>
           <Button type='button' variant='outline'>
             {t('nav.stores')}
           </Button>

@@ -50,12 +50,9 @@ export async function StoreCard({ store, priority = false }: StoreCardProps) {
             />
           </div>
           <div className='min-w-0 pb-0.5'>
-            <div className='flex items-center gap-1.5'>
-              <h3 className='truncate text-lg font-bold tracking-tight text-foreground'>
-                {formatEmpty(name)}
-              </h3>
-              <Icons.badgeCheck className='h-4 w-4 shrink-0 text-primary' />
-            </div>
+            <h3 className='truncate text-lg font-bold tracking-tight text-foreground'>
+              {formatEmpty(name)}
+            </h3>
             <p className='flex items-center gap-1 text-xs text-muted-foreground'>
               <Icons.mapPin className='h-3 w-3 shrink-0' />
               <span className='truncate'>{formatEmpty(store.city)}</span>

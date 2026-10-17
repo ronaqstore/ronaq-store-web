@@ -1,7 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { SmartImage } from '@/components/media/smart-image';
 import { shopLogoSrc } from '@/constants/placeholders';
 import { buildWhatsAppLink, formatEmpty, formatPhone } from '@/lib/formatters';
@@ -57,15 +56,9 @@ export async function StoreHeader({ store }: StoreHeaderProps) {
             </div>
 
             <div className='space-y-1.5'>
-              <div className='flex flex-wrap items-center gap-2'>
-                <h1 className='text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight'>
-                  {formatEmpty(store.displayName || store.name)}
-                </h1>
-                <Badge variant='success' className='gap-1 text-xs'>
-                  <Icons.badgeCheck className='h-3.5 w-3.5' />
-                  {t('common.verified')}
-                </Badge>
-              </div>
+              <h1 className='text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight'>
+                {formatEmpty(store.displayName || store.name)}
+              </h1>
 
               <div className='flex flex-wrap items-center gap-x-4 gap-y-1 text-xs sm:text-sm text-muted-foreground'>
                 <span className='flex items-center gap-1'>
