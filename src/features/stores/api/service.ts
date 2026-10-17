@@ -5,6 +5,9 @@ import type {
   PaginatedStoresResponse,
   StoreProfile
 } from '@/types/store';
+import type { PublicFetchCache } from '@/types/common';
+
+const STORES_LIST_CACHE: PublicFetchCache = { cache: 'no-store' };
 
 export async function getPublicStores(
   query: StoreListQuery = {}
@@ -16,7 +19,7 @@ export async function getPublicStores(
   if (query.limit) params.set('limit', String(query.limit));
 
   const qs = params.toString() ? `?${params.toString()}` : '';
-  return publicApiRequest<PaginatedStoresResponse>(`stores${qs}`);
+  return publicApiRequest<PaginatedStoresResponse>(`stores${qs}`, STORES_LIST_CACHE);
 }
 
 export const getPublicStoreProfile = cache(async (slug: string): Promise<StoreProfile | null> => {

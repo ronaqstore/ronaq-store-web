@@ -1,7 +1,12 @@
 import { API_BASE_URL } from '@/constants/api';
-import type { ApiResponse } from '@/types/common';
+import type { ApiResponse, PublicFetchCache } from '@/types/common';
 
-export async function publicApiRequest<T>(endpoint: string): Promise<T | null> {
+const DEFAULT_CACHE: PublicFetchCache = { revalidate: 120 };
+
+export async function publicApiRequest<T>(
+  endpoint: string,
+  cache: PublicFetchCache = DEFAULT_CACHE
+): Promise<T | null> {
   if (!API_BASE_URL) return null;
 
   try {
@@ -12,7 +17,9 @@ export async function publicApiRequest<T>(endpoint: string): Promise<T | null> {
         'Content-Type': 'application/json',
         Accept: 'application/json'
       },
-      next: { revalidate: 120 }
+      ...('cache' in cache
+        ? { cache: cache.cache }
+        : { next: { revalidate: cache.revalidate } })
     });
 
     if (!response.ok) {
