@@ -82,7 +82,7 @@
     "login": "Login to Portal",
     "helpTitle": "Help & Support",
     "whatsappSupport": "WhatsApp Helpdesk",
-    "directCall": "+92 300 1234567",
+    "directCall": "+92 3029825213",
     "allRightsReserved": "All rights reserved."
   },
   "metadata": {
@@ -119,6 +119,7 @@
     "toggleNavigation": "Toggle navigation",
     "toggleTheme": "Toggle theme",
     "closeModal": "Close modal",
+    "previewImage": "View larger image",
     "clearSearch": "Clear search",
     "directions": "Directions",
     "whatsapp": "Chat on WhatsApp",

@@ -43,10 +43,5 @@ export function buildWhatsAppLink(rawPhone?: string | null, message = ''): strin
 }
 
 export function resolveStoreWhatsAppNumber(store: StoreWhatsAppContact): string {
-  return (
-    store.whatsappNumber?.trim() ||
-    store.phoneNumber?.trim() ||
-    store.phone?.trim() ||
-    ''
-  );
+  return store.whatsappNumber?.trim() || '';
 }

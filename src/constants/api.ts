@@ -23,7 +23,7 @@ export const SOCIAL_URLS = {
   facebook: 'https://web.facebook.com/ronaqstores'
 } as const;
 
-export const SUPPORT_PHONE = '+92 300 1234567';
+export const SUPPORT_PHONE = '+92 3029825213';
 
 export const SUPPORT_PHONE_TEL = 'tel:+923001234567';
 

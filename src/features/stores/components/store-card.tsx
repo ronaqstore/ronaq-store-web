@@ -4,7 +4,8 @@ import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { SmartImage } from '@/components/media/smart-image';
-import { shopLogoSrc } from '@/constants/placeholders';
+import { PreviewableImage } from '@/components/media/previewable-image';
+import { PLACEHOLDER_SHOP_LOGO } from '@/constants/placeholders';
 import { buildWhatsAppLink, formatEmpty, resolveStoreWhatsAppNumber } from '@/lib/formatters';
 import type { StoreCardProps } from '@/types/store';
 
@@ -39,16 +40,15 @@ export async function StoreCard({ store, priority = false }: StoreCardProps) {
         <div className='absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent' />
 
         <div className='absolute bottom-3 start-3 end-3 flex items-end gap-3'>
-          <div className='relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-border/80 bg-background shadow-md'>
-            <SmartImage
-              src={shopLogoSrc(store.logoUrl)}
-              alt={formatEmpty(name)}
-              fill
-              priority={priority}
-              className='object-cover'
-              sizes='56px'
-            />
-          </div>
+          <PreviewableImage
+            src={store.logoUrl}
+            alt={formatEmpty(name)}
+            priority={priority}
+            className='relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-border/80 bg-background shadow-md'
+            imageClassName='object-cover'
+            sizes='56px'
+            fallbackSrc={PLACEHOLDER_SHOP_LOGO}
+          />
           <div className='min-w-0 pb-0.5'>
             <h3 className='truncate text-lg font-bold tracking-tight text-foreground'>
               {formatEmpty(name)}
@@ -72,7 +72,9 @@ export async function StoreCard({ store, priority = false }: StoreCardProps) {
           {t('stores.productsAvailable', { count: productCount })}
         </Badge>
 
-        <div className='mt-auto grid grid-cols-2 gap-2 pt-1'>
+        <div
+          className={`mt-auto grid gap-2 pt-1 ${whatsappHref ? 'grid-cols-2' : 'grid-cols-1'}`}
+        >
           {whatsappHref ? (
             <a href={whatsappHref} target='_blank' rel='noopener noreferrer' className='w-full'>
               <Button
@@ -85,12 +87,7 @@ export async function StoreCard({ store, priority = false }: StoreCardProps) {
                 {t('stores.whatsapp')}
               </Button>
             </a>
-          ) : (
-            <Button type='button' variant='outline' size='sm' className='w-full gap-1.5 text-xs' disabled>
-              <Icons.whatsapp className='h-3.5 w-3.5' />
-              {t('stores.whatsapp')}
-            </Button>
-          )}
+          ) : null}
 
           <Link href={`/shop/${store.slug}`} className='w-full'>
             <Button type='button' size='sm' className='w-full gap-1.5 text-xs shadow-sm'>

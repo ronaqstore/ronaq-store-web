@@ -1,7 +1,8 @@
 import { API_BASE_URL } from '@/constants/api';
+import { PUBLIC_REVALIDATE_SECONDS } from '@/constants/site';
 import type { ApiResponse, PublicFetchCache } from '@/types/common';
 
-const DEFAULT_CACHE: PublicFetchCache = { revalidate: 120 };
+const DEFAULT_CACHE: PublicFetchCache = { revalidate: PUBLIC_REVALIDATE_SECONDS };
 
 export async function publicApiRequest<T>(
   endpoint: string,

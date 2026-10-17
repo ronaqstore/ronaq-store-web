@@ -7,9 +7,10 @@ import { ProductDetailView } from '@/features/products/components/product-detail
 import { buildProductMetadata } from '@/features/products/lib/product-metadata';
 import { buildProductStaticParams } from '@/features/products/lib/product-static-params';
 import { extractProductId, productPath, toProductKey } from '@/lib/seo/slug';
+import { PUBLIC_REVALIDATE_SECONDS } from '@/constants/site';
 import type { ProductPageProps } from '@/types/common';
 
-export const revalidate = 120;
+export const revalidate = PUBLIC_REVALIDATE_SECONDS;
 export const dynamicParams = true;
 
 export async function generateStaticParams() {

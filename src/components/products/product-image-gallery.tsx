@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { SmartImage } from '@/components/media/smart-image';
-import { productImageSrc } from '@/constants/placeholders';
+import { PreviewableImage } from '@/components/media/previewable-image';
+import { productImageSrc, PLACEHOLDER_PRODUCT_IMAGE } from '@/constants/placeholders';
 import { formatEmpty } from '@/lib/formatters';
 import { cn } from '@/lib/utils';
 import type { ProductImageGalleryProps } from '@/types/product';
@@ -18,16 +19,15 @@ export function ProductImageGallery({ images, productName }: ProductImageGallery
 
   return (
     <div className='space-y-3'>
-      <div className='relative h-72 sm:h-96 w-full bg-muted/30 rounded-2xl overflow-hidden flex items-center justify-center border border-border/50'>
-        <SmartImage
-          src={productImageSrc(active.url)}
-          alt={alt}
-          fill
-          priority
-          className='object-contain p-6'
-          sizes='(max-width: 768px) 100vw, 700px'
-        />
-      </div>
+      <PreviewableImage
+        src={active.url || null}
+        alt={alt}
+        priority
+        className='relative h-72 w-full overflow-hidden rounded-2xl border border-border/50 bg-muted/30 sm:h-96'
+        imageClassName='object-contain p-6'
+        sizes='(max-width: 768px) 100vw, 700px'
+        fallbackSrc={PLACEHOLDER_PRODUCT_IMAGE}
+      />
 
       {sorted.length > 1 ? (
         <div className='flex flex-wrap gap-2'>

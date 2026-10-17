@@ -121,7 +121,7 @@ export async function ProductDetailView({
           </div>
         </div>
 
-        {product.contactForPrice ? (
+        {product.contactForPrice && storePhone ? (
           <a href={whatsappHref} target='_blank' rel='noopener noreferrer' className='block'>
             <Button
               type='button'

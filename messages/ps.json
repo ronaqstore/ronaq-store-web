@@ -82,7 +82,7 @@
     "login": "پورټل ته ننوتل",
     "helpTitle": "مرسته او ملاتړ",
     "whatsappSupport": "د واټس اپ لارښود",
-    "directCall": "+92 300 1234567",
+    "directCall": "+92 3029825213",
     "allRightsReserved": "ټول حقونه خوندي دي."
   },
   "metadata": {
@@ -119,6 +119,7 @@
     "toggleNavigation": "د مینو بدلول",
     "toggleTheme": "رنګ بدلول",
     "closeModal": "بندول",
+    "previewImage": "لویه انځور وګورئ",
     "clearSearch": "لټون پاکول",
     "directions": "لارښوونه",
     "whatsapp": "په واټس اپ اړیکه ونیسئ",

@@ -1,8 +1,8 @@
 import { getTranslations } from 'next-intl/server';
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
-import { SmartImage } from '@/components/media/smart-image';
-import { shopLogoSrc } from '@/constants/placeholders';
+import { PreviewableImage } from '@/components/media/previewable-image';
+import { PLACEHOLDER_SHOP_LOGO } from '@/constants/placeholders';
 import {
   buildWhatsAppLink,
   formatEmpty,
@@ -15,7 +15,7 @@ export async function StoreHeader({ store }: StoreHeaderProps) {
   const t = await getTranslations();
 
   const name = store.displayName || store.name || t('common.appName');
-  const phoneNumber = store.phoneNumber || store.whatsappNumber || '';
+  const phoneNumber = store.phoneNumber?.trim() || '';
   const phoneHref = phoneNumber ? `tel:${phoneNumber}` : undefined;
   const whatsappNumber = resolveStoreWhatsAppNumber(store);
   const whatsappHref = whatsappNumber
@@ -32,33 +32,32 @@ export async function StoreHeader({ store }: StoreHeaderProps) {
     <div className='relative overflow-hidden border-b border-border/70 bg-gradient-to-b from-muted/30 via-background to-background'>
       <div className='relative flex h-40 w-full items-center justify-center overflow-hidden sm:h-52'>
         {banner ? (
-          <SmartImage
+          <PreviewableImage
             src={banner}
             alt={t('stores.bannerAlt', { store: formatEmpty(name) })}
-            fill
             priority
-            className='object-cover'
+            className='absolute inset-0 h-full w-full'
+            imageClassName='object-cover'
             sizes='100vw'
           />
         ) : (
           <div className='absolute inset-0 bg-gradient-to-r from-emerald-600/30 via-teal-500/20 to-sky-600/30' />
         )}
-        <div className='absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent' />
+        <div className='pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent' />
       </div>
 
       <div className='mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8'>
         <div className='relative -mt-16 sm:-mt-20 flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8'>
           <div className='flex flex-col sm:flex-row items-start sm:items-end gap-4'>
-            <div className='relative h-24 w-24 sm:h-32 sm:w-32 overflow-hidden rounded-2xl bg-card border-4 border-background shadow-xl shrink-0'>
-              <SmartImage
-                src={shopLogoSrc(store.logoUrl)}
-                alt={formatEmpty(name)}
-                fill
-                priority
-                className='object-cover'
-                sizes='128px'
-              />
-            </div>
+            <PreviewableImage
+              src={store.logoUrl}
+              alt={formatEmpty(name)}
+              priority
+              className='h-24 w-24 shrink-0 overflow-hidden rounded-2xl border-4 border-background bg-card shadow-xl sm:h-32 sm:w-32'
+              imageClassName='object-cover'
+              sizes='128px'
+              fallbackSrc={PLACEHOLDER_SHOP_LOGO}
+            />
 
             <div className='space-y-1.5'>
               <h1 className='text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight'>

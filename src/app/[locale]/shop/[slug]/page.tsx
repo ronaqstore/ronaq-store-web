@@ -6,9 +6,10 @@ import { ShopPageView } from '@/features/stores/components/shop-page-view';
 import { buildShopMetadata } from '@/features/stores/lib/shop-metadata';
 import { parseCatalogFilters } from '@/features/stores/lib/parse-catalog-filters';
 import { locales } from '@/i18n/request';
+import { PUBLIC_REVALIDATE_SECONDS } from '@/constants/site';
 import type { StorePageProps } from '@/types/common';
 
-export const revalidate = 120;
+export const revalidate = PUBLIC_REVALIDATE_SECONDS;
 export const dynamicParams = true;
 
 export async function generateStaticParams() {
