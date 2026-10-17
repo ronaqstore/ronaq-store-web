@@ -1,14 +1,29 @@
 import { cache } from 'react';
 import { publicApiRequest } from '@/lib/api/client';
+import {
+  mapCategoriesResponse,
+  mapProductDetail,
+  mapProductsResponse
+} from '@/lib/api/mappers';
+import { PUBLIC_REVALIDATE_SECONDS } from '@/constants/site';
+import { extractProductId } from '@/lib/seo/slug';
 import type {
   StoreCategory,
   ProductListQuery,
   PaginatedProductsResponse,
   StoreProductDetail
 } from '@/types/product';
+import type { ApiCategoriesResponse, ApiPaginatedProducts, ApiProduct } from '@/types/api';
+import type { PublicFetchCache } from '@/types/common';
+
+const PUBLIC_CACHE: PublicFetchCache = { revalidate: PUBLIC_REVALIDATE_SECONDS };
 
 export const getStoreCategories = cache(async (slug: string): Promise<StoreCategory[] | null> => {
-  return publicApiRequest<StoreCategory[]>(`stores/${slug}/categories`);
+  const raw = await publicApiRequest<ApiCategoriesResponse>(
+    `stores/${slug}/categories`,
+    PUBLIC_CACHE
+  );
+  return mapCategoriesResponse(raw);
 });
 
 export async function getStoreProducts(
@@ -23,11 +38,20 @@ export async function getStoreProducts(
   if (query.limit) params.set('limit', String(query.limit));
 
   const qs = params.toString() ? `?${params.toString()}` : '';
-  return publicApiRequest<PaginatedProductsResponse>(`stores/${slug}/products${qs}`);
+  const raw = await publicApiRequest<ApiPaginatedProducts>(
+    `stores/${slug}/products${qs}`,
+    PUBLIC_CACHE
+  );
+  return mapProductsResponse(raw);
 }
 
 export const getStoreProductDetail = cache(
-  async (slug: string, productId: string): Promise<StoreProductDetail | null> => {
-    return publicApiRequest<StoreProductDetail>(`stores/${slug}/products/${productId}`);
+  async (slug: string, productKey: string): Promise<StoreProductDetail | null> => {
+    const productId = extractProductId(productKey);
+    const raw = await publicApiRequest<ApiProduct>(
+      `stores/${slug}/products/${productId}`,
+      PUBLIC_CACHE
+    );
+    return mapProductDetail(raw);
   }
 );

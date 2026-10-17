@@ -6,7 +6,7 @@ import {
   IconBrandWhatsapp,
   IconBrandFacebook,
   IconBrandInstagram,
-  IconBrandX,
+  IconBrandTiktok,
   IconBrandYoutube,
   IconMail,
   IconCheck,
@@ -28,7 +28,6 @@ import {
   IconChevronRight,
   IconChevronDown,
   IconSparkles,
-  IconRosetteDiscountCheck,
   IconShieldCheck,
   IconRefresh,
   IconLoader2
@@ -42,7 +41,7 @@ export const Icons = {
   whatsapp: IconBrandWhatsapp,
   facebook: IconBrandFacebook,
   instagram: IconBrandInstagram,
-  twitter: IconBrandX,
+  tiktok: IconBrandTiktok,
   youtube: IconBrandYoutube,
   mail: IconMail,
   check: IconCheck,
@@ -64,7 +63,6 @@ export const Icons = {
   info: IconInfoCircle,
   warning: IconAlertTriangle,
   sparkles: IconSparkles,
-  badgeCheck: IconRosetteDiscountCheck,
   shieldCheck: IconShieldCheck,
   refresh: IconRefresh,
   spinner: IconLoader2

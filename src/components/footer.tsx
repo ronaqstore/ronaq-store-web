@@ -10,16 +10,10 @@ import {
 
 const SOCIAL_LINKS = [
   {
-    key: 'whatsapp',
-    href: SOCIAL_URLS.whatsapp,
-    icon: Icons.whatsapp,
-    labelKey: 'aria.whatsapp'
-  },
-  {
-    key: 'facebook',
-    href: SOCIAL_URLS.facebook,
-    icon: Icons.facebook,
-    labelKey: 'aria.facebook'
+    key: 'youtube',
+    href: SOCIAL_URLS.youtube,
+    icon: Icons.youtube,
+    labelKey: 'aria.youtube'
   },
   {
     key: 'instagram',
@@ -28,16 +22,16 @@ const SOCIAL_LINKS = [
     labelKey: 'aria.instagram'
   },
   {
-    key: 'twitter',
-    href: SOCIAL_URLS.twitter,
-    icon: Icons.twitter,
-    labelKey: 'aria.twitter'
+    key: 'tiktok',
+    href: SOCIAL_URLS.tiktok,
+    icon: Icons.tiktok,
+    labelKey: 'aria.tiktok'
   },
   {
-    key: 'youtube',
-    href: SOCIAL_URLS.youtube,
-    icon: Icons.youtube,
-    labelKey: 'aria.youtube'
+    key: 'facebook',
+    href: SOCIAL_URLS.facebook,
+    icon: Icons.facebook,
+    labelKey: 'aria.facebook'
   }
 ] as const;
 
@@ -91,7 +85,7 @@ export function Footer() {
                 <a
                   href={`${ADMIN_BASE_URL}/login`}
                   target='_blank'
-                  rel='noopener noreferrer'
+                  rel='noopener noreferrer nofollow'
                   className='text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1.5'
                 >
                   <Icons.arrowRight className='h-3.5 w-3.5 text-muted-foreground/70 shrink-0' />
@@ -132,12 +126,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className='mt-12 pt-8 border-t border-border/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground'>
-          <div className='flex items-center gap-2'>
-            <Icons.shieldCheck className='h-4 w-4 text-primary' />
-            <span>{t('footer.verifiedBadge')}</span>
-          </div>
-
+        <div className='mt-12 pt-8 border-t border-border/80 flex flex-col sm:flex-row items-center justify-center sm:justify-end gap-4 text-xs text-muted-foreground'>
           <p className='text-center sm:text-end'>
             &copy; 2026 {t('common.appName')}. {t('footer.allRightsReserved')}
           </p>

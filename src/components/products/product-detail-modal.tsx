@@ -4,9 +4,10 @@ import { useTranslations } from 'next-intl';
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { SmartImage } from '@/components/media/smart-image';
-import { productImageSrc } from '@/constants/placeholders';
+import { PreviewableImage } from '@/components/media/previewable-image';
+import { PLACEHOLDER_PRODUCT_IMAGE } from '@/constants/placeholders';
 import { formatPrice, buildWhatsAppLink, formatEmpty } from '@/lib/formatters';
+import { StockBadge } from '@/components/products/stock-badge';
 import type { ProductDetailModalProps } from '@/types/product';
 
 export function ProductDetailModal({
@@ -19,7 +20,9 @@ export function ProductDetailModal({
 
   if (!product) return null;
 
-  const formattedPrice = formatPrice(product.retailPrice);
+  const formattedPrice = product.contactForPrice
+    ? t('catalog.contactForPrice')
+    : formatPrice(product.retailPrice);
   const whatsappMessage = t('whatsapp.inquireProductShort', {
     storeName,
     productName: product.name,
@@ -42,15 +45,14 @@ export function ProductDetailModal({
         </Button>
 
         <div className='space-y-6'>
-          <div className='relative h-64 sm:h-80 w-full bg-muted/30 rounded-2xl overflow-hidden flex items-center justify-center border border-border/50'>
-            <SmartImage
-              src={productImageSrc(product.images?.[0]?.url)}
-              alt={formatEmpty(product.name)}
-              fill
-              className='object-contain p-6'
-              sizes='(max-width: 768px) 100vw, 600px'
-            />
-          </div>
+          <PreviewableImage
+            src={product.images?.[0]?.url ?? null}
+            alt={formatEmpty(product.name)}
+            className='relative h-64 w-full overflow-hidden rounded-2xl border border-border/50 bg-muted/30 sm:h-80'
+            imageClassName='object-contain p-6'
+            sizes='(max-width: 768px) 100vw, 600px'
+            fallbackSrc={PLACEHOLDER_PRODUCT_IMAGE}
+          />
 
           <div className='space-y-3'>
             <div className='flex flex-wrap items-center gap-2'>
@@ -59,13 +61,7 @@ export function ProductDetailModal({
               {product.ptaStatus === 'APPROVED' ? (
                 <Badge variant='success'>{t('catalog.ptaApproved')}</Badge>
               ) : null}
-              {product.inStock ? (
-                <Badge variant='outline' className='text-emerald-600 dark:text-emerald-400 border-emerald-500/30'>
-                  {t('catalog.inStock')}
-                </Badge>
-              ) : (
-                <Badge variant='destructive'>{t('catalog.outOfStock')}</Badge>
-              )}
+              <StockBadge availability={product.availability} stockCount={product.stockCount} />
             </div>
 
             <h2 className='text-2xl font-bold text-foreground'>{formatEmpty(product.name)}</h2>
@@ -99,23 +95,25 @@ export function ProductDetailModal({
             </div>
           </div>
 
-          <div className='pt-2'>
-            <a
-              href={whatsappHref}
-              target='_blank'
-              rel='noopener noreferrer'
-              className='w-full block'
-            >
-              <Button
-                type='button'
-                size='lg'
-                className='w-full gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-md'
+          {product.contactForPrice && storePhone ? (
+            <div className='pt-2'>
+              <a
+                href={whatsappHref}
+                target='_blank'
+                rel='noopener noreferrer'
+                className='w-full block'
               >
-                <Icons.whatsapp className='h-5 w-5' />
-                {t('catalog.inquireWhatsApp')}
-              </Button>
-            </a>
-          </div>
+                <Button
+                  type='button'
+                  size='lg'
+                  className='w-full gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-md'
+                >
+                  <Icons.whatsapp className='h-5 w-5' />
+                  {t('catalog.inquireWhatsApp')}
+                </Button>
+              </a>
+            </div>
+          ) : null}
         </div>
       </div>
     </div>
