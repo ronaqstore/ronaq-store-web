@@ -15,12 +15,11 @@ export const ADMIN_BASE_URL = (
 export const WHATSAPP_BASE_URL = 'https://wa.me';
 
 export const SOCIAL_URLS = {
-  whatsapp: 'https://wa.me/923001234567?text=Assalam-o-Alaikum%20Ronaq%20Store',
   whatsappSupport: 'https://wa.me/923001234567?text=Assalam-o-Alaikum%20Ronaq%20Store%20Support',
-  facebook: 'https://facebook.com/ronaqstorepk',
-  instagram: 'https://instagram.com/ronaqstorepk',
-  twitter: 'https://x.com/ronaqstorepk',
-  youtube: 'https://youtube.com/@ronaqstorepk'
+  youtube: 'https://www.youtube.com/@ronaq-store',
+  instagram: 'https://www.instagram.com/ronaqstores',
+  tiktok: 'https://www.tiktok.com/@ronaqstores',
+  facebook: 'https://web.facebook.com/ronaqstores'
 } as const;
 
 export const SUPPORT_PHONE = '+92 300 1234567';

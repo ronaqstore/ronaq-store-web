@@ -10,16 +10,10 @@ import {
 
 const SOCIAL_LINKS = [
   {
-    key: 'whatsapp',
-    href: SOCIAL_URLS.whatsapp,
-    icon: Icons.whatsapp,
-    labelKey: 'aria.whatsapp'
-  },
-  {
-    key: 'facebook',
-    href: SOCIAL_URLS.facebook,
-    icon: Icons.facebook,
-    labelKey: 'aria.facebook'
+    key: 'youtube',
+    href: SOCIAL_URLS.youtube,
+    icon: Icons.youtube,
+    labelKey: 'aria.youtube'
   },
   {
     key: 'instagram',
@@ -28,16 +22,16 @@ const SOCIAL_LINKS = [
     labelKey: 'aria.instagram'
   },
   {
-    key: 'twitter',
-    href: SOCIAL_URLS.twitter,
-    icon: Icons.twitter,
-    labelKey: 'aria.twitter'
+    key: 'tiktok',
+    href: SOCIAL_URLS.tiktok,
+    icon: Icons.tiktok,
+    labelKey: 'aria.tiktok'
   },
   {
-    key: 'youtube',
-    href: SOCIAL_URLS.youtube,
-    icon: Icons.youtube,
-    labelKey: 'aria.youtube'
+    key: 'facebook',
+    href: SOCIAL_URLS.facebook,
+    icon: Icons.facebook,
+    labelKey: 'aria.facebook'
   }
 ] as const;
 
