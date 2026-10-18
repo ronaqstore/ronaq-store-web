@@ -8,7 +8,6 @@
     "retry": "Try again",
     "viewAll": "View all",
     "close": "Close",
-    "verified": "Verified Store",
     "phone": "Phone",
     "address": "Address",
     "city": "City"
@@ -21,22 +20,28 @@
     "login": "Login"
   },
   "hero": {
-    "title": "Discover Local Mobile & Tech Shops Across Pakistan",
-    "subtitle": "Browse verified smartphone shops, check live stock, compare PTA approved devices, chargers, and accessories — connect directly on WhatsApp.",
-    "searchPlaceholder": "Search...",
-    "popularCities": "Popular Cities:"
+    "title": "Find trusted mobile shops near you",
+    "subtitle": "Live stock, PTA status, and WhatsApp contact — from local shops across Pakistan.",
+    "searchPlaceholder": "Search shops, cities, or areas…",
+    "popularCities": "Popular Cities:",
+    "ctaExplore": "Browse shops",
+    "trustLive": "Live stock",
+    "trustPta": "PTA clarity",
+    "trustWhatsapp": "Direct WhatsApp"
   },
   "stores": {
-    "allShops": "Verified Shops",
+    "allShops": "Local shops",
+    "sectionSubtitle": "Only online stores appear here — toggled off shops stay private.",
     "shopsFound": "{count} shops found",
     "noShopsFound": "No shops found matching your search.",
     "productsAvailable": "{count} products listed",
-    "viewShop": "View Catalog",
+    "viewShop": "View catalog",
     "directions": "Directions",
     "whatsapp": "WhatsApp",
     "call": "Call Shop",
     "timing": "Hours",
-    "search": "Search shops..."
+    "search": "Search shops...",
+    "bannerAlt": "{store} store banner"
   },
   "catalog": {
     "allCategories": "All Categories",
@@ -44,7 +49,11 @@
     "inStockOnly": "In Stock Only",
     "searchInShop": "Search products in this shop...",
     "inStock": "In Stock",
+    "inStockCount": "{count} in stock",
+    "lowStock": "Low stock",
+    "lowStockCount": "Only {count} left",
     "outOfStock": "Out of Stock",
+    "contactForPrice": "Ask on WhatsApp",
     "ptaApproved": "PTA Approved",
     "ptaNon": "Non-PTA",
     "ptaJv": "JV",
@@ -60,22 +69,43 @@
     "price": "Price",
     "category": "Category",
     "brand": "Brand",
-    "description": "Description"
+    "description": "Description",
+    "relatedProducts": "Related products",
+    "viewShopCatalog": "View full catalog",
+    "backToShop": "Back to {store}",
+    "shopCatalogHeading": "{store} product catalog"
   },
   "footer": {
-    "tagline": "Discover verified local mobile and tech shops across Pakistan. Compare live stock, check PTA status, and order directly on WhatsApp.",
+    "tagline": "Discover local mobile and tech shops across Pakistan. Compare live stock, check PTA status, and order directly on WhatsApp.",
     "ownersTitle": "Shop Owners",
     "registerDukan": "Open Your Store",
     "login": "Login to Portal",
     "helpTitle": "Help & Support",
     "whatsappSupport": "WhatsApp Helpdesk",
-    "directCall": "+92 300 1234567",
-    "verifiedBadge": "100% Verified Local Stores",
+    "directCall": "+92 3029825213",
     "allRightsReserved": "All rights reserved."
   },
   "metadata": {
     "title": "Ronaq Store — Pakistan's Mobile & Electronics Store Directory",
-    "description": "Find local mobile and electronics shops in Lahore, Karachi, Islamabad and all cities of Pakistan. View stock, phones, chargers, and accessories."
+    "description": "Find local mobile and electronics shops in Lahore, Karachi, Islamabad and all cities of Pakistan. View stock, phones, chargers, and accessories.",
+    "homeTitle": "Find Mobile Shops in Pakistan",
+    "homeDescription": "Browse smartphone shops across Pakistan. Check live stock, PTA status, chargers and accessories — then order on WhatsApp.",
+    "shopTitle": "{store} Mobile Shop in {city}",
+    "shopDescription": "Shop phones and accessories at {store} in {city}. View live prices, stock status, and chat on WhatsApp via Ronaq Store.",
+    "shopFallbackTitle": "Shop Not Found",
+    "shopFallbackDescription": "This shop is offline or unavailable on Ronaq Store right now.",
+    "productTitle": "{product} at {store}",
+    "productDescription": "View {product} at {store}. Check price, PTA status, stock, and order directly on WhatsApp.",
+    "productFallbackTitle": "Product Not Found",
+    "productFallbackDescription": "This product is unavailable or no longer listed on Ronaq Store."
+  },
+  "faq": {
+    "q1": "What is Ronaq Store?",
+    "a1": "Ronaq Store is a directory of local mobile and electronics shops across Pakistan where you can browse stock and contact shops on WhatsApp.",
+    "q2": "Are the shops verified?",
+    "a2": "Yes. Only shops that pass review and keep their store online appear in the public directory.",
+    "q3": "How do I buy a product?",
+    "a3": "Open a shop or product page, then use Order via WhatsApp to message the shop directly about price and availability."
   },
   "errors": {
     "notFoundTitle": "Page Not Found",
@@ -89,14 +119,16 @@
     "toggleNavigation": "Toggle navigation",
     "toggleTheme": "Toggle theme",
     "closeModal": "Close modal",
+    "previewImage": "View larger image",
     "clearSearch": "Clear search",
     "directions": "Directions",
     "whatsapp": "Chat on WhatsApp",
     "facebook": "Follow on Facebook",
     "instagram": "Follow on Instagram",
-    "twitter": "Follow on X",
+    "tiktok": "Follow on TikTok",
     "youtube": "Watch on YouTube",
-    "call": "Call Phone"
+    "call": "Call Phone",
+    "breadcrumb": "Breadcrumb"
   },
   "whatsapp": {
     "inquireProduct": "Hello {storeName}, I am interested in buying \"{productName}\" ({price}) listed on your Ronaq Store. Is it available in stock?",

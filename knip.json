@@ -1,10 +1,12 @@
 {
   "$schema": "https://unpkg.com/knip@latest/schema.json",
   "entry": [
-    "src/app/**/{layout,page,error,not-found,global-error,loading,default}.tsx",
+    "src/app/**/{layout,page,error,not-found,global-error,loading,default,robots,sitemap,manifest}.tsx",
+    "src/app/**/{robots,sitemap,manifest}.ts",
     "src/app/**/route.ts",
     "src/i18n/request.ts",
     "src/proxy.ts",
+    "src/config/env.ts",
     "scripts/run-checks.mjs",
     "scripts/check-list-tables.mjs",
     "scripts/code/*.cjs"
@@ -22,7 +24,9 @@
     "knip",
     "jscpd",
     "@babel/parser",
-    "@babel/traverse"
+    "@babel/traverse",
+    "@vercel/analytics",
+    "@vercel/speed-insights"
   ],
   "ignoreExportsUsedInFile": true,
   "rules": {

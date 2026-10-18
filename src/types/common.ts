@@ -1,9 +1,13 @@
 import type { ReactNode } from 'react';
 import type { AbstractIntlMessages } from 'next-intl';
 
+export interface LocaleParams {
+  locale: string;
+}
+
 export interface LocaleLayoutProps {
   children: ReactNode;
-  params: Promise<{ locale: string }>;
+  params: Promise<LocaleParams>;
 }
 
 export interface I18nProviderProps {
@@ -12,8 +16,13 @@ export interface I18nProviderProps {
   children: ReactNode;
 }
 
+export interface HomeSearchParams {
+  q?: string;
+}
+
 export interface HomePageProps {
-  searchParams: Promise<{ q?: string }>;
+  params: Promise<LocaleParams>;
+  searchParams: Promise<HomeSearchParams>;
 }
 
 export interface CatalogSearchParams {
@@ -22,20 +31,32 @@ export interface CatalogSearchParams {
   inStock?: string;
 }
 
+export interface StoreRouteParams {
+  locale: string;
+  slug: string;
+}
+
 export interface StorePageProps {
-  params: Promise<{ locale: string; slug: string }>;
+  params: Promise<StoreRouteParams>;
   searchParams: Promise<CatalogSearchParams>;
 }
 
-export interface ProductPageProps {
-  params: Promise<{ locale: string; slug: string; productId: string }>;
+export interface ProductRouteParams {
+  locale: string;
+  slug: string;
+  productId: string;
 }
 
+export interface ProductPageProps {
+  params: Promise<ProductRouteParams>;
+}
 
 export interface LocaleAppErrorProps {
   error: Error & { digest?: string };
   reset: () => void;
 }
+
+export type PublicFetchCache = { revalidate: number } | { cache: 'no-store' };
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -51,4 +72,3 @@ export interface NotFoundViewProps {
   onBack: () => void;
   onHome: () => void;
 }
-

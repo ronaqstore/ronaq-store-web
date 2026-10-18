@@ -1,19 +1,23 @@
 import { getTranslations } from 'next-intl/server';
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { SmartImage } from '@/components/media/smart-image';
-import { shopLogoSrc } from '@/constants/placeholders';
-import { buildWhatsAppLink, formatEmpty, formatPhone } from '@/lib/formatters';
+import { PreviewableImage } from '@/components/media/previewable-image';
+import { PLACEHOLDER_SHOP_LOGO } from '@/constants/placeholders';
+import {
+  buildWhatsAppLink,
+  formatEmpty,
+  formatPhone,
+  resolveStoreWhatsAppNumber
+} from '@/lib/formatters';
 import type { StoreHeaderProps } from '@/types/store';
 
 export async function StoreHeader({ store }: StoreHeaderProps) {
   const t = await getTranslations();
 
   const name = store.displayName || store.name || t('common.appName');
-  const phoneNumber = store.phoneNumber || store.whatsappNumber || '';
+  const phoneNumber = store.phoneNumber?.trim() || '';
   const phoneHref = phoneNumber ? `tel:${phoneNumber}` : undefined;
-  const whatsappNumber = store.whatsappNumber || store.phoneNumber || '';
+  const whatsappNumber = resolveStoreWhatsAppNumber(store);
   const whatsappHref = whatsappNumber
     ? buildWhatsAppLink(whatsappNumber, t('whatsapp.contactShop', { storeName: name }))
     : undefined;
@@ -21,37 +25,44 @@ export async function StoreHeader({ store }: StoreHeaderProps) {
   const location = store.address
     ? `${store.address}${store.city ? `, ${store.city}` : ''}`
     : formatEmpty(store.city);
+  const banner = store.heroBannerUrl || store.bannerUrl;
+  const about = store.description || store.about;
 
   return (
     <div className='relative overflow-hidden border-b border-border/70 bg-gradient-to-b from-muted/30 via-background to-background'>
-      <div className='h-40 sm:h-52 w-full bg-gradient-to-r from-emerald-600/30 via-teal-500/20 to-sky-600/30 relative flex items-center justify-center overflow-hidden'>
-        <div className='absolute inset-0 bg-radial-gradient from-transparent to-background/90' />
+      <div className='relative flex h-40 w-full items-center justify-center overflow-hidden sm:h-52'>
+        {banner ? (
+          <PreviewableImage
+            src={banner}
+            alt={t('stores.bannerAlt', { store: formatEmpty(name) })}
+            priority
+            className='absolute inset-0 h-full w-full'
+            imageClassName='object-cover'
+            sizes='100vw'
+          />
+        ) : (
+          <div className='absolute inset-0 bg-gradient-to-r from-emerald-600/30 via-teal-500/20 to-sky-600/30' />
+        )}
+        <div className='pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent' />
       </div>
 
       <div className='mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8'>
         <div className='relative -mt-16 sm:-mt-20 flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8'>
           <div className='flex flex-col sm:flex-row items-start sm:items-end gap-4'>
-            <div className='relative h-24 w-24 sm:h-32 sm:w-32 overflow-hidden rounded-2xl bg-card border-4 border-background shadow-xl shrink-0'>
-              <SmartImage
-                src={shopLogoSrc(store.logoUrl)}
-                alt={formatEmpty(name)}
-                fill
-                priority
-                className='object-cover'
-                sizes='128px'
-              />
-            </div>
+            <PreviewableImage
+              src={store.logoUrl}
+              alt={formatEmpty(name)}
+              priority
+              className='h-24 w-24 shrink-0 overflow-hidden rounded-2xl border-4 border-background bg-card shadow-xl sm:h-32 sm:w-32'
+              imageClassName='object-cover'
+              sizes='128px'
+              fallbackSrc={PLACEHOLDER_SHOP_LOGO}
+            />
 
             <div className='space-y-1.5'>
-              <div className='flex flex-wrap items-center gap-2'>
-                <h1 className='text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight'>
-                  {formatEmpty(store.displayName || store.name)}
-                </h1>
-                <Badge variant='success' className='gap-1 text-xs'>
-                  <Icons.badgeCheck className='h-3.5 w-3.5' />
-                  {t('common.verified')}
-                </Badge>
-              </div>
+              <h1 className='text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight'>
+                {formatEmpty(store.displayName || store.name)}
+              </h1>
 
               <div className='flex flex-wrap items-center gap-x-4 gap-y-1 text-xs sm:text-sm text-muted-foreground'>
                 <span className='flex items-center gap-1'>
@@ -65,8 +76,8 @@ export async function StoreHeader({ store }: StoreHeaderProps) {
                 </span>
               </div>
 
-              <p className='text-xs sm:text-sm text-foreground/80 max-w-2xl pt-1 leading-relaxed'>
-                {formatEmpty(store.description)}
+              <p className='max-w-2xl pt-1 text-xs leading-relaxed text-foreground/80 sm:text-sm'>
+                {formatEmpty(about)}
               </p>
             </div>
           </div>

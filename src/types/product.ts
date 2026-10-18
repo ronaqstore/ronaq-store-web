@@ -1,3 +1,5 @@
+export type StoreAvailability = 'IN_STOCK' | 'LOW_STOCK' | 'OUT_OF_STOCK';
+
 export interface StoreCategory {
   id: string;
   name: string;
@@ -20,12 +22,17 @@ export interface StoreProductListItem {
   brandId: string | null;
   brandName: string | null;
   retailPrice: string;
+  contactForPrice: boolean;
   ptaStatus: string;
   condition: string;
   warrantyType: string;
   primaryImageUrl: string | null;
+  images?: StoreProductImage[];
+  availability: StoreAvailability;
+  stockCount: number | null;
   inStock: boolean;
   totalQuantity: number;
+  description?: string | null;
 }
 
 export interface StoreProductDetail {
@@ -37,11 +44,14 @@ export interface StoreProductDetail {
   brandId: string | null;
   brandName: string | null;
   retailPrice: string;
+  contactForPrice: boolean;
   ptaStatus: string;
   condition: string;
   warrantyType: string;
   description: string | null;
   images: StoreProductImage[];
+  availability: StoreAvailability;
+  stockCount: number | null;
   inStock: boolean;
   totalQuantity: number;
 }
@@ -64,6 +74,7 @@ export interface PaginatedProductsResponse {
 
 export interface ProductCardProps {
   product: StoreProductListItem;
+  storeSlug?: string;
   storeName: string;
   storePhone: string;
   onSelectProduct?: (product: StoreProductListItem) => void;
@@ -72,6 +83,7 @@ export interface ProductCardProps {
 
 export interface ProductGridProps {
   products: StoreProductListItem[];
+  storeSlug: string;
   storeName: string;
   storePhone: string;
   onSelectProduct?: (product: StoreProductListItem) => void;
@@ -100,9 +112,14 @@ export interface ProductImageGalleryProps {
 }
 
 export interface ProductDetailViewProps {
+  locale: string;
   slug: string;
-  storeName: string;
-  storePhone: string;
+  store: import('./store').StoreProfile;
   product: StoreProductDetail;
+  relatedProducts?: StoreProductListItem[];
 }
 
+export interface StockBadgeProps {
+  availability: StoreAvailability;
+  stockCount: number | null;
+}

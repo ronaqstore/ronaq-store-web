@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next';
-import { Poppins } from 'next/font/google';
+import localFont from 'next/font/local';
 import { notFound } from 'next/navigation';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import NextTopLoader from 'nextjs-toploader';
 import { isLocale, isRtlLocale, locales, type AppLocale } from '@/i18n/request';
@@ -10,21 +12,23 @@ import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
 import type { LocaleLayoutProps } from '@/types/common';
 import {
-  APP_DESCRIPTION,
   APP_NAME,
   PWA_THEME_COLOR_DARK,
   PWA_THEME_COLOR_LIGHT
 } from '@/constants/site';
+import { defaultRootMetadata } from '@/lib/seo/metadata';
 import '@/styles/globals.css';
 
-
-const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['400', '600', '700'],
+const poppins = localFont({
+  src: [
+    { path: '../../styles/fonts/poppins-400.woff2', weight: '400', style: 'normal' },
+    { path: '../../styles/fonts/poppins-600.woff2', weight: '600', style: 'normal' },
+    { path: '../../styles/fonts/poppins-700.woff2', weight: '700', style: 'normal' }
+  ],
   variable: '--font-poppins',
   display: 'swap',
   preload: true,
-  adjustFontFallback: true
+  adjustFontFallback: 'Arial'
 });
 
 export function generateStaticParams() {
@@ -32,16 +36,11 @@ export function generateStaticParams() {
 }
 
 export const metadata: Metadata = {
-  title: `${APP_NAME} — Discover Verified Local Mobile Shops`,
-  description: APP_DESCRIPTION,
-  applicationName: APP_NAME,
+  ...defaultRootMetadata(),
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
     title: APP_NAME
-  },
-  formatDetection: {
-    telephone: false
   },
   icons: {
     icon: [
@@ -88,12 +87,14 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
         <ThemeProvider>
           <I18nProvider locale={locale} messages={messages}>
             <Navbar />
-            <main className='flex-1 min-w-0'>{children}</main>
+            <main id='main-content' className='flex-1 min-w-0'>
+              {children}
+            </main>
             <Footer />
           </I18nProvider>
-
-
         </ThemeProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

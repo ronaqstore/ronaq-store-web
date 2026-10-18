@@ -1,5 +1,6 @@
 import { fromPaisa } from '@/lib/money';
 import { WHATSAPP_BASE_URL } from '@/constants/api';
+import type { StoreWhatsAppContact } from '@/types/store';
 
 export const EMPTY_DISPLAY = '—';
 
@@ -39,4 +40,8 @@ export function buildWhatsAppLink(rawPhone?: string | null, message = ''): strin
     clean = `92${clean}`;
   }
   return `${WHATSAPP_BASE_URL}/${clean}?text=${encodeURIComponent(message)}`;
+}
+
+export function resolveStoreWhatsAppNumber(store: StoreWhatsAppContact): string {
+  return store.whatsappNumber?.trim() || '';
 }
