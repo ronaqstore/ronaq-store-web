@@ -85,6 +85,7 @@ export interface StoreCatalogClientProps {
   store: StoreProfile;
   categories: import('./product').StoreCategory[];
   products: import('./product').StoreProductListItem[];
+  models: import('./product').StoreModelListItem[];
   filters: StoreCatalogFilters;
 }
 

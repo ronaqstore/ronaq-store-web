@@ -26,3 +26,7 @@ export function extractProductId(productKey: string): string {
 export function productPath(storeSlug: string, productName: string, productId: string): string {
   return `/shop/${storeSlug}/product/${toProductKey(productName, productId)}`;
 }
+
+export function modelPath(storeSlug: string, modelKey: string): string {
+  return `/shop/${storeSlug}/model/${encodeURIComponent(modelKey)}`;
+}

@@ -13,6 +13,22 @@ export interface StoreProductImage {
   sortOrder: number;
 }
 
+export interface ProductSpecs {
+  model: string | null;
+  color: string | null;
+  ram: string | null;
+  storage: string | null;
+}
+
+export interface StoreProductUnit {
+  id: string;
+  imeiMasked: string;
+  condition: 'NEW' | 'USED';
+  batteryHealth: number | null;
+  price: string | null;
+  defectNotes: string | null;
+}
+
 export interface StoreProductListItem {
   id: string;
   name: string;
@@ -24,8 +40,16 @@ export interface StoreProductListItem {
   retailPrice: string;
   contactForPrice: boolean;
   ptaStatus: string;
+  authenticity: 'ORIGINAL' | 'COPY' | '';
   condition: string;
   warrantyType: string;
+  trackingType?: 'SERIALIZED' | 'QUANTITY';
+  modelKey?: string | null;
+  model?: string | null;
+  color?: string | null;
+  ram?: string | null;
+  storage?: string | null;
+  specs?: ProductSpecs | null;
   primaryImageUrl: string | null;
   images?: StoreProductImage[];
   availability: StoreAvailability;
@@ -33,6 +57,7 @@ export interface StoreProductListItem {
   inStock: boolean;
   totalQuantity: number;
   description?: string | null;
+  units?: StoreProductUnit[];
 }
 
 export interface StoreProductDetail {
@@ -46,8 +71,15 @@ export interface StoreProductDetail {
   retailPrice: string;
   contactForPrice: boolean;
   ptaStatus: string;
+  authenticity: 'ORIGINAL' | 'COPY' | '';
   condition: string;
   warrantyType: string;
+  trackingType?: 'SERIALIZED' | 'QUANTITY';
+  model?: string | null;
+  color?: string | null;
+  ram?: string | null;
+  storage?: string | null;
+  specs?: ProductSpecs | null;
   description: string | null;
   images: StoreProductImage[];
   availability: StoreAvailability;
@@ -72,6 +104,24 @@ export interface PaginatedProductsResponse {
   totalPages: number;
 }
 
+export interface StoreModelListItem {
+  key: string;
+  brand: string;
+  model: string;
+  variantCount: number;
+  coverImage: string | null;
+  fromPrice: string | null;
+  contactForPrice: boolean;
+  availability: StoreAvailability;
+}
+
+export interface StoreModelDetail {
+  key: string;
+  brand: string;
+  model: string;
+  variants: StoreProductListItem[];
+}
+
 export interface ProductCardProps {
   product: StoreProductListItem;
   storeSlug?: string;
@@ -79,6 +129,32 @@ export interface ProductCardProps {
   storePhone: string;
   onSelectProduct?: (product: StoreProductListItem) => void;
   priority?: boolean;
+  linkToModel?: boolean;
+}
+
+export interface ModelVariantsClientProps {
+  variants: StoreProductListItem[];
+  storeSlug: string;
+  storeName: string;
+  storePhone: string;
+  isAppleBrand: boolean;
+}
+
+export type ModelUnitRow = StoreProductUnit & {
+  variant: StoreProductListItem;
+};
+
+export interface ModelCardProps {
+  model: StoreModelListItem;
+  storeSlug: string;
+  priority?: boolean;
+}
+
+export interface ModelDetailViewProps {
+  locale: string;
+  slug: string;
+  store: import('./store').StoreProfile;
+  model: StoreModelDetail;
 }
 
 export interface ProductGridProps {
@@ -87,6 +163,7 @@ export interface ProductGridProps {
   storeName: string;
   storePhone: string;
   onSelectProduct?: (product: StoreProductListItem) => void;
+  linkToModel?: boolean;
 }
 
 export interface ProductFiltersProps {

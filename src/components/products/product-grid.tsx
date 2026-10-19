@@ -8,7 +8,8 @@ export function ProductGrid({
   storeSlug,
   storeName,
   storePhone,
-  onSelectProduct
+  onSelectProduct,
+  linkToModel = true
 }: ProductGridProps) {
   const t = useTranslations();
 
@@ -34,6 +35,7 @@ export function ProductGrid({
           storePhone={storePhone}
           onSelectProduct={onSelectProduct}
           priority={index < 2}
+          linkToModel={linkToModel}
         />
       ))}
     </div>

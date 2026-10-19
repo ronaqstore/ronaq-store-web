@@ -66,7 +66,7 @@ const CHECKS = [
   { id: 'orphans',            cmd: ['node', 'scripts/code/check-orphans.cjs'] },
   { id: 'duplicates',         cmd: ['npx', '--yes', 'jscpd', '--config', '.jscpd.json'] },
   { id: 'duplicate-audit',    cmd: ['node', 'scripts/code/check-duplicates.cjs'] },
-  { id: 'knip',               cmd: ['npx', '--yes', 'knip', '--include', 'files,dependencies,unlisted,unresolved,exports,nsExports,types,nsTypes,enumMembers,duplicates,cycles', '--reporter', 'compact'] },
+  { id: 'knip',               cmd: ['npm', 'run', 'knip'] },
   { id: 'lint',               cmd: ['npm', 'run', 'lint'] },
   { id: 'typecheck',          cmd: ['npm', 'run', 'typecheck'] },
   { id: 'test',               cmd: ['npm', 'run', 'test'] },

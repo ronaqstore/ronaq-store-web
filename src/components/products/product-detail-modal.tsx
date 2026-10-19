@@ -61,6 +61,12 @@ export function ProductDetailModal({
               {product.ptaStatus === 'APPROVED' ? (
                 <Badge variant='success'>{t('catalog.ptaApproved')}</Badge>
               ) : null}
+              {product.authenticity === 'ORIGINAL' ? (
+                <Badge variant='success'>{t('catalog.authenticityOriginal')}</Badge>
+              ) : null}
+              {product.authenticity === 'COPY' ? (
+                <Badge variant='secondary'>{t('catalog.authenticityCopy')}</Badge>
+              ) : null}
               <StockBadge availability={product.availability} stockCount={product.stockCount} />
             </div>
 

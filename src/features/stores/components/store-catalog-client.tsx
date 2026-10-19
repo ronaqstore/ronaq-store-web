@@ -5,6 +5,7 @@ import { useEffect, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import { ProductFilters } from '@/components/products/product-filters';
 import { ProductGrid } from '@/components/products/product-grid';
+import { ModelCard } from '@/components/products/model-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
@@ -30,6 +31,7 @@ export function StoreCatalogClient({
   store,
   categories,
   products,
+  models,
   filters
 }: StoreCatalogClientProps) {
   const t = useTranslations();
@@ -120,12 +122,34 @@ export function StoreCatalogClient({
             <Skeleton className='h-3 w-12' />
           </span>
         ) : (
-          <span>{t('stores.productsAvailable', { count: products.length })}</span>
+          <span>
+            {t('stores.productsAvailable', {
+              count: products.length + models.length
+            })}
+          </span>
         )}
       </div>
 
+      {models.length > 0 ? (
+        <section className='space-y-3' aria-labelledby='phone-models-heading'>
+          <h3 id='phone-models-heading' className='text-sm font-semibold tracking-wide'>
+            {t('catalog.phoneModels')}
+          </h3>
+          <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+            {models.map((model, index) => (
+              <ModelCard
+                key={model.key}
+                model={model}
+                storeSlug={store.slug}
+                priority={index < 4}
+              />
+            ))}
+          </div>
+        </section>
+      ) : null}
+
       <ProductGrid
-        products={products}
+        products={products.filter((p) => p.trackingType !== 'SERIALIZED')}
         storeSlug={store.slug}
         storeName={store.displayName}
         storePhone={resolveStoreWhatsAppNumber(store)}

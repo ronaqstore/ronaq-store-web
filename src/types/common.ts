@@ -51,6 +51,16 @@ export interface ProductPageProps {
   params: Promise<ProductRouteParams>;
 }
 
+export interface ModelRouteParams {
+  locale: string;
+  slug: string;
+  modelKey: string;
+}
+
+export interface ModelPageProps {
+  params: Promise<ModelRouteParams>;
+}
+
 export interface LocaleAppErrorProps {
   error: Error & { digest?: string };
   reset: () => void;

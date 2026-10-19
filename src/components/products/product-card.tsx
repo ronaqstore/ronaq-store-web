@@ -10,7 +10,7 @@ import { PreviewableImage } from '@/components/media/previewable-image';
 import { PLACEHOLDER_PRODUCT_IMAGE } from '@/constants/placeholders';
 import { formatPrice, buildWhatsAppLink, formatEmpty } from '@/lib/formatters';
 import { StockBadge } from '@/components/products/stock-badge';
-import { productPath } from '@/lib/seo/slug';
+import { modelPath, productPath } from '@/lib/seo/slug';
 import type { ProductCardProps } from '@/types/product';
 
 export function ProductCard({
@@ -19,7 +19,8 @@ export function ProductCard({
   storeName,
   storePhone,
   onSelectProduct,
-  priority = false
+  priority = false,
+  linkToModel = true
 }: ProductCardProps) {
   const t = useTranslations();
 
@@ -27,13 +28,22 @@ export function ProductCard({
     ? t('catalog.contactForPrice')
     : formatPrice(product.retailPrice);
 
+  const specDetails = [product.color, product.storage].filter(Boolean).join(', ');
+  const fullProductName = specDetails
+    ? `${product.name} (${specDetails})`
+    : product.name;
+
   const whatsappMessage = t('whatsapp.inquireProduct', {
     storeName,
-    productName: product.name,
+    productName: fullProductName,
     price: formattedPrice
   });
   const whatsappHref = buildWhatsAppLink(storePhone, whatsappMessage);
-  const href = storeSlug ? productPath(storeSlug, product.name, product.id) : undefined;
+  const href = storeSlug
+    ? linkToModel && product.trackingType === 'SERIALIZED' && product.modelKey
+      ? modelPath(storeSlug, product.modelKey)
+      : productPath(storeSlug, product.name, product.id)
+    : undefined;
 
   const getPtaBadge = () => {
     switch (product.ptaStatus) {
@@ -56,9 +66,39 @@ export function ProductCard({
             {t('catalog.ptaJv')}
           </Badge>
         );
+      case 'BYPASS':
+        return (
+          <Badge variant='secondary' className='text-[10px]'>
+            {t('catalog.ptaBypass')}
+          </Badge>
+        );
+      case 'MDM_BYPASS':
+        return (
+          <Badge variant='secondary' className='text-[10px]'>
+            {t('catalog.ptaMdmBypass')}
+          </Badge>
+        );
       default:
         return null;
     }
+  };
+
+  const getAuthenticityBadge = () => {
+    if (product.authenticity === 'ORIGINAL') {
+      return (
+        <Badge variant='success' className='text-[10px]'>
+          {t('catalog.authenticityOriginal')}
+        </Badge>
+      );
+    }
+    if (product.authenticity === 'COPY') {
+      return (
+        <Badge variant='secondary' className='text-[10px]'>
+          {t('catalog.authenticityCopy')}
+        </Badge>
+      );
+    }
+    return null;
   };
 
   const details = (
@@ -72,6 +112,30 @@ export function ProductCard({
       <h3 className='line-clamp-2 text-sm font-bold leading-snug text-foreground transition-colors group-hover:text-primary'>
         {formatEmpty(product.name)}
       </h3>
+
+      {product.storage || product.color || product.condition ? (
+        <div className='flex flex-wrap items-center gap-1.5 pt-0.5 text-[11px] text-muted-foreground'>
+          {product.storage ? (
+            <span className='rounded bg-muted/70 px-1.5 py-0.5 font-medium text-foreground/80'>
+              {product.storage}
+            </span>
+          ) : null}
+          {product.color ? (
+            <span className='rounded bg-muted/70 px-1.5 py-0.5 font-medium text-foreground/80'>
+              {product.color}
+            </span>
+          ) : null}
+          {product.condition ? (
+            <span className='rounded bg-muted/70 px-1.5 py-0.5 font-medium text-foreground/80'>
+              {product.condition === 'NEW'
+                ? t('catalog.brandNew')
+                : product.condition === 'USED'
+                  ? t('catalog.used')
+                  : product.condition}
+            </span>
+          ) : null}
+        </div>
+      ) : null}
 
       <div className='flex items-baseline justify-between pt-1'>
         <span className='text-lg font-extrabold tracking-tight text-primary'>
@@ -96,6 +160,7 @@ export function ProductCard({
 
         <div className='pointer-events-none absolute top-2.5 start-2.5 flex flex-col gap-1'>
           {getPtaBadge()}
+          {getAuthenticityBadge()}
         </div>
 
         <div className='pointer-events-none absolute top-2.5 end-2.5'>

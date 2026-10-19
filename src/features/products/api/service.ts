@@ -3,7 +3,9 @@ import { publicApiRequest } from '@/lib/api/client';
 import {
   mapCategoriesResponse,
   mapProductDetail,
-  mapProductsResponse
+  mapProductsResponse,
+  mapStoreModelDetail,
+  mapStoreModels
 } from '@/lib/api/mappers';
 import { PUBLIC_REVALIDATE_SECONDS } from '@/constants/site';
 import { extractProductId } from '@/lib/seo/slug';
@@ -11,9 +13,17 @@ import type {
   StoreCategory,
   ProductListQuery,
   PaginatedProductsResponse,
-  StoreProductDetail
+  StoreProductDetail,
+  StoreModelDetail,
+  StoreModelListItem
 } from '@/types/product';
-import type { ApiCategoriesResponse, ApiPaginatedProducts, ApiProduct } from '@/types/api';
+import type {
+  ApiCategoriesResponse,
+  ApiPaginatedProducts,
+  ApiProduct,
+  ApiStoreModel,
+  ApiStoreModelDetail
+} from '@/types/api';
 import type { PublicFetchCache } from '@/types/common';
 
 const PUBLIC_CACHE: PublicFetchCache = { revalidate: PUBLIC_REVALIDATE_SECONDS };
@@ -53,5 +63,21 @@ export const getStoreProductDetail = cache(
       PUBLIC_CACHE
     );
     return mapProductDetail(raw);
+  }
+);
+
+export const getStoreModels = cache(async (slug: string): Promise<StoreModelListItem[]> => {
+  const raw = await publicApiRequest<ApiStoreModel[]>(`stores/${slug}/models`, PUBLIC_CACHE);
+  return mapStoreModels(raw);
+});
+
+export const getStoreModelDetail = cache(
+  async (slug: string, modelKey: string): Promise<StoreModelDetail | null> => {
+    const encoded = encodeURIComponent(modelKey);
+    const raw = await publicApiRequest<ApiStoreModelDetail>(
+      `stores/${slug}/models/${encoded}`,
+      PUBLIC_CACHE
+    );
+    return mapStoreModelDetail(raw);
   }
 );
