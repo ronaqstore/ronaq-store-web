@@ -26,9 +26,9 @@ export function StoreDiscoveryShell({ searchQuery: urlSearch, children }: StoreD
 
     startTransition(() => {
       if (trimmed) {
-        router.replace({ pathname, query: { q: trimmed } });
+        router.replace({ pathname, query: { q: trimmed } }, { scroll: false });
       } else {
-        router.replace(pathname);
+        router.replace(pathname, { scroll: false });
       }
     });
   }, [debouncedSearch, urlSearch, pathname, router]);

@@ -82,3 +82,10 @@ export interface NotFoundViewProps {
   onBack: () => void;
   onHome: () => void;
 }
+
+export interface TruncateTextProps {
+  children: ReactNode;
+  className?: string;
+  title?: string;
+  lines?: 1 | 2 | 3;
+}

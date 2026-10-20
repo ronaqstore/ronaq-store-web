@@ -9,6 +9,7 @@ import {
   formatPhone,
   resolveStoreWhatsAppNumber
 } from '@/lib/formatters';
+import { formatOpeningHoursDisplay } from '@/lib/opening-hours';
 import { cn } from '@/lib/utils';
 import type { StoreHeaderProps } from '@/types/store';
 
@@ -73,7 +74,7 @@ export async function StoreHeader({ store }: StoreHeaderProps) {
 
                 <span className='flex items-center gap-1'>
                   <Icons.clock className='h-3.5 w-3.5' />
-                  {formatEmpty(store.openingHours)}
+                  {formatEmpty(formatOpeningHoursDisplay(store.openingHours))}
                 </span>
               </div>
 

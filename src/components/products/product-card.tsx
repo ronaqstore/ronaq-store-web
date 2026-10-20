@@ -10,6 +10,7 @@ import { PreviewableImage } from '@/components/media/previewable-image';
 import { PLACEHOLDER_PRODUCT_IMAGE } from '@/constants/placeholders';
 import { formatPrice, buildWhatsAppLink, formatEmpty } from '@/lib/formatters';
 import { StockBadge } from '@/components/products/stock-badge';
+import { TruncateText } from '@/components/ui/truncate-text';
 import { modelPath, productPath } from '@/lib/seo/slug';
 import { cn } from '@/lib/utils';
 import type { ProductCardProps } from '@/types/product';
@@ -104,15 +105,18 @@ export function ProductCard({
 
   const details = (
     <div className='space-y-2 p-4'>
-      <div className='flex items-center gap-1.5 text-xs text-muted-foreground'>
-        <span>{formatEmpty(product.brandName)}</span>
-        <span>•</span>
-        <span>{formatEmpty(product.categoryName)}</span>
+      <div className='flex min-w-0 items-center gap-1.5 text-xs text-muted-foreground'>
+        <TruncateText>{formatEmpty(product.brandName)}</TruncateText>
+        <span className='shrink-0'>•</span>
+        <TruncateText>{formatEmpty(product.categoryName)}</TruncateText>
       </div>
 
-      <h3 className='line-clamp-2 text-sm font-bold leading-snug text-foreground transition-colors group-hover:text-primary'>
+      <TruncateText
+        lines={2}
+        className='text-sm font-bold leading-snug text-foreground transition-colors group-hover:text-primary'
+      >
         {formatEmpty(product.name)}
-      </h3>
+      </TruncateText>
 
       {product.storage || product.color || product.condition ? (
         <div className='flex flex-wrap items-center gap-1.5 pt-0.5 text-[11px] text-muted-foreground'>

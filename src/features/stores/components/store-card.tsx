@@ -51,7 +51,7 @@ export async function StoreCard({ store, priority = false }: StoreCardProps) {
             fallbackSrc={PLACEHOLDER_SHOP_LOGO}
           />
           <div className='min-w-0 pb-0.5'>
-            <h3 className='truncate text-lg font-bold tracking-tight text-foreground'>
+            <h3 className='min-w-0 truncate text-lg font-bold tracking-tight text-foreground'>
               {formatEmpty(name)}
             </h3>
             <p className='flex items-center gap-1 text-xs text-muted-foreground'>

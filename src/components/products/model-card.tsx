@@ -8,6 +8,7 @@ import { PreviewableImage } from '@/components/media/previewable-image';
 import { PLACEHOLDER_PRODUCT_IMAGE } from '@/constants/placeholders';
 import { formatEmpty, formatPrice } from '@/lib/formatters';
 import { StockBadge } from '@/components/products/stock-badge';
+import { TruncateText } from '@/components/ui/truncate-text';
 import { modelPath } from '@/lib/seo/slug';
 import type { ModelCardProps } from '@/types/product';
 
@@ -22,10 +23,13 @@ export function ModelCard({ model, storeSlug, priority = false }: ModelCardProps
 
   const details = (
     <div className='space-y-2 p-4'>
-      <p className='text-xs text-muted-foreground'>{formatEmpty(model.brand)}</p>
-      <h3 className='line-clamp-2 text-sm font-bold leading-snug text-foreground group-hover:text-primary'>
+      <TruncateText className='text-xs text-muted-foreground'>{formatEmpty(model.brand)}</TruncateText>
+      <TruncateText
+        lines={2}
+        className='text-sm font-bold leading-snug text-foreground group-hover:text-primary'
+      >
         {formatEmpty(model.model)}
-      </h3>
+      </TruncateText>
       <div className='flex flex-wrap items-center gap-2'>
         <Badge variant='secondary' className='text-[10px]'>
           {t('catalog.variantCount', { count: model.variantCount })}

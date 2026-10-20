@@ -50,9 +50,9 @@ export function StoreCatalogClient({
     const query = buildQuery(next);
     startTransition(() => {
       if (Object.keys(query).length > 0) {
-        router.replace({ pathname, query });
+        router.replace({ pathname, query }, { scroll: false });
       } else {
-        router.replace(pathname);
+        router.replace(pathname, { scroll: false });
       }
     });
   };
@@ -69,9 +69,9 @@ export function StoreCatalogClient({
 
     startTransition(() => {
       if (Object.keys(query).length > 0) {
-        router.replace({ pathname, query });
+        router.replace({ pathname, query }, { scroll: false });
       } else {
-        router.replace(pathname);
+        router.replace(pathname, { scroll: false });
       }
     });
   }, [debouncedSearch, filters.q, filters.category, filters.inStock, pathname, router]);

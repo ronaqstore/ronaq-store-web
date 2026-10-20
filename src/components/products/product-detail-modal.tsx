@@ -34,16 +34,17 @@ export function ProductDetailModal({
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in'>
       <div className='relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-border bg-card shadow-2xl p-6'>
-        <Button
+        <button
           type='button'
-          variant='ghost'
-          size='icon'
-          className='absolute inset-e-4 top-4 h-8 w-8 rounded-full'
+          className={cn(
+            buttonVariants({ variant: 'ghost', size: 'icon' }),
+            'absolute inset-e-4 top-4 h-8 w-8 rounded-full'
+          )}
           onClick={onClose}
           aria-label={t('aria.closeModal')}
         >
           <Icons.close className='h-4 w-4' />
-        </Button>
+        </button>
 
         <div className='space-y-6'>
           <PreviewableImage
