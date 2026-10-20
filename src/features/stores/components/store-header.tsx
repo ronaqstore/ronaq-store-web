@@ -53,7 +53,7 @@ export async function StoreHeader({ store }: StoreHeaderProps) {
               src={store.logoUrl}
               alt={formatEmpty(name)}
               priority
-              className='h-24 w-24 shrink-0 overflow-hidden rounded-2xl border-4 border-background bg-card shadow-xl sm:h-32 sm:w-32'
+              className='h-24 w-24 shrink-0 overflow-hidden rounded-full border-4 border-background bg-card shadow-xl sm:h-32 sm:w-32'
               imageClassName='object-cover'
               sizes='128px'
               fallbackSrc={PLACEHOLDER_SHOP_LOGO}
