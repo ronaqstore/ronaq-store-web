@@ -158,12 +158,12 @@ export function ProductCard({
           fallbackSrc={PLACEHOLDER_PRODUCT_IMAGE}
         />
 
-        <div className='pointer-events-none absolute top-2.5 start-2.5 flex flex-col gap-1'>
+        <div className='pointer-events-none absolute top-2.5 inset-s-2.5 flex flex-col gap-1'>
           {getPtaBadge()}
           {getAuthenticityBadge()}
         </div>
 
-        <div className='pointer-events-none absolute top-2.5 end-2.5'>
+        <div className='pointer-events-none absolute top-2.5 inset-e-2.5'>
           <StockBadge availability={product.availability} stockCount={product.stockCount} />
         </div>
       </div>

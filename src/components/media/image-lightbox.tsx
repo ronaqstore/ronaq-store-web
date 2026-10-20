@@ -48,7 +48,7 @@ export function ImageLightbox({ src, alt, open, onOpenChange }: ImageLightboxPro
         type='button'
         variant='ghost'
         size='icon'
-        className='absolute end-4 top-4 z-10 h-10 w-10 rounded-full bg-background/80'
+        className='absolute inset-e-4 top-4 z-10 h-10 w-10 rounded-full bg-background/80'
         onClick={handleClose}
         aria-label={t('aria.closeModal')}
       >

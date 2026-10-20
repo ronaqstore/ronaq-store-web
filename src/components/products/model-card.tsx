@@ -36,7 +36,7 @@ export function ModelCard({ model, storeSlug, priority = false }: ModelCardProps
             sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
             fallbackSrc={PLACEHOLDER_PRODUCT_IMAGE}
           />
-          <div className='pointer-events-none absolute top-2.5 end-2.5'>
+          <div className='pointer-events-none absolute top-2.5 inset-e-2.5'>
             <StockBadge availability={model.availability} stockCount={null} />
           </div>
         </div>

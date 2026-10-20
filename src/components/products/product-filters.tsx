@@ -19,7 +19,7 @@ export function ProductFilters({
     <div className='space-y-4 py-4 border-b border-border/60'>
       <div className='flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3'>
         <div className='relative flex-1 max-w-md'>
-          <Icons.search className='absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
+          <Icons.search className='absolute inset-s-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
           <Input
             type='text'
             value={searchQuery}

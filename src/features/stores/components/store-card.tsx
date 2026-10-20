@@ -39,7 +39,7 @@ export async function StoreCard({ store, priority = false }: StoreCardProps) {
         )}
         <div className='absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent' />
 
-        <div className='absolute bottom-3 start-3 end-3 flex items-end gap-3'>
+        <div className='absolute bottom-3 inset-s-3 inset-e-3 flex items-end gap-3'>
           <PreviewableImage
             src={store.logoUrl}
             alt={formatEmpty(name)}

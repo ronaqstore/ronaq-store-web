@@ -37,7 +37,7 @@ export function ProductDetailModal({
           type='button'
           variant='ghost'
           size='icon'
-          className='absolute end-4 top-4 h-8 w-8 rounded-full'
+          className='absolute inset-e-4 top-4 h-8 w-8 rounded-full'
           onClick={onClose}
           aria-label={t('aria.closeModal')}
         >

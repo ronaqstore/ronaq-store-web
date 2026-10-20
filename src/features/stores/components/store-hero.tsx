@@ -43,7 +43,7 @@ export function StoreHero({ searchQuery, onSearchChange }: StoreHeroProps) {
 
           <div className='animate-in fade-in slide-in-from-bottom-4 mx-auto mt-8 max-w-2xl duration-700 delay-200'>
             <div className='relative flex items-center overflow-hidden rounded-2xl border border-border bg-card shadow-sm'>
-              <Icons.search className='pointer-events-none absolute start-4 top-1/2 z-10 h-5 w-5 -translate-y-1/2 text-muted-foreground' />
+              <Icons.search className='pointer-events-none absolute inset-s-4 top-1/2 z-10 h-5 w-5 -translate-y-1/2 text-muted-foreground' />
               <Input
                 type='search'
                 value={searchQuery}
@@ -57,7 +57,7 @@ export function StoreHero({ searchQuery, onSearchChange }: StoreHeroProps) {
                   variant='ghost'
                   size='sm'
                   onClick={clearSearch}
-                  className='absolute end-3 top-1/2 z-10 h-8 w-8 -translate-y-1/2 rounded-full p-0'
+                  className='absolute inset-e-3 top-1/2 z-10 h-8 w-8 -translate-y-1/2 rounded-full p-0'
                   aria-label={t('aria.clearSearch')}
                 >
                   <Icons.close className='h-4 w-4' />

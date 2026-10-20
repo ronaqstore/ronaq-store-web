@@ -5,6 +5,7 @@
  *   1. secrets          — no hardcoded secrets / API keys
  *   2. hardcoded-text   — no raw UI strings (must use next-intl)
  *   3. arch-rules       — no raw process.env, no inline style, no as any, RTL safe classes, no hex colors
+ *   3b.tailwind-classes — prefer inset-s and inset-e over deprecated start and end positioning
  *   4. structure        — allowed src/ top-level dirs and root files
  *   5. metadata         — every page.tsx server component with SEO metadata & openGraph
  *   6. types            — ban any, !, @ts-ignore, as unknown, Function, Object
@@ -40,6 +41,7 @@ const CHECKS = [
   { id: 'locale-sync',        cmd: ['node', 'scripts/code/check-locale-sync.cjs'] },
 
   { id: 'arch-rules',         cmd: ['node', 'scripts/code/check-arch-rules.cjs'] },
+  { id: 'tailwind-classes',   cmd: ['node', 'scripts/code/check-tailwind-classes.cjs'] },
   { id: 'structure',          cmd: ['node', 'scripts/code/check-structure.cjs'] },
   { id: 'metadata',           cmd: ['node', 'scripts/code/check-metadata.cjs'] },
   { id: 'types',              cmd: ['node', 'scripts/code/check-types.cjs'] },
