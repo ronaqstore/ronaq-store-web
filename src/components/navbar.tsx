@@ -4,10 +4,11 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { Icons } from '@/components/icons';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { ADMIN_BASE_URL } from '@/constants/api';
+import { cn } from '@/lib/utils';
 
 export function Navbar() {
   const t = useTranslations();
@@ -57,10 +58,9 @@ export function Navbar() {
             href={`${ADMIN_BASE_URL}/login`}
             target='_blank'
             rel='noopener noreferrer nofollow'
+            className={cn(buttonVariants({ size: 'sm' }), 'ms-1 shadow-sm')}
           >
-            <Button type='button' size='sm' className='ms-1 shadow-sm'>
-              {t('nav.login')}
-            </Button>
+            {t('nav.login')}
           </a>
         </div>
 
@@ -95,11 +95,9 @@ export function Navbar() {
             href={`${ADMIN_BASE_URL}/login`}
             target='_blank'
             rel='noopener noreferrer nofollow'
-            className='block w-full'
+            className={cn(buttonVariants(), 'w-full')}
           >
-            <Button type='button' className='w-full'>
-              {t('nav.login')}
-            </Button>
+            {t('nav.login')}
           </a>
         </div>
       ) : null}

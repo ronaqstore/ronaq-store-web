@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { Icons } from '@/components/icons';
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { PreviewableImage } from '@/components/media/previewable-image';
@@ -11,6 +11,7 @@ import { PLACEHOLDER_PRODUCT_IMAGE } from '@/constants/placeholders';
 import { formatPrice, buildWhatsAppLink, formatEmpty } from '@/lib/formatters';
 import { StockBadge } from '@/components/products/stock-badge';
 import { modelPath, productPath } from '@/lib/seo/slug';
+import { cn } from '@/lib/utils';
 import type { ProductCardProps } from '@/types/product';
 
 export function ProductCard({
@@ -187,15 +188,17 @@ export function ProductCard({
 
       {product.contactForPrice && storePhone ? (
         <div className='p-4 pt-0'>
-          <a href={whatsappHref} target='_blank' rel='noopener noreferrer' className='block w-full'>
-            <Button
-              type='button'
-              size='sm'
-              className='w-full gap-2 bg-emerald-600 text-xs text-white shadow-sm hover:bg-emerald-700'
-            >
-              <Icons.whatsapp className='h-4 w-4' />
-              {t('catalog.inquireWhatsApp')}
-            </Button>
+          <a
+            href={whatsappHref}
+            target='_blank'
+            rel='noopener noreferrer'
+            className={cn(
+              buttonVariants({ size: 'sm' }),
+              'w-full gap-2 bg-emerald-600 text-xs text-white shadow-sm hover:bg-emerald-700'
+            )}
+          >
+            <Icons.whatsapp className='h-4 w-4' />
+            {t('catalog.inquireWhatsApp')}
           </a>
         </div>
       ) : null}

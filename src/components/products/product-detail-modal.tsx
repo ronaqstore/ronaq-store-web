@@ -2,12 +2,13 @@
 
 import { useTranslations } from 'next-intl';
 import { Icons } from '@/components/icons';
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { PreviewableImage } from '@/components/media/previewable-image';
 import { PLACEHOLDER_PRODUCT_IMAGE } from '@/constants/placeholders';
 import { formatPrice, buildWhatsAppLink, formatEmpty } from '@/lib/formatters';
 import { StockBadge } from '@/components/products/stock-badge';
+import { cn } from '@/lib/utils';
 import type { ProductDetailModalProps } from '@/types/product';
 
 export function ProductDetailModal({
@@ -107,16 +108,13 @@ export function ProductDetailModal({
                 href={whatsappHref}
                 target='_blank'
                 rel='noopener noreferrer'
-                className='w-full block'
+                className={cn(
+                  buttonVariants({ size: 'lg' }),
+                  'w-full gap-2 bg-emerald-600 font-bold text-white shadow-md hover:bg-emerald-700'
+                )}
               >
-                <Button
-                  type='button'
-                  size='lg'
-                  className='w-full gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-md'
-                >
-                  <Icons.whatsapp className='h-5 w-5' />
-                  {t('catalog.inquireWhatsApp')}
-                </Button>
+                <Icons.whatsapp className='h-5 w-5' />
+                {t('catalog.inquireWhatsApp')}
               </a>
             </div>
           ) : null}

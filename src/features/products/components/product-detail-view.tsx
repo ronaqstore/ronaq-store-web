@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { Icons } from '@/components/icons';
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ProductImageGallery } from '@/components/products/product-image-gallery';
 import { ProductCard } from '@/components/products/product-card';
@@ -16,6 +16,7 @@ import {
   resolveStoreWhatsAppNumber
 } from '@/lib/formatters';
 import { StockBadge } from '@/components/products/stock-badge';
+import { cn } from '@/lib/utils';
 import type { ProductDetailViewProps } from '@/types/product';
 
 export async function ProductDetailView({
@@ -231,15 +232,17 @@ export async function ProductDetailView({
         </div>
 
         {storePhone ? (
-          <a href={whatsappHref} target='_blank' rel='noopener noreferrer' className='block'>
-            <Button
-              type='button'
-              size='lg'
-              className='w-full gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold'
-            >
-              <Icons.whatsapp className='h-5 w-5' />
-              {product.contactForPrice ? t('catalog.inquireWhatsApp') : t('catalog.orderWhatsApp')}
-            </Button>
+          <a
+            href={whatsappHref}
+            target='_blank'
+            rel='noopener noreferrer'
+            className={cn(
+              buttonVariants({ size: 'lg' }),
+              'w-full gap-2 bg-emerald-600 font-bold text-white hover:bg-emerald-700'
+            )}
+          >
+            <Icons.whatsapp className='h-5 w-5' />
+            {product.contactForPrice ? t('catalog.inquireWhatsApp') : t('catalog.orderWhatsApp')}
           </a>
         ) : null}
       </div>

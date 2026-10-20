@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useTranslations } from 'next-intl';
-import { SmartImage } from '@/components/media/smart-image';
-import { ImageLightbox } from '@/components/media/image-lightbox';
-import { isPreviewableImageSrc } from '@/lib/media';
-import { cn } from '@/lib/utils';
-import type { PreviewableImageProps } from '@/types/media';
+import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { SmartImage } from "@/components/media/smart-image";
+import { ImageLightbox } from "@/components/media/image-lightbox";
+import { isPreviewableImageSrc } from "@/lib/media";
+import { cn } from "@/lib/utils";
+import type { PreviewableImageProps } from "@/types/media";
 
 export function PreviewableImage({
   src,
@@ -15,14 +15,14 @@ export function PreviewableImage({
   imageClassName,
   sizes,
   priority = false,
-  fallbackSrc
+  fallbackSrc,
 }: PreviewableImageProps) {
   const t = useTranslations();
   const [open, setOpen] = useState(false);
   const canPreview = isPreviewableImageSrc(src);
-  const displaySrc = canPreview ? src.trim() : (fallbackSrc ?? src ?? '');
+  const displaySrc = canPreview ? src.trim() : (fallbackSrc ?? src ?? "");
 
-  const handleOpenPreview = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const openPreview = (event: React.SyntheticEvent) => {
     event.preventDefault();
     event.stopPropagation();
     setOpen(true);
@@ -30,7 +30,7 @@ export function PreviewableImage({
 
   if (!canPreview) {
     return (
-      <div className={cn('relative overflow-hidden', className)}>
+      <div className={cn("relative overflow-hidden", className)}>
         <SmartImage
           src={displaySrc}
           alt={alt}
@@ -46,14 +46,21 @@ export function PreviewableImage({
 
   return (
     <>
-      <button
-        type='button'
+      <div
         className={cn(
-          'relative block w-full overflow-hidden border-0 bg-transparent p-0 cursor-zoom-in',
-          className
+          "relative block w-full overflow-hidden border-0 bg-transparent p-0 cursor-zoom-in",
+          className,
         )}
-        onClick={handleOpenPreview}
-        aria-label={t('aria.previewImage')}
+        onClick={openPreview}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            openPreview(event);
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-label={t("aria.previewImage")}
+        suppressHydrationWarning
       >
         <SmartImage
           src={displaySrc}
@@ -64,8 +71,13 @@ export function PreviewableImage({
           sizes={sizes}
           fallbackSrc={fallbackSrc}
         />
-      </button>
-      <ImageLightbox src={displaySrc} alt={alt} open={open} onOpenChange={setOpen} />
+      </div>
+      <ImageLightbox
+        src={displaySrc}
+        alt={alt}
+        open={open}
+        onOpenChange={setOpen}
+      />
     </>
   );
 }

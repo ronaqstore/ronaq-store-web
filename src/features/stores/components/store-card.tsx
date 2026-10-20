@@ -1,12 +1,13 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { Icons } from '@/components/icons';
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { SmartImage } from '@/components/media/smart-image';
 import { PreviewableImage } from '@/components/media/previewable-image';
 import { PLACEHOLDER_SHOP_LOGO } from '@/constants/placeholders';
 import { buildWhatsAppLink, formatEmpty, resolveStoreWhatsAppNumber } from '@/lib/formatters';
+import { cn } from '@/lib/utils';
 import type { StoreCardProps } from '@/types/store';
 
 export async function StoreCard({ store, priority = false }: StoreCardProps) {
@@ -76,24 +77,29 @@ export async function StoreCard({ store, priority = false }: StoreCardProps) {
           className={`mt-auto grid gap-2 pt-1 ${whatsappHref ? 'grid-cols-2' : 'grid-cols-1'}`}
         >
           {whatsappHref ? (
-            <a href={whatsappHref} target='_blank' rel='noopener noreferrer' className='w-full'>
-              <Button
-                type='button'
-                variant='outline'
-                size='sm'
-                className='w-full gap-1.5 border-emerald-500/30 text-xs text-emerald-700 hover:bg-emerald-500/10 dark:text-emerald-400'
-              >
-                <Icons.whatsapp className='h-3.5 w-3.5' />
-                {t('stores.whatsapp')}
-              </Button>
+            <a
+              href={whatsappHref}
+              target='_blank'
+              rel='noopener noreferrer'
+              className={cn(
+                buttonVariants({ variant: 'outline', size: 'sm' }),
+                'w-full gap-1.5 border-emerald-500/30 text-xs text-emerald-700 hover:bg-emerald-500/10 dark:text-emerald-400'
+              )}
+            >
+              <Icons.whatsapp className='h-3.5 w-3.5' />
+              {t('stores.whatsapp')}
             </a>
           ) : null}
 
-          <Link href={`/shop/${store.slug}`} className='w-full'>
-            <Button type='button' size='sm' className='w-full gap-1.5 text-xs shadow-sm'>
-              {t('stores.viewShop')}
-              <Icons.arrowRight className='h-3.5 w-3.5' />
-            </Button>
+          <Link
+            href={`/shop/${store.slug}`}
+            className={cn(
+              buttonVariants({ size: 'sm' }),
+              'w-full gap-1.5 text-xs shadow-sm'
+            )}
+          >
+            {t('stores.viewShop')}
+            <Icons.arrowRight className='h-3.5 w-3.5' />
           </Link>
         </div>
       </div>

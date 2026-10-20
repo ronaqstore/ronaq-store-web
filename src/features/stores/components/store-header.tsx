@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { Icons } from '@/components/icons';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { PreviewableImage } from '@/components/media/previewable-image';
 import { PLACEHOLDER_SHOP_LOGO } from '@/constants/placeholders';
 import {
@@ -9,6 +9,7 @@ import {
   formatPhone,
   resolveStoreWhatsAppNumber
 } from '@/lib/formatters';
+import { cn } from '@/lib/utils';
 import type { StoreHeaderProps } from '@/types/store';
 
 export async function StoreHeader({ store }: StoreHeaderProps) {
@@ -84,20 +85,24 @@ export async function StoreHeader({ store }: StoreHeaderProps) {
 
           <div className='flex flex-wrap items-center gap-2.5 pt-2 md:pt-0'>
             {whatsappHref ? (
-              <a href={whatsappHref} target='_blank' rel='noopener noreferrer'>
-                <Button type='button' className='gap-2 bg-emerald-600 hover:bg-emerald-700 text-white shadow-md'>
-                  <Icons.whatsapp className='h-4 w-4' />
-                  {t('stores.whatsapp')}
-                </Button>
+              <a
+                href={whatsappHref}
+                target='_blank'
+                rel='noopener noreferrer'
+                className={cn(
+                  buttonVariants(),
+                  'gap-2 bg-emerald-600 text-white shadow-md hover:bg-emerald-700'
+                )}
+              >
+                <Icons.whatsapp className='h-4 w-4' />
+                {t('stores.whatsapp')}
               </a>
             ) : null}
 
             {phoneHref ? (
-              <a href={phoneHref}>
-                <Button type='button' variant='outline' className='gap-2'>
-                  <Icons.phone className='h-4 w-4' />
-                  <span>{formatPhone(store.phoneNumber)}</span>
-                </Button>
+              <a href={phoneHref} className={cn(buttonVariants({ variant: 'outline' }), 'gap-2')}>
+                <Icons.phone className='h-4 w-4' />
+                <span>{formatPhone(store.phoneNumber)}</span>
               </a>
             ) : (
               <Button type='button' variant='outline' className='gap-2' disabled>
@@ -111,10 +116,10 @@ export async function StoreHeader({ store }: StoreHeaderProps) {
                 href={store.googleMapsUrl}
                 target='_blank'
                 rel='noopener noreferrer'
+                className={buttonVariants({ variant: 'ghost', size: 'icon' })}
+                aria-label={t('aria.directions')}
               >
-                <Button type='button' variant='ghost' size='icon' aria-label={t('aria.directions')}>
-                  <Icons.externalLink className='h-4 w-4' />
-                </Button>
+                <Icons.externalLink className='h-4 w-4' />
               </a>
             ) : null}
           </div>
