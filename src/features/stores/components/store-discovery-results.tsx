@@ -21,7 +21,7 @@ export async function StoreDiscoveryResults({ stores }: StoreDiscoveryResultsPro
   return (
     <div className='space-y-3'>
       <p className='text-xs text-muted-foreground'>{t('stores.shopsFound', { count: stores.length })}</p>
-      <div className='grid grid-cols-1 min-[480px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5'>
+      <div className='grid grid-cols-1 gap-4 min-[480px]:grid-cols-2 sm:gap-5 md:grid-cols-3 xl:grid-cols-4'>
 
         {stores.map((store, index) => (
           <StoreCard

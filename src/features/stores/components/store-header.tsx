@@ -29,10 +29,11 @@ export async function StoreHeader({ store }: StoreHeaderProps) {
     : formatEmpty(store.city);
   const banner = store.heroBannerUrl || store.bannerUrl;
   const about = store.description || store.about;
+  const hours = formatOpeningHoursDisplay(store.openingHours);
 
   return (
-    <div className='relative overflow-hidden border-b border-border/70 bg-gradient-to-b from-muted/30 via-background to-background'>
-      <div className='relative flex h-40 w-full items-center justify-center overflow-hidden sm:h-52'>
+    <header className='border-b border-border/60 bg-background'>
+      <div className='relative h-36 w-full overflow-hidden sm:h-44 md:h-52'>
         {banner ? (
           <PreviewableImage
             src={banner}
@@ -43,48 +44,51 @@ export async function StoreHeader({ store }: StoreHeaderProps) {
             sizes='100vw'
           />
         ) : (
-          <div className='absolute inset-0 bg-gradient-to-r from-emerald-600/30 via-teal-500/20 to-sky-600/30' />
+          <div className='absolute inset-0 bg-gradient-to-br from-primary/25 via-primary/10 to-muted' />
         )}
-        <div className='pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent' />
+        <div className='pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/55 to-transparent' />
       </div>
 
       <div className='mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8'>
-        <div className='relative -mt-16 sm:-mt-20 flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8'>
-          <div className='flex flex-col sm:flex-row items-start sm:items-end gap-4'>
+        <div className='relative -mt-12 flex flex-col gap-5 pb-6 sm:-mt-14 sm:pb-8 md:flex-row md:items-end md:justify-between md:gap-8'>
+          <div className='flex min-w-0 items-start gap-3.5 sm:gap-4'>
             <PreviewableImage
               src={store.logoUrl}
               alt={formatEmpty(name)}
               priority
-              className='h-24 w-24 shrink-0 overflow-hidden rounded-full border-4 border-background bg-card shadow-xl sm:h-32 sm:w-32'
+              className='h-20 w-20 shrink-0 overflow-hidden rounded-2xl border-4 border-background bg-card shadow-md sm:h-24 sm:w-24'
               imageClassName='object-cover'
-              sizes='128px'
+              sizes='96px'
               fallbackSrc={PLACEHOLDER_SHOP_LOGO}
             />
 
-            <div className='space-y-1.5'>
-              <h1 className='text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight'>
+            <div className='min-w-0 space-y-1.5 pt-1 sm:pt-2'>
+              <h1 className='truncate text-xl font-bold tracking-tight text-foreground sm:text-2xl md:text-3xl'>
                 {formatEmpty(store.displayName || store.name)}
               </h1>
 
-              <div className='flex flex-wrap items-center gap-x-4 gap-y-1 text-xs sm:text-sm text-muted-foreground'>
-                <span className='flex items-center gap-1'>
-                  <Icons.mapPin className='h-3.5 w-3.5 text-primary' />
-                  {location}
+              <div className='flex flex-col gap-1 text-xs text-muted-foreground sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-1 sm:text-sm'>
+                <span className='inline-flex min-w-0 items-center gap-1.5'>
+                  <Icons.mapPin className='h-3.5 w-3.5 shrink-0 text-primary' />
+                  <span className='truncate'>{location}</span>
                 </span>
-
-                <span className='flex items-center gap-1'>
-                  <Icons.clock className='h-3.5 w-3.5' />
-                  {formatEmpty(formatOpeningHoursDisplay(store.openingHours))}
-                </span>
+                {hours ? (
+                  <span className='inline-flex items-center gap-1.5'>
+                    <Icons.clock className='h-3.5 w-3.5 shrink-0' />
+                    <span>{hours}</span>
+                  </span>
+                ) : null}
               </div>
 
-              <p className='max-w-2xl pt-1 text-xs leading-relaxed text-foreground/80 sm:text-sm'>
-                {formatEmpty(about)}
-              </p>
+              {about ? (
+                <p className='max-w-2xl line-clamp-2 pt-0.5 text-xs leading-relaxed text-muted-foreground sm:text-sm'>
+                  {about}
+                </p>
+              ) : null}
             </div>
           </div>
 
-          <div className='flex flex-wrap items-center gap-2.5 pt-2 md:pt-0'>
+          <div className='flex flex-wrap items-center gap-2 md:shrink-0'>
             {whatsappHref ? (
               <a
                 href={whatsappHref}
@@ -92,7 +96,7 @@ export async function StoreHeader({ store }: StoreHeaderProps) {
                 rel='noopener noreferrer'
                 className={cn(
                   buttonVariants(),
-                  'gap-2 bg-emerald-600 text-white shadow-md hover:bg-emerald-700'
+                  'gap-2 bg-emerald-600 text-white shadow-sm hover:bg-emerald-700'
                 )}
               >
                 <Icons.whatsapp className='h-4 w-4' />
@@ -101,9 +105,12 @@ export async function StoreHeader({ store }: StoreHeaderProps) {
             ) : null}
 
             {phoneHref ? (
-              <a href={phoneHref} className={cn(buttonVariants({ variant: 'outline' }), 'gap-2')}>
+              <a
+                href={phoneHref}
+                className={cn(buttonVariants({ variant: 'outline' }), 'gap-2')}
+              >
                 <Icons.phone className='h-4 w-4' />
-                <span>{formatPhone(store.phoneNumber)}</span>
+                <span dir='ltr'>{formatPhone(store.phoneNumber)}</span>
               </a>
             ) : (
               <Button type='button' variant='outline' className='gap-2' disabled>
@@ -126,6 +133,6 @@ export async function StoreHeader({ store }: StoreHeaderProps) {
           </div>
         </div>
       </div>
-    </div>
+    </header>
   );
 }

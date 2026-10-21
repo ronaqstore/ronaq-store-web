@@ -16,39 +16,39 @@ export function ProductFilters({
   const t = useTranslations();
 
   return (
-    <div className='space-y-4 py-4 border-b border-border/60'>
-      <div className='flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3'>
-        <div className='relative flex-1 max-w-md'>
-          <Icons.search className='absolute inset-s-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
+    <div className='sticky top-14 z-20 -mx-4 space-y-3 border-b border-border/60 bg-background/90 px-4 py-3 backdrop-blur-md min-[390px]:top-16 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8'>
+      <div className='flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-3'>
+        <div className='relative w-full max-w-md flex-1'>
+          <Icons.search className='absolute inset-s-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
           <Input
             type='text'
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={t('catalog.searchInShop')}
-            className='ps-9 text-sm h-9 bg-card'
+            className='h-9 bg-card ps-9 text-sm'
           />
         </div>
 
-        <div className='flex items-center gap-2'>
-          <Button
-            type='button'
-            variant={inStockOnly ? 'secondary' : 'outline'}
-            size='sm'
-            onClick={() => onInStockToggle(!inStockOnly)}
-            className='gap-1.5 text-xs h-9'
-          >
-            <Icons.check className={`h-3.5 w-3.5 ${inStockOnly ? 'text-primary' : 'text-muted-foreground'}`} />
-            {t('catalog.inStockOnly')}
-          </Button>
-        </div>
+        <Button
+          type='button'
+          variant={inStockOnly ? 'secondary' : 'outline'}
+          size='sm'
+          onClick={() => onInStockToggle(!inStockOnly)}
+          className='h-9 gap-1.5 self-start text-xs sm:self-auto'
+        >
+          <Icons.check
+            className={`h-3.5 w-3.5 ${inStockOnly ? 'text-primary' : 'text-muted-foreground'}`}
+          />
+          {t('catalog.inStockOnly')}
+        </Button>
       </div>
 
-      <div className='flex flex-wrap items-center gap-1.5 overflow-x-auto pb-1'>
+      <div className='-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'>
         <Button
           type='button'
           variant={!selectedCategoryId ? 'secondary' : 'ghost'}
           size='sm'
-          className='rounded-full text-xs h-8 px-3.5'
+          className='h-8 shrink-0 rounded-full px-3.5 text-xs'
           onClick={() => onCategorySelect('')}
         >
           {t('catalog.allCategories')}
@@ -59,11 +59,9 @@ export function ProductFilters({
             type='button'
             variant={selectedCategoryId === category.id ? 'secondary' : 'ghost'}
             size='sm'
-            className='rounded-full text-xs h-8 px-3.5'
+            className='h-8 shrink-0 rounded-full px-3.5 text-xs'
             onClick={() =>
-              onCategorySelect(
-                selectedCategoryId === category.id ? '' : category.id
-              )
+              onCategorySelect(selectedCategoryId === category.id ? '' : category.id)
             }
           >
             {category.name}

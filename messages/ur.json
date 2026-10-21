@@ -94,15 +94,18 @@
     "backToShop": "{store} پر واپس جائیں",
     "shopCatalogHeading": "{store} کی پروڈکٹ کیٹلاگ",
     "filterAll": "سب",
+    "resetFilters": "ری سیٹ",
+    "clearFilter": "{title} صاف کریں",
     "condition": "حالت",
     "conditionNew": "نیا",
     "conditionUsed": "استعمال شدہ",
     "batteryMin": "کم از کم بیٹری %",
     "batteryPct": "{pct}% بیٹری",
+    "phoneUnit": "فون {n}",
     "inStockPhones": "{count} فون دستیاب",
-    "inStockPhonesHelp": "ہر قطار ایک فون ہے (IMEI چھپا ہوا)۔ درست یونٹ کے لیے واٹس ایپ پر پوچھیں۔",
-    "contactForPrice": "قیمت کے لیے رابطہ کریں",
-    "unitWhatsAppMessage": "السلام علیکم {store}، مجھے {product} چاہیے — IMEI {imei}، {condition}، {battery}۔"
+    "inStockPhonesHelp": "ہر قطار ایک فون ہے۔ درست یونٹ کے لیے واٹس ایپ پر پوچھیں۔",
+    "contactForPrice": "قیمت پوچھیں",
+    "unitWhatsAppMessage": "السلام علیکم {store}، مجھے {product} چاہیے — فون {unit}، {condition}، {battery}۔"
   },
   "footer": {
     "tagline": "پورے پاکستان میں مقامی موبائل دکانیں دیکھیں، لائیو اسٹاک چیک کریں اور براہ راست واٹس ایپ پر آرڈر کریں۔",

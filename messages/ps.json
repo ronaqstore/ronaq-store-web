@@ -94,15 +94,18 @@
     "backToShop": "{store} ته بیرته",
     "shopCatalogHeading": "د {store} د توکو کتلاګ",
     "filterAll": "ټول",
+    "resetFilters": "ریسیټ",
+    "clearFilter": "{title} پاک کړئ",
     "condition": "حالت",
     "conditionNew": "نوی",
     "conditionUsed": "کارېدلی",
     "batteryMin": "لږترلږه بیټري %",
     "batteryPct": "{pct}% بیټري",
+    "phoneUnit": "تلیفون {n}",
     "inStockPhones": "{count} تلیفونونه په سټاک کې",
-    "inStockPhonesHelp": "هره کرښه یو فزیکي تلیفون دی (IMEI پټ). دقیق واحد لپاره واټساپ وپوښتئ.",
-    "contactForPrice": "د بیې لپاره اړیکه",
-    "unitWhatsAppMessage": "سلام {store}، زه په {product} علاقه لرم — IMEI {imei}، {condition}، {battery}."
+    "inStockPhonesHelp": "هره کرښه یو تلیفون دی. دقیق واحد لپاره واټساپ وپوښتئ.",
+    "contactForPrice": "بیه وپوښتئ",
+    "unitWhatsAppMessage": "سلام {store}، زه په {product} علاقه لرم — تلیفون {unit}، {condition}، {battery}."
   },
   "footer": {
     "tagline": "په ټول پاکستان کې محلي موبایل دوکانونه ومومئ او مستقیم په واټس اپ امر وکړئ.",

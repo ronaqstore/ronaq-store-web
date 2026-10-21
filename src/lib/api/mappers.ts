@@ -38,7 +38,8 @@ function mapStoreItem(raw: ApiStore): StoreListItem {
     heroBannerUrl: raw.bannerUrl ?? null,
     bannerUrl: raw.bannerUrl ?? null,
     productCount: raw.totalProducts ?? 0,
-    totalProducts: raw.totalProducts ?? 0
+    totalProducts: raw.totalProducts ?? 0,
+    openingHours: raw.openingHours ?? null
   };
 }
 

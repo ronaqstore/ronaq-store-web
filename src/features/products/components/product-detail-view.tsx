@@ -13,6 +13,10 @@ import {
   formatPrice,
   buildWhatsAppLink,
   formatEmpty,
+  formatProductCardTitle,
+  formatStorageLabel,
+  formatColorLabel,
+  formatTitleCase,
   resolveStoreWhatsAppNumber
 } from '@/lib/formatters';
 import { StockBadge } from '@/components/products/stock-badge';
@@ -30,19 +34,22 @@ export async function ProductDetailView({
   const storeName = store.displayName;
   const storePhone = resolveStoreWhatsAppNumber(store);
   const path = productPath(slug, product.name, product.id);
+  const displayTitle = formatProductCardTitle(product.name, product.brandName);
+  const storageLabel = formatStorageLabel(product.storage);
+  const colorLabel = formatColorLabel(product.color);
   const crumbs = [
     { name: t('nav.home'), path: '/' },
     { name: storeName, path: `/shop/${slug}` },
-    { name: product.name, path }
+    { name: displayTitle, path }
   ];
 
   const formattedPrice = product.contactForPrice
     ? t('catalog.contactForPrice')
     : formatPrice(product.retailPrice);
-  const specDetails = [product.color, product.storage].filter(Boolean).join(', ');
+  const specDetails = [storageLabel, colorLabel].filter(Boolean).join(', ');
   const fullProductName = specDetails
-    ? `${product.name} (${specDetails})`
-    : product.name;
+    ? `${displayTitle} (${specDetails})`
+    : displayTitle;
 
   const whatsappHref = buildWhatsAppLink(
     storePhone,
@@ -129,11 +136,20 @@ export async function ProductDetailView({
             <StockBadge availability={product.availability} stockCount={product.stockCount} />
           </div>
 
-          <h1 className='text-2xl sm:text-3xl font-extrabold text-foreground'>
-            {formatEmpty(product.name)}
-          </h1>
+          <div className='space-y-1'>
+            {product.brandName ? (
+              <p className='text-xs font-semibold tracking-[0.08em] text-muted-foreground uppercase'>
+                {formatTitleCase(product.brandName)}
+              </p>
+            ) : null}
+            <h1 className='text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl'>
+              {displayTitle}
+            </h1>
+          </div>
 
-          <div className='text-3xl font-black text-primary'>{formattedPrice}</div>
+          <div className='text-3xl font-black tracking-tight text-primary tabular-nums'>
+            {formattedPrice}
+          </div>
 
           {product.description ? (
             <div className='space-y-1.5 pt-3 border-t border-border/50'>
@@ -154,25 +170,29 @@ export async function ProductDetailView({
               {product.model ? (
                 <div className='rounded-xl bg-muted/40 p-3 space-y-0.5'>
                   <span className='block text-muted-foreground text-[11px]'>{t('catalog.model')}</span>
-                  <span className='font-semibold text-foreground text-sm'>{product.model}</span>
+                  <span className='font-semibold text-foreground text-sm'>
+                    {formatTitleCase(product.model)}
+                  </span>
                 </div>
               ) : null}
-              {product.color ? (
+              {colorLabel ? (
                 <div className='rounded-xl bg-muted/40 p-3 space-y-0.5'>
                   <span className='block text-muted-foreground text-[11px]'>{t('catalog.color')}</span>
-                  <span className='font-semibold text-foreground text-sm'>{product.color}</span>
+                  <span className='font-semibold text-foreground text-sm'>{colorLabel}</span>
                 </div>
               ) : null}
-              {product.storage ? (
+              {storageLabel ? (
                 <div className='rounded-xl bg-muted/40 p-3 space-y-0.5'>
                   <span className='block text-muted-foreground text-[11px]'>{t('catalog.storage')}</span>
-                  <span className='font-semibold text-foreground text-sm'>{product.storage}</span>
+                  <span className='font-semibold text-foreground text-sm'>{storageLabel}</span>
                 </div>
               ) : null}
               {product.ram ? (
                 <div className='rounded-xl bg-muted/40 p-3 space-y-0.5'>
                   <span className='block text-muted-foreground text-[11px]'>{t('catalog.ram')}</span>
-                  <span className='font-semibold text-foreground text-sm'>{product.ram}</span>
+                  <span className='font-semibold text-foreground text-sm'>
+                    {formatStorageLabel(product.ram)}
+                  </span>
                 </div>
               ) : null}
               {product.ptaStatus ? (

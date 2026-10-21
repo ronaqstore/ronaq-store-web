@@ -8,8 +8,15 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { PreviewableImage } from '@/components/media/previewable-image';
 import { PLACEHOLDER_PRODUCT_IMAGE } from '@/constants/placeholders';
-import { formatPrice, buildWhatsAppLink, formatEmpty } from '@/lib/formatters';
-import { StockBadge } from '@/components/products/stock-badge';
+import {
+  formatPrice,
+  buildWhatsAppLink,
+  formatEmpty,
+  formatProductCardTitle,
+  formatStorageLabel,
+  formatColorLabel,
+  formatTitleCase
+} from '@/lib/formatters';
 import { TruncateText } from '@/components/ui/truncate-text';
 import { modelPath, productPath } from '@/lib/seo/slug';
 import { cn } from '@/lib/utils';
@@ -26,14 +33,43 @@ export function ProductCard({
 }: ProductCardProps) {
   const t = useTranslations();
 
+  const title = formatProductCardTitle(product.name, product.brandName);
+  const storageLabel = formatStorageLabel(product.storage);
+  const colorLabel = formatColorLabel(product.color);
+  const conditionLabel =
+    product.condition === 'NEW'
+      ? t('catalog.brandNew')
+      : product.condition === 'USED'
+        ? t('catalog.used')
+        : product.condition
+          ? formatTitleCase(product.condition)
+          : '';
+
   const formattedPrice = product.contactForPrice
     ? t('catalog.contactForPrice')
     : formatPrice(product.retailPrice);
 
-  const specDetails = [product.color, product.storage].filter(Boolean).join(', ');
-  const fullProductName = specDetails
-    ? `${product.name} (${specDetails})`
-    : product.name;
+  const unitsCount = product.units?.length ?? 0;
+  const stockCount =
+    product.stockCount != null && product.stockCount > 0
+      ? product.stockCount
+      : unitsCount > 0
+        ? unitsCount
+        : product.totalQuantity > 0
+          ? product.totalQuantity
+          : null;
+
+  const stockLabel =
+    stockCount != null && stockCount > 0
+      ? product.trackingType === 'SERIALIZED' || unitsCount > 0
+        ? t('catalog.inStockPhones', { count: stockCount })
+        : t('catalog.inStockCount', { count: stockCount })
+      : product.availability === 'OUT_OF_STOCK'
+        ? t('catalog.outOfStock')
+        : null;
+
+  const specForWhatsApp = [storageLabel, colorLabel].filter(Boolean).join(', ');
+  const fullProductName = specForWhatsApp ? `${title} (${specForWhatsApp})` : title;
 
   const whatsappMessage = t('whatsapp.inquireProduct', {
     storeName,
@@ -47,143 +83,134 @@ export function ProductCard({
       : productPath(storeSlug, product.name, product.id)
     : undefined;
 
-  const getPtaBadge = () => {
-    switch (product.ptaStatus) {
-      case 'APPROVED':
-        return (
-          <Badge variant='success' className='gap-1 text-[10px]'>
-            <Icons.shieldCheck className='h-3 w-3' />
-            {t('catalog.ptaApproved')}
-          </Badge>
-        );
-      case 'NON_PTA':
-        return (
-          <Badge variant='warning' className='text-[10px]'>
-            {t('catalog.ptaNon')}
-          </Badge>
-        );
-      case 'JV':
-        return (
-          <Badge variant='secondary' className='text-[10px]'>
-            {t('catalog.ptaJv')}
-          </Badge>
-        );
-      case 'BYPASS':
-        return (
-          <Badge variant='secondary' className='text-[10px]'>
-            {t('catalog.ptaBypass')}
-          </Badge>
-        );
-      case 'MDM_BYPASS':
-        return (
-          <Badge variant='secondary' className='text-[10px]'>
-            {t('catalog.ptaMdmBypass')}
-          </Badge>
-        );
-      default:
-        return null;
-    }
-  };
-
-  const getAuthenticityBadge = () => {
-    if (product.authenticity === 'ORIGINAL') {
-      return (
-        <Badge variant='success' className='text-[10px]'>
+  const statusBadges = (
+    <>
+      {product.ptaStatus === 'APPROVED' ? (
+        <Badge variant='success' className='gap-1 px-1.5 py-0.5 text-[10px] font-semibold'>
+          <Icons.shieldCheck className='h-3 w-3' />
+          {t('catalog.ptaApproved')}
+        </Badge>
+      ) : null}
+      {product.ptaStatus === 'NON_PTA' ? (
+        <Badge variant='warning' className='px-1.5 py-0.5 text-[10px] font-semibold'>
+          {t('catalog.ptaNon')}
+        </Badge>
+      ) : null}
+      {product.ptaStatus === 'JV' ? (
+        <Badge variant='secondary' className='px-1.5 py-0.5 text-[10px] font-semibold'>
+          {t('catalog.ptaJv')}
+        </Badge>
+      ) : null}
+      {product.ptaStatus === 'BYPASS' ? (
+        <Badge variant='secondary' className='px-1.5 py-0.5 text-[10px] font-semibold'>
+          {t('catalog.ptaBypass')}
+        </Badge>
+      ) : null}
+      {product.ptaStatus === 'MDM_BYPASS' ? (
+        <Badge variant='secondary' className='px-1.5 py-0.5 text-[10px] font-semibold'>
+          {t('catalog.ptaMdmBypass')}
+        </Badge>
+      ) : null}
+      {product.authenticity === 'ORIGINAL' ? (
+        <Badge variant='success' className='px-1.5 py-0.5 text-[10px] font-semibold'>
           {t('catalog.authenticityOriginal')}
         </Badge>
-      );
-    }
-    if (product.authenticity === 'COPY') {
-      return (
-        <Badge variant='secondary' className='text-[10px]'>
+      ) : null}
+      {product.authenticity === 'COPY' ? (
+        <Badge variant='secondary' className='px-1.5 py-0.5 text-[10px] font-semibold'>
           {t('catalog.authenticityCopy')}
         </Badge>
-      );
-    }
-    return null;
-  };
+      ) : null}
+    </>
+  );
+
+  const hasStatusBadges =
+    Boolean(product.ptaStatus) ||
+    product.authenticity === 'ORIGINAL' ||
+    product.authenticity === 'COPY';
+
+  const specParts = [storageLabel, colorLabel, conditionLabel].filter(Boolean);
 
   const details = (
-    <div className='space-y-2 p-4'>
-      <div className='flex min-w-0 items-center gap-1.5 text-xs text-muted-foreground'>
-        <TruncateText>{formatEmpty(product.brandName)}</TruncateText>
-        <span className='shrink-0'>•</span>
-        <TruncateText>{formatEmpty(product.categoryName)}</TruncateText>
-      </div>
+    <div className='flex flex-1 flex-col gap-1.5 p-3 sm:gap-2 sm:p-3.5'>
+      {hasStatusBadges ? (
+        <div className='flex flex-wrap items-center gap-1'>{statusBadges}</div>
+      ) : null}
+
+      {product.brandName ? (
+        <p className='text-[10px] font-semibold tracking-[0.08em] text-muted-foreground uppercase sm:text-[11px]'>
+          {formatTitleCase(product.brandName)}
+        </p>
+      ) : null}
 
       <TruncateText
         lines={2}
-        className='text-sm font-bold leading-snug text-foreground transition-colors group-hover:text-primary'
+        className='text-[13px] font-bold leading-snug text-foreground transition-colors group-hover:text-primary sm:text-sm'
       >
-        {formatEmpty(product.name)}
+        {title}
       </TruncateText>
 
-      {product.storage || product.color || product.condition ? (
-        <div className='flex flex-wrap items-center gap-1.5 pt-0.5 text-[11px] text-muted-foreground'>
-          {product.storage ? (
-            <span className='rounded bg-muted/70 px-1.5 py-0.5 font-medium text-foreground/80'>
-              {product.storage}
-            </span>
-          ) : null}
-          {product.color ? (
-            <span className='rounded bg-muted/70 px-1.5 py-0.5 font-medium text-foreground/80'>
-              {product.color}
-            </span>
-          ) : null}
-          {product.condition ? (
-            <span className='rounded bg-muted/70 px-1.5 py-0.5 font-medium text-foreground/80'>
-              {product.condition === 'NEW'
-                ? t('catalog.brandNew')
-                : product.condition === 'USED'
-                  ? t('catalog.used')
-                  : product.condition}
-            </span>
-          ) : null}
-        </div>
+      {specParts.length > 0 ? (
+        <p className='text-[11px] leading-relaxed text-muted-foreground sm:text-xs'>
+          {specParts.join(' · ')}
+        </p>
+      ) : product.categoryName ? (
+        <p className='text-[11px] text-muted-foreground sm:text-xs'>
+          {formatTitleCase(product.categoryName)}
+        </p>
       ) : null}
 
-      <div className='flex items-baseline justify-between pt-1'>
-        <span className='text-lg font-extrabold tracking-tight text-primary'>
+      {stockLabel ? (
+        <p
+          className={cn(
+            'text-[11px] font-medium sm:text-xs',
+            product.availability === 'OUT_OF_STOCK'
+              ? 'text-destructive'
+              : 'text-emerald-700 dark:text-emerald-400'
+          )}
+        >
+          {stockLabel}
+        </p>
+      ) : null}
+
+      <div className='mt-auto flex items-end justify-between gap-2 pt-1.5'>
+        <p
+          className={cn(
+            'text-sm font-extrabold tracking-tight tabular-nums sm:text-base',
+            product.contactForPrice ? 'text-foreground' : 'text-primary'
+          )}
+        >
           {formattedPrice}
-        </span>
+        </p>
       </div>
     </div>
   );
 
   return (
-    <Card className='group flex flex-col justify-between overflow-hidden rounded-2xl border border-border/70 bg-card transition-all duration-300 hover:border-primary/40 hover:shadow-lg'>
-      <div className='relative h-48 w-full overflow-hidden border-b border-border/50 bg-muted/40'>
+    <Card className='group flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border border-border/80 bg-card shadow-none transition-all duration-200 hover:border-primary/30 hover:shadow-md sm:rounded-2xl'>
+      <div className='relative aspect-square w-full overflow-hidden bg-muted/25 sm:aspect-[4/3]'>
         <PreviewableImage
           src={product.primaryImageUrl}
-          alt={formatEmpty(product.name)}
+          alt={formatEmpty(title)}
           priority={priority}
           className='absolute inset-0 h-full w-full'
-          imageClassName='object-contain p-4 transition-transform duration-300 group-hover:scale-105'
-          sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+          imageClassName='object-contain p-4 transition-transform duration-300 group-hover:scale-[1.04] sm:p-5'
+          sizes='(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw'
           fallbackSrc={PLACEHOLDER_PRODUCT_IMAGE}
         />
-
-        <div className='pointer-events-none absolute top-2.5 inset-s-2.5 flex flex-col gap-1'>
-          {getPtaBadge()}
-          {getAuthenticityBadge()}
-        </div>
-
-        <div className='pointer-events-none absolute top-2.5 inset-e-2.5'>
-          <StockBadge availability={product.availability} stockCount={product.stockCount} />
-        </div>
       </div>
 
       {href ? (
         <Link
           href={href}
-          className='block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+          className='flex flex-1 cursor-pointer flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
         >
           {details}
         </Link>
       ) : (
         <button
           type='button'
-          className='cursor-pointer text-start'
+          className='flex flex-1 cursor-pointer flex-col text-start'
           onClick={() => onSelectProduct?.(product)}
         >
           {details}
@@ -191,17 +218,17 @@ export function ProductCard({
       )}
 
       {product.contactForPrice && storePhone ? (
-        <div className='p-4 pt-0'>
+        <div className='px-3 pb-3 sm:px-3.5 sm:pb-3.5'>
           <a
             href={whatsappHref}
             target='_blank'
             rel='noopener noreferrer'
             className={cn(
               buttonVariants({ size: 'sm' }),
-              'w-full gap-2 bg-emerald-600 text-xs text-white shadow-sm hover:bg-emerald-700'
+              'h-8 w-full gap-1.5 bg-emerald-600 text-[11px] text-white shadow-sm hover:bg-emerald-700 sm:text-xs'
             )}
           >
-            <Icons.whatsapp className='h-4 w-4' />
+            <Icons.whatsapp className='h-3.5 w-3.5' />
             {t('catalog.inquireWhatsApp')}
           </a>
         </div>

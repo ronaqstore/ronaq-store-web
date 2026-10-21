@@ -94,15 +94,18 @@
     "backToShop": "Back to {store}",
     "shopCatalogHeading": "{store} product catalog",
     "filterAll": "All",
+    "resetFilters": "Reset",
+    "clearFilter": "Clear {title}",
     "condition": "Condition",
     "conditionNew": "New",
     "conditionUsed": "Used",
     "batteryMin": "Min battery %",
     "batteryPct": "{pct}% battery",
+    "phoneUnit": "Phone {n}",
     "inStockPhones": "{count} phones in stock",
-    "inStockPhonesHelp": "Each row is one physical phone (IMEI masked). Ask on WhatsApp about the exact unit.",
-    "contactForPrice": "Contact for price",
-    "unitWhatsAppMessage": "Hi {store}, I am interested in {product} — IMEI {imei}, {condition}, {battery}."
+    "inStockPhonesHelp": "Each row is one phone. Ask on WhatsApp for the exact unit.",
+    "contactForPrice": "Ask for price",
+    "unitWhatsAppMessage": "Hi {store}, I am interested in {product} — Phone {unit}, {condition}, {battery}."
   },
   "footer": {
     "tagline": "Discover local mobile and tech shops across Pakistan. Compare live stock, check PTA status, and order directly on WhatsApp.",

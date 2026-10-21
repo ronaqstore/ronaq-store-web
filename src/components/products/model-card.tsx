@@ -3,63 +3,82 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { PreviewableImage } from '@/components/media/previewable-image';
 import { PLACEHOLDER_PRODUCT_IMAGE } from '@/constants/placeholders';
-import { formatEmpty, formatPrice } from '@/lib/formatters';
-import { StockBadge } from '@/components/products/stock-badge';
+import {
+  formatEmpty,
+  formatPrice,
+  formatProductCardTitle,
+  formatTitleCase
+} from '@/lib/formatters';
 import { TruncateText } from '@/components/ui/truncate-text';
 import { modelPath } from '@/lib/seo/slug';
+import { cn } from '@/lib/utils';
 import type { ModelCardProps } from '@/types/product';
 
 export function ModelCard({ model, storeSlug, priority = false }: ModelCardProps) {
   const t = useTranslations();
   const href = modelPath(storeSlug, model.key);
+  const title = formatProductCardTitle(model.model, model.brand);
   const priceLabel = model.contactForPrice
     ? t('catalog.contactForPrice')
     : model.fromPrice
       ? t('catalog.fromPrice', { price: formatPrice(model.fromPrice) })
       : t('catalog.contactForPrice');
 
-  const details = (
-    <div className='space-y-2 p-4'>
-      <TruncateText className='text-xs text-muted-foreground'>{formatEmpty(model.brand)}</TruncateText>
-      <TruncateText
-        lines={2}
-        className='text-sm font-bold leading-snug text-foreground group-hover:text-primary'
-      >
-        {formatEmpty(model.model)}
-      </TruncateText>
-      <div className='flex flex-wrap items-center gap-2'>
-        <Badge variant='secondary' className='text-[10px]'>
-          {t('catalog.variantCount', { count: model.variantCount })}
-        </Badge>
-      </div>
-      <p className='pt-1 text-lg font-extrabold tracking-tight text-primary'>{priceLabel}</p>
-    </div>
-  );
+  const stockLabel =
+    model.availability === 'OUT_OF_STOCK'
+      ? t('catalog.outOfStock')
+      : model.variantCount > 0
+        ? t('catalog.variantCount', { count: model.variantCount })
+        : null;
 
   return (
-    <Card className='group flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card transition-all duration-300 hover:border-primary/40 hover:shadow-lg'>
-      <div className='relative h-44 w-full overflow-hidden border-b border-border/50 bg-muted/40'>
+    <Card className='group flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border border-border/80 bg-card shadow-none transition-all duration-200 hover:border-primary/30 hover:shadow-md sm:rounded-2xl'>
+      <div className='relative aspect-square w-full overflow-hidden bg-muted/25 sm:aspect-[4/3]'>
         <PreviewableImage
           src={model.coverImage}
-          alt={`${model.brand} ${model.model}`}
+          alt={`${formatTitleCase(model.brand)} ${title}`}
           priority={priority}
           className='absolute inset-0 h-full w-full'
-          imageClassName='object-contain p-4 transition-transform duration-300 group-hover:scale-105'
-          sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+          imageClassName='object-contain p-4 transition-transform duration-300 group-hover:scale-[1.04] sm:p-5'
+          sizes='(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw'
           fallbackSrc={PLACEHOLDER_PRODUCT_IMAGE}
         />
-        <div className='pointer-events-none absolute top-2.5 inset-e-2.5'>
-          <StockBadge availability={model.availability} stockCount={null} />
-        </div>
       </div>
       <Link
         href={href}
-        className='block flex-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+        className='flex flex-1 cursor-pointer flex-col gap-1.5 p-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:gap-2 sm:p-3.5'
       >
-        {details}
+        <p className='text-[10px] font-semibold tracking-[0.08em] text-muted-foreground uppercase sm:text-[11px]'>
+          {formatEmpty(formatTitleCase(model.brand))}
+        </p>
+        <TruncateText
+          lines={2}
+          className='text-[13px] font-bold leading-snug text-foreground transition-colors group-hover:text-primary sm:text-sm'
+        >
+          {title}
+        </TruncateText>
+        {stockLabel ? (
+          <p
+            className={cn(
+              'text-[11px] font-medium sm:text-xs',
+              model.availability === 'OUT_OF_STOCK'
+                ? 'text-destructive'
+                : 'text-emerald-700 dark:text-emerald-400'
+            )}
+          >
+            {stockLabel}
+          </p>
+        ) : null}
+        <p
+          className={cn(
+            'mt-auto pt-1.5 text-sm font-extrabold tracking-tight tabular-nums sm:text-base',
+            model.contactForPrice && !model.fromPrice ? 'text-foreground' : 'text-primary'
+          )}
+        >
+          {priceLabel}
+        </p>
       </Link>
     </Card>
   );

@@ -92,7 +92,7 @@ export function StoreCatalogClient({
   };
 
   return (
-    <div className='mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 py-8 space-y-6'>
+    <div className='mx-auto max-w-[1600px] space-y-5 px-4 pb-10 pt-4 sm:space-y-6 sm:px-6 sm:pb-12 sm:pt-5 lg:px-8'>
       <ProductFilters
         categories={categories}
         selectedCategoryId={filters.category}
@@ -132,10 +132,13 @@ export function StoreCatalogClient({
 
       {models.length > 0 ? (
         <section className='space-y-3' aria-labelledby='phone-models-heading'>
-          <h3 id='phone-models-heading' className='text-sm font-semibold tracking-wide'>
+          <h3
+            id='phone-models-heading'
+            className='text-sm font-semibold tracking-tight text-foreground'
+          >
             {t('catalog.phoneModels')}
           </h3>
-          <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+          <div className='grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3 xl:grid-cols-4'>
             {models.map((model, index) => (
               <ModelCard
                 key={model.key}

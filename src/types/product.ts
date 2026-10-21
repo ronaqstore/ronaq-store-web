@@ -140,10 +140,6 @@ export interface ModelVariantsClientProps {
   isAppleBrand: boolean;
 }
 
-export type ModelUnitRow = StoreProductUnit & {
-  variant: StoreProductListItem;
-};
-
 export interface ModelCardProps {
   model: StoreModelListItem;
   storeSlug: string;
@@ -174,6 +170,21 @@ export interface ProductFiltersProps {
   onCategorySelect: (categoryId: string) => void;
   onInStockToggle: (inStock: boolean) => void;
   onSearchChange: (search: string) => void;
+}
+
+export interface FacetedFilterOption {
+  label: string;
+  value: string;
+}
+
+export interface FacetedFilterProps {
+  title: string;
+  options: FacetedFilterOption[];
+  value: string;
+  onChange: (value: string) => void;
+  allLabel?: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export interface ProductDetailModalProps {

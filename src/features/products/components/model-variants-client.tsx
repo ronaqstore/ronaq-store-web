@@ -3,11 +3,15 @@
 import { useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { ProductCard } from '@/components/products/product-card';
-import { formatPrice, buildWhatsAppLink } from '@/lib/formatters';
-import type {
-  ModelUnitRow,
-  ModelVariantsClientProps
-} from '@/types/product';
+import { Button } from '@/components/ui/button';
+import { FacetedFilter } from '@/components/ui/faceted-filter';
+import { Input } from '@/components/ui/input';
+import { formatColorLabel, formatStorageLabel } from '@/lib/formatters';
+import type { ModelVariantsClientProps } from '@/types/product';
+
+function ptaLabel(status: string, labels: Record<string, string>): string {
+  return labels[status] ?? status.replaceAll('_', ' ');
+}
 
 export function ModelVariantsClient({
   variants,
@@ -17,145 +21,167 @@ export function ModelVariantsClient({
   isAppleBrand
 }: ModelVariantsClientProps) {
   const t = useTranslations('catalog');
-  const [pta, setPta] = useState('ALL');
-  const [color, setColor] = useState('ALL');
-  const [storage, setStorage] = useState('ALL');
-  const [condition, setCondition] = useState('ALL');
+  const [pta, setPta] = useState('');
+  const [color, setColor] = useState('');
+  const [storage, setStorage] = useState('');
+  const [condition, setCondition] = useState('');
   const [batteryMin, setBatteryMin] = useState('');
+  const [openFilter, setOpenFilter] = useState<string | null>(null);
 
-  const colors = useMemo(
+  const ptaLabels = useMemo(
+    () => ({
+      APPROVED: t('ptaApproved'),
+      NON_PTA: t('ptaNon'),
+      JV: t('ptaJv'),
+      BYPASS: t('ptaBypass'),
+      MDM_BYPASS: t('ptaMdmBypass')
+    }),
+    [t]
+  );
+
+  const colorOptions = useMemo(
     () =>
-      [...new Set(variants.map((v) => v.color).filter(Boolean) as string[])].sort(),
+      [...new Set(variants.map((v) => v.color).filter(Boolean) as string[])]
+        .sort()
+        .map((value) => ({ value, label: formatColorLabel(value) || value })),
     [variants]
   );
-  const storages = useMemo(
+  const storageOptions = useMemo(
     () =>
-      [...new Set(variants.map((v) => v.storage).filter(Boolean) as string[])].sort(),
+      [...new Set(variants.map((v) => v.storage).filter(Boolean) as string[])]
+        .sort()
+        .map((value) => ({ value, label: formatStorageLabel(value) || value })),
     [variants]
   );
   const ptaOptions = useMemo(
     () =>
-      [...new Set(variants.map((v) => v.ptaStatus).filter(Boolean) as string[])].sort(),
-    [variants]
+      [...new Set(variants.map((v) => v.ptaStatus).filter(Boolean) as string[])]
+        .sort()
+        .map((value) => ({ value, label: ptaLabel(value, ptaLabels) })),
+    [variants, ptaLabels]
+  );
+  const conditionOptions = useMemo(
+    () => [
+      { value: 'NEW', label: t('conditionNew') },
+      { value: 'USED', label: t('conditionUsed') }
+    ],
+    [t]
   );
 
   const filteredVariants = useMemo(() => {
-    return variants.filter((v) => {
-      if (pta !== 'ALL' && v.ptaStatus !== pta) return false;
-      if (color !== 'ALL' && v.color !== color) return false;
-      if (storage !== 'ALL' && v.storage !== storage) return false;
+    const min = batteryMin.trim() ? Number(batteryMin) : null;
+
+    return variants.filter((variant) => {
+      if (pta && variant.ptaStatus !== pta) return false;
+      if (color && variant.color !== color) return false;
+      if (storage && variant.storage !== storage) return false;
+
+      const units = variant.units ?? [];
+      if (!condition && (min == null || Number.isNaN(min))) return true;
+
+      if (units.length > 0) {
+        return units.some((unit) => {
+          if (condition && unit.condition !== condition) return false;
+          if (
+            min != null &&
+            !Number.isNaN(min) &&
+            (unit.batteryHealth == null || unit.batteryHealth < min)
+          ) {
+            return false;
+          }
+          return true;
+        });
+      }
+
+      if (condition && variant.condition !== condition) return false;
       return true;
     });
-  }, [variants, pta, color, storage]);
+  }, [variants, pta, color, storage, condition, batteryMin]);
 
-  const unitRows = useMemo(() => {
-    const min = batteryMin.trim() ? Number(batteryMin) : null;
-    const rows: ModelUnitRow[] = [];
-    for (const variant of filteredVariants) {
-      for (const unit of variant.units ?? []) {
-        if (condition !== 'ALL' && unit.condition !== condition) continue;
-        if (
-          min != null &&
-          !Number.isNaN(min) &&
-          (unit.batteryHealth == null || unit.batteryHealth < min)
-        ) {
-          continue;
-        }
-        rows.push({ ...unit, variant });
-      }
-    }
-    return rows;
-  }, [filteredVariants, condition, batteryMin]);
+  const hasActiveFilters = Boolean(pta || color || storage || condition || batteryMin.trim());
 
-  const selectClass =
-    'h-9 rounded-md border border-border bg-background px-2 text-xs text-foreground';
+  const resetFilters = () => {
+    setPta('');
+    setColor('');
+    setStorage('');
+    setCondition('');
+    setBatteryMin('');
+    setOpenFilter(null);
+  };
+
+  const bindOpen = (key: string) => ({
+    open: openFilter === key,
+    onOpenChange: (next: boolean) => setOpenFilter(next ? key : null)
+  });
 
   return (
-    <div className='space-y-8'>
-      <div className='flex flex-wrap items-end gap-2'>
+    <div className='space-y-6 sm:space-y-8'>
+      <div className='flex flex-wrap items-center gap-2'>
         {ptaOptions.length > 0 ? (
-          <label className='space-y-1 text-xs'>
-            <span className='text-muted-foreground'>{t('ptaStatusLabel')}</span>
-            <select
-              className={selectClass}
-              value={pta}
-              onChange={(e) => setPta(e.target.value)}
-            >
-              <option value='ALL'>{t('filterAll')}</option>
-              {ptaOptions.map((value) => (
-                <option key={value} value={value}>
-                  {value.replaceAll('_', ' ')}
-                </option>
-              ))}
-            </select>
-          </label>
+          <FacetedFilter
+            title={t('ptaStatusLabel')}
+            options={ptaOptions}
+            value={pta}
+            onChange={setPta}
+            {...bindOpen('pta')}
+          />
         ) : null}
-        {colors.length > 0 ? (
-          <label className='space-y-1 text-xs'>
-            <span className='text-muted-foreground'>{t('color')}</span>
-            <select
-              className={selectClass}
-              value={color}
-              onChange={(e) => setColor(e.target.value)}
-            >
-              <option value='ALL'>{t('filterAll')}</option>
-              {colors.map((value) => (
-                <option key={value} value={value}>
-                  {value}
-                </option>
-              ))}
-            </select>
-          </label>
+        {colorOptions.length > 0 ? (
+          <FacetedFilter
+            title={t('color')}
+            options={colorOptions}
+            value={color}
+            onChange={setColor}
+            {...bindOpen('color')}
+          />
         ) : null}
-        {storages.length > 0 ? (
-          <label className='space-y-1 text-xs'>
-            <span className='text-muted-foreground'>{t('storage')}</span>
-            <select
-              className={selectClass}
-              value={storage}
-              onChange={(e) => setStorage(e.target.value)}
-            >
-              <option value='ALL'>{t('filterAll')}</option>
-              {storages.map((value) => (
-                <option key={value} value={value}>
-                  {value}
-                </option>
-              ))}
-            </select>
-          </label>
+        {storageOptions.length > 0 ? (
+          <FacetedFilter
+            title={t('storage')}
+            options={storageOptions}
+            value={storage}
+            onChange={setStorage}
+            {...bindOpen('storage')}
+          />
         ) : null}
-        <label className='space-y-1 text-xs'>
-          <span className='text-muted-foreground'>{t('condition')}</span>
-          <select
-            className={selectClass}
-            value={condition}
-            onChange={(e) => setCondition(e.target.value)}
-          >
-            <option value='ALL'>{t('filterAll')}</option>
-            <option value='NEW'>{t('conditionNew')}</option>
-            <option value='USED'>{t('conditionUsed')}</option>
-          </select>
-        </label>
+        <FacetedFilter
+          title={t('condition')}
+          options={conditionOptions}
+          value={condition}
+          onChange={setCondition}
+          {...bindOpen('condition')}
+        />
         {isAppleBrand ? (
-          <label className='space-y-1 text-xs'>
-            <span className='text-muted-foreground'>{t('batteryMin')}</span>
-            <input
+          <div className='flex h-8 items-center gap-1.5 rounded-md border border-dashed border-border bg-background px-2'>
+            <span className='text-muted-foreground shrink-0 text-xs'>{t('batteryMin')}</span>
+            <Input
               type='number'
               min={1}
               max={100}
-              className={`${selectClass} w-24`}
               value={batteryMin}
               onChange={(e) => setBatteryMin(e.target.value)}
               placeholder='90'
+              className='h-6 w-14 border-0 bg-transparent px-1 text-xs shadow-none focus-visible:ring-0'
             />
-          </label>
+          </div>
+        ) : null}
+        {hasActiveFilters ? (
+          <Button
+            type='button'
+            variant='ghost'
+            size='sm'
+            className='h-8 px-2 text-xs'
+            onClick={resetFilters}
+          >
+            {t('resetFilters')}
+          </Button>
         ) : null}
       </div>
 
       {filteredVariants.length === 0 ? (
         <p className='text-muted-foreground text-sm'>{t('noProducts')}</p>
       ) : (
-        <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+        <div className='grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-4'>
           {filteredVariants.map((product, index) => (
             <ProductCard
               key={product.id}
@@ -169,69 +195,6 @@ export function ModelVariantsClient({
           ))}
         </div>
       )}
-
-      {unitRows.length > 0 ? (
-        <section className='space-y-3' aria-labelledby='in-stock-units-heading'>
-          <h2 id='in-stock-units-heading' className='text-lg font-semibold tracking-tight'>
-            {t('inStockPhones', { count: unitRows.length })}
-          </h2>
-          <p className='text-muted-foreground text-sm'>{t('inStockPhonesHelp')}</p>
-          <ul className='divide-y divide-border rounded-lg border border-border'>
-            {unitRows.map((row) => {
-              const priceLabel = row.variant.contactForPrice
-                ? t('contactForPrice')
-                : formatPrice(row.price ?? row.variant.retailPrice);
-              const message = t('unitWhatsAppMessage', {
-                store: storeName,
-                product: row.variant.name,
-                imei: row.imeiMasked,
-                condition: row.condition,
-                battery:
-                  row.batteryHealth != null
-                    ? t('batteryPct', { pct: row.batteryHealth })
-                    : '—'
-              });
-              const href = buildWhatsAppLink(storePhone, message);
-              return (
-                <li
-                  key={row.id}
-                  className='flex flex-col gap-2 px-3 py-3 sm:flex-row sm:items-center sm:justify-between'
-                >
-                  <div className='space-y-0.5 text-sm'>
-                    <p className='font-medium'>{row.variant.name}</p>
-                    <p className='text-muted-foreground text-xs'>
-                      {[
-                        row.condition,
-                        row.imeiMasked,
-                        row.batteryHealth != null
-                          ? t('batteryPct', { pct: row.batteryHealth })
-                          : null,
-                        row.variant.ptaStatus
-                          ? row.variant.ptaStatus.replaceAll('_', ' ')
-                          : null,
-                        row.defectNotes
-                      ]
-                        .filter(Boolean)
-                        .join(' · ')}
-                    </p>
-                  </div>
-                  <div className='flex items-center gap-3'>
-                    <span className='text-sm font-semibold tabular-nums'>{priceLabel}</span>
-                    <a
-                      href={href}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='text-sm font-medium text-primary underline-offset-4 hover:underline'
-                    >
-                      {t('inquireWhatsApp')}
-                    </a>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      ) : null}
     </div>
   );
 }

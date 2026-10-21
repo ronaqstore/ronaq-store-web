@@ -21,6 +21,7 @@ export interface StoreListItem {
   logoUrl: string | null;
   productCount?: number;
   totalProducts?: number;
+  openingHours?: string | null;
 }
 
 export interface StoreProfile {

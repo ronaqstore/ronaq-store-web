@@ -38,11 +38,11 @@ export function StoreDiscoveryShell({ searchQuery: urlSearch, children }: StoreD
       <StoreHero searchQuery={searchQuery} onSearchChange={setSearchQuery} />
       <section
         id='shops'
-        className='mx-auto max-w-[1600px] scroll-mt-24 px-4 py-14 sm:px-6 sm:py-16 lg:px-8'
+        className='mx-auto max-w-[1600px] scroll-mt-24 px-4 py-10 sm:px-6 sm:py-14 lg:px-8'
       >
-        <div className='mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between'>
+        <div className='mb-6 flex flex-col gap-2 sm:mb-8 sm:flex-row sm:items-end sm:justify-between'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight text-foreground sm:text-3xl'>
+            <h2 className='text-xl font-bold tracking-tight text-foreground sm:text-2xl md:text-3xl'>
               {t('stores.allShops')}
             </h2>
             <p className='mt-1 max-w-xl text-sm text-muted-foreground'>
