@@ -162,6 +162,11 @@ export interface ProductGridProps {
   linkToModel?: boolean;
 }
 
+export interface ProductGridSkeletonProps {
+  count?: number;
+  className?: string;
+}
+
 export interface ProductFiltersProps {
   categories: StoreCategory[];
   selectedCategoryId: string;

@@ -6,6 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { StoreHero } from './store-hero';
+import { StoreSearchBar } from './store-search-bar';
 import type { StoreDiscoveryShellProps } from '@/types/store';
 
 export function StoreDiscoveryShell({ searchQuery: urlSearch, children }: StoreDiscoveryShellProps) {
@@ -35,10 +36,17 @@ export function StoreDiscoveryShell({ searchQuery: urlSearch, children }: StoreD
 
   return (
     <div>
-      <StoreHero searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+      <StoreHero />
+
+      <div className='sticky top-14 z-30 border-b border-border/60 bg-background/90 backdrop-blur-xl min-[390px]:top-16'>
+        <div className='mx-auto max-w-[1600px] px-4 py-3 sm:px-6 sm:py-3.5 lg:px-8'>
+          <StoreSearchBar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+        </div>
+      </div>
+
       <section
         id='shops'
-        className='mx-auto max-w-[1600px] scroll-mt-24 px-4 py-10 sm:px-6 sm:py-14 lg:px-8'
+        className='mx-auto max-w-[1600px] scroll-mt-36 px-4 py-10 sm:px-6 sm:py-14 lg:px-8'
       >
         <div className='mb-6 flex flex-col gap-2 sm:mb-8 sm:flex-row sm:items-end sm:justify-between'>
           <div>

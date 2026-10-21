@@ -1,4 +1,6 @@
-import { getTranslations } from 'next-intl/server';
+'use client';
+
+import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { Icons } from '@/components/icons';
 import { buttonVariants } from '@/components/ui/button';
@@ -17,8 +19,8 @@ import { cn } from '@/lib/utils';
 import type { StoreCardProps } from '@/types/store';
 import { StoreMapLink } from './store-map-link';
 
-export async function StoreCard({ store, priority = false }: StoreCardProps) {
-  const t = await getTranslations();
+export function StoreCard({ store, priority = false }: StoreCardProps) {
+  const t = useTranslations();
 
   const name = store.displayName || store.name || t('common.appName');
   const phone = resolveStoreWhatsAppNumber(store);

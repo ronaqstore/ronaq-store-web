@@ -22,7 +22,7 @@
   "hero": {
     "title": "Find trusted mobile shops near you",
     "subtitle": "Live stock, PTA status, and WhatsApp contact — from local shops across Pakistan.",
-    "searchPlaceholder": "Search shops, cities, or areas…",
+    "searchPlaceholder": "Search...",
     "popularCities": "Popular Cities:",
     "ctaExplore": "Browse shops",
     "trustLive": "Live stock",
@@ -47,7 +47,10 @@
     "call": "Call Shop",
     "timing": "Hours",
     "search": "Search shops...",
-    "bannerAlt": "{store} store banner"
+    "bannerAlt": "{store} store banner",
+    "loadingMore": "Loading more shops…",
+    "retryLoadMore": "Couldn’t load more. Tap to retry.",
+    "endOfList": "You’re all caught up."
   },
   "catalog": {
     "allCategories": "All Categories",
@@ -84,6 +87,9 @@
     "phoneDevice": "Mobile Phone",
     "accessoryItem": "Accessory",
     "noProducts": "No products listed in this shop yet.",
+    "loadingMore": "Loading more products…",
+    "retryLoadMore": "Couldn’t load more. Tap to retry.",
+    "endOfList": "You’re all caught up.",
     "phoneModels": "Phones by model",
     "variantCount": "{count} variants",
     "fromPrice": "From {price}",
@@ -118,7 +124,7 @@
     "registerDukan": "Open Your Store",
     "login": "Login to Portal",
     "helpTitle": "Help & Support",
-    "whatsappSupport": "WhatsApp Helpdesk",
+    "whatsappSupport": "WhatsApp",
     "directCall": "+92 3029825213",
     "allRightsReserved": "All rights reserved."
   },

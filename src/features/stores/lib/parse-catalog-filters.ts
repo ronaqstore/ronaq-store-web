@@ -5,6 +5,6 @@ export function parseCatalogFilters(searchParams: CatalogSearchParams): StoreCat
   return {
     q: searchParams.q?.trim() ?? '',
     category: searchParams.category?.trim() ?? '',
-    inStock: true
+    inStock: false
   };
 }

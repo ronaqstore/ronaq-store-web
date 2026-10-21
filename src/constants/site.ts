@@ -20,3 +20,6 @@ export const PWA_BACKGROUND_COLOR = '#059669';
 
 export const PUBLIC_REVALIDATE_SECONDS = 30;
 
+export const STORES_PAGE_SIZE = 20;
+export const PRODUCTS_PAGE_SIZE = 20;
+

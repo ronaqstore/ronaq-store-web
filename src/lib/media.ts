@@ -12,7 +12,10 @@ export function isPreviewableImageSrc(src?: string | null): src is string {
 export function shouldSkipImageOptimization(src: string): boolean {
   if (isLocalStaticImage(src)) return true;
   if (/\.svg($|\?)/i.test(src)) return true;
-  return src.toLowerCase().includes('.r2.dev/');
+  const lower = src.toLowerCase();
+  if (lower.includes('.r2.dev/')) return true;
+  if (lower.includes('picsum.photos')) return true;
+  return false;
 }
 
 export const STOREFRONT_IMAGE_QUALITY = 65;

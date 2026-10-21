@@ -86,7 +86,7 @@ export interface StoreDiscoveryShellProps {
   children: ReactNode;
 }
 
-export interface StoreHeroProps {
+export interface StoreSearchBarProps {
   searchQuery: string;
   onSearchChange: (search: string) => void;
 }
@@ -104,9 +104,23 @@ export interface StoreCatalogFilters {
 export interface StoreCatalogClientProps {
   store: StoreProfile;
   categories: import('./product').StoreCategory[];
-  products: import('./product').StoreProductListItem[];
-  models: import('./product').StoreModelListItem[];
+  initialProducts: import('./product').StoreProductListItem[];
+  allModels: import('./product').StoreModelListItem[];
+  productsTotal: number;
+  productsPage: number;
+  productsTotalPages: number;
   filters: StoreCatalogFilters;
+}
+
+export interface StoreCatalogFeedProps {
+  store: StoreProfile;
+  initialProducts: import('./product').StoreProductListItem[];
+  allModels: import('./product').StoreModelListItem[];
+  productsTotal: number;
+  productsPage: number;
+  productsTotalPages: number;
+  filters: StoreCatalogFilters;
+  isFilterPending?: boolean;
 }
 
 export interface StoreCatalogSectionProps {
@@ -124,10 +138,10 @@ export interface StoreDiscoverySectionProps {
   searchQuery: string;
 }
 
-export interface StoreDiscoveryResultsProps {
-  stores: StoreListItem[];
+export interface StoreDiscoveryFeedProps {
+  initialStores: StoreListItem[];
+  total: number;
+  page: number;
+  totalPages: number;
+  searchQuery: string;
 }
-
-
-
-

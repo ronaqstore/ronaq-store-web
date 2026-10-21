@@ -22,7 +22,7 @@
   "hero": {
     "title": "خپل نږدې باوري موبایل دوکانونه ومومئ",
     "subtitle": "ژوندی سټاک، د پی ټي اې حالت، او واټساپ اړیکه — په ټول پاکستان کې له محلي دوکانونو څخه.",
-    "searchPlaceholder": "دوکان، ښار یا سیمه ولټوئ…",
+    "searchPlaceholder": "لټون...",
     "popularCities": "مشهور ښارونه:",
     "ctaExplore": "دوکانونه وګورئ",
     "trustLive": "ژوندی سټاک",
@@ -47,7 +47,10 @@
     "call": "تلیفون",
     "timing": "وختونه",
     "search": "دوکانونه لټول...",
-    "bannerAlt": "د {store} بینر"
+    "bannerAlt": "د {store} بینر",
+    "loadingMore": "نور دوکانونه لوډېږي…",
+    "retryLoadMore": "نور ونه لوډ شول. بیا هڅه وکړئ.",
+    "endOfList": "ټول دوکانونه ښودل شوي دي."
   },
   "catalog": {
     "allCategories": "ټولې کټګورۍ",
@@ -84,6 +87,9 @@
     "phoneDevice": "موبایل ټلیفون",
     "accessoryItem": "سامانونه",
     "noProducts": "په دې دوکان کې تر اوسه کوم توکي نشته.",
+    "loadingMore": "نور توکي لوډېږي…",
+    "retryLoadMore": "نور ونه لوډ شول. بیا هڅه وکړئ.",
+    "endOfList": "ټول توکي ښودل شوي دي.",
     "phoneModels": "د ماډل له مخې تلیفونونه",
     "variantCount": "{count} ډولونه",
     "fromPrice": "له {price}",

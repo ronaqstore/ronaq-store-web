@@ -66,7 +66,10 @@ export async function ShopPageView({ locale, store, filters }: ShopPageViewProps
         <h2 id='shop-catalog-heading' className='sr-only'>
           {tCatalog('shopCatalogHeading', { store: store.displayName })}
         </h2>
-        <Suspense fallback={<StoreCatalogSkeleton />}>
+        <Suspense
+          key={`${filters.category || 'all'}|${filters.q || ''}`}
+          fallback={<StoreCatalogSkeleton />}
+        >
           <StoreCatalogSection store={store} filters={filters} />
         </Suspense>
       </section>

@@ -1,23 +1,13 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import { useEffect, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import { ProductFilters } from '@/components/products/product-filters';
-import { ProductGrid } from '@/components/products/product-grid';
-import { ModelCard } from '@/components/products/model-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import type { StoreCatalogClientProps, StoreCatalogFilters } from '@/types/store';
-import type { StoreProductListItem, StoreProductDetail } from '@/types/product';
-import { resolveStoreWhatsAppNumber } from '@/lib/formatters';
-
-const ProductDetailModal = dynamic(
-  () =>
-    import('@/components/products/product-detail-modal').then((mod) => mod.ProductDetailModal),
-  { ssr: false }
-);
+import { StoreCatalogFeed } from './store-catalog-feed';
 
 function buildQuery(filters: StoreCatalogFilters): Record<string, string> {
   const query: Record<string, string> = {};
@@ -29,8 +19,11 @@ function buildQuery(filters: StoreCatalogFilters): Record<string, string> {
 export function StoreCatalogClient({
   store,
   categories,
-  products,
-  models,
+  initialProducts,
+  allModels,
+  productsTotal,
+  productsPage,
+  productsTotalPages,
   filters
 }: StoreCatalogClientProps) {
   const t = useTranslations();
@@ -39,7 +32,6 @@ export function StoreCatalogClient({
   const [isPending, startTransition] = useTransition();
   const [searchQuery, setSearchQuery] = useState(filters.q);
   const debouncedSearch = useDebouncedValue(searchQuery, 400);
-  const [selectedProduct, setSelectedProduct] = useState<StoreProductDetail | null>(null);
 
   useEffect(() => {
     setSearchQuery(filters.q);
@@ -63,7 +55,7 @@ export function StoreCatalogClient({
     const query = buildQuery({
       q: trimmed,
       category: filters.category,
-      inStock: true
+      inStock: filters.inStock
     });
 
     startTransition(() => {
@@ -73,21 +65,14 @@ export function StoreCatalogClient({
         router.replace(pathname, { scroll: false });
       }
     });
-  }, [debouncedSearch, filters.q, filters.category, pathname, router]);
+  }, [debouncedSearch, filters.q, filters.category, filters.inStock, pathname, router]);
 
-  const handleSelectProduct = (product: StoreProductListItem) => {
-    const detail: StoreProductDetail = {
-      ...product,
-      description: null,
-      images: product.primaryImageUrl
-        ? [{ id: '1', url: product.primaryImageUrl, sortOrder: 0 }]
-        : []
-    };
-    setSelectedProduct(detail);
-  };
-
-  const handleCloseModal = () => {
-    setSelectedProduct(null);
+  const handleCategorySelect = (category: string) => {
+    replaceFilters({
+      q: searchQuery.trim(),
+      category,
+      inStock: filters.inStock
+    });
   };
 
   return (
@@ -96,13 +81,7 @@ export function StoreCatalogClient({
         categories={categories}
         selectedCategoryId={filters.category}
         searchQuery={searchQuery}
-        onCategorySelect={(category) =>
-          replaceFilters({
-            q: searchQuery.trim(),
-            category,
-            inStock: true
-          })
-        }
+        onCategorySelect={handleCategorySelect}
         onSearchChange={setSearchQuery}
       />
 
@@ -111,50 +90,20 @@ export function StoreCatalogClient({
           <span className='inline-flex items-center gap-2' aria-busy='true'>
             <Skeleton className='h-3 w-24' />
             <Skeleton className='h-3 w-12' />
+            <span className='sr-only'>{t('catalog.loadingMore')}</span>
           </span>
-        ) : (
-          <span>
-            {t('stores.productsAvailable', {
-              count: products.length + models.length
-            })}
-          </span>
-        )}
+        ) : null}
       </div>
 
-      {models.length > 0 ? (
-        <section className='space-y-3' aria-labelledby='phone-models-heading'>
-          <h3
-            id='phone-models-heading'
-            className='text-sm font-semibold tracking-tight text-foreground'
-          >
-            {t('catalog.phoneModels')}
-          </h3>
-          <div className='grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3 xl:grid-cols-4'>
-            {models.map((model, index) => (
-              <ModelCard
-                key={model.key}
-                model={model}
-                storeSlug={store.slug}
-                priority={index < 4}
-              />
-            ))}
-          </div>
-        </section>
-      ) : null}
-
-      <ProductGrid
-        products={products.filter((p) => p.trackingType !== 'SERIALIZED')}
-        storeSlug={store.slug}
-        storeName={store.displayName}
-        storePhone={resolveStoreWhatsAppNumber(store)}
-        onSelectProduct={handleSelectProduct}
-      />
-
-      <ProductDetailModal
-        product={selectedProduct}
-        storeName={store.displayName}
-        storePhone={resolveStoreWhatsAppNumber(store)}
-        onClose={handleCloseModal}
+      <StoreCatalogFeed
+        store={store}
+        initialProducts={initialProducts}
+        allModels={allModels}
+        productsTotal={productsTotal}
+        productsPage={productsPage}
+        productsTotalPages={productsTotalPages}
+        filters={filters}
+        isFilterPending={isPending}
       />
     </div>
   );
