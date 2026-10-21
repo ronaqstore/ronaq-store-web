@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { Noto_Naskh_Arabic, Noto_Nastaliq_Urdu } from 'next/font/google';
 import localFont from 'next/font/local';
 import { notFound } from 'next/navigation';
 import { Analytics } from '@vercel/analytics/react';
@@ -17,6 +18,7 @@ import {
   PWA_THEME_COLOR_LIGHT
 } from '@/constants/site';
 import { defaultRootMetadata } from '@/lib/seo/metadata';
+import { cn } from '@/lib/utils';
 import '@/styles/globals.css';
 
 const poppins = localFont({
@@ -29,6 +31,22 @@ const poppins = localFont({
   display: 'swap',
   preload: true,
   adjustFontFallback: 'Arial'
+});
+
+const notoNastaliqUrdu = Noto_Nastaliq_Urdu({
+  subsets: ['arabic', 'latin'],
+  weight: ['400', '700'],
+  variable: '--font-noto-nastaliq',
+  display: 'swap',
+  preload: false
+});
+
+const notoNaskhArabic = Noto_Naskh_Arabic({
+  subsets: ['arabic', 'latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-noto-naskh',
+  display: 'swap',
+  preload: false
 });
 
 export function generateStaticParams() {
@@ -71,16 +89,28 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
 
   const messages = await getMessages();
   const isRtl = isRtlLocale(locale as AppLocale);
+  const scriptFontClass =
+    locale === 'ur'
+      ? notoNastaliqUrdu.className
+      : locale === 'ps'
+        ? notoNaskhArabic.className
+        : poppins.className;
 
   return (
     <html
       lang={locale}
       dir={isRtl ? 'rtl' : 'ltr'}
-      className={poppins.variable}
+      className={cn(poppins.variable, notoNastaliqUrdu.variable, notoNaskhArabic.variable)}
       suppressHydrationWarning
     >
       <body
-        className={`${poppins.className} min-h-dvh bg-background font-sans antialiased text-foreground selection:bg-primary/20 selection:text-primary flex flex-col justify-between overscroll-none`}
+        className={cn(
+          scriptFontClass,
+          locale === 'ur' && 'font-urdu',
+          locale === 'ps' && 'font-pashto',
+          locale === 'en' && 'font-sans',
+          'min-h-dvh bg-background antialiased text-foreground selection:bg-primary/20 selection:text-primary flex flex-col justify-between overscroll-none'
+        )}
         suppressHydrationWarning
       >
         <NextTopLoader color='var(--primary)' showSpinner={false} />

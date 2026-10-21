@@ -7,7 +7,11 @@
 @theme {
   --font-sans: var(--font-poppins), 'Poppins', system-ui, -apple-system, sans-serif;
   --font-poppins: var(--font-poppins), 'Poppins', sans-serif;
-  --font-urdu: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', Tahoma, sans-serif;
+  --font-urdu:
+    var(--font-noto-nastaliq), 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting',
+    Tahoma, sans-serif;
+  --font-pashto:
+    var(--font-noto-naskh), 'Noto Naskh Arabic', 'Noto Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -85,9 +89,31 @@
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-poppins), 'Poppins', system-ui, -apple-system, sans-serif;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings: 'rlig' 1, 'calt' 1;
     overscroll-behavior-y: none;
     min-height: 100dvh;
+  }
+
+  /* Urdu: cascading Nastaliq (needs taller leading) */
+  html[lang='ur'] body {
+    font-family: var(--font-urdu) !important;
+    line-height: 1.95;
+    letter-spacing: 0;
+  }
+
+  html[lang='ur'] :where(h1, h2, h3, h4, h5, h6) {
+    line-height: 2.05;
+  }
+
+  /* Pashto: upright Naskh like digital Pashto text */
+  html[lang='ps'] body {
+    font-family: var(--font-pashto) !important;
+    line-height: 1.75;
+    letter-spacing: 0;
+  }
+
+  html[lang='ps'] :where(h1, h2, h3, h4, h5, h6) {
+    line-height: 1.85;
   }
   @media (display-mode: standalone) {
     html,
@@ -136,7 +162,13 @@ input[type='file']:not(:disabled),
 
 
 .font-urdu {
-  font-family: var(--font-urdu);
+  font-family: var(--font-urdu) !important;
+  line-height: 1.95;
+}
+
+.font-pashto {
+  font-family: var(--font-pashto) !important;
+  line-height: 1.75;
 }
 
 .hero-atmosphere {
