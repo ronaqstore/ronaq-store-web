@@ -1,7 +1,7 @@
 {
   "common": {
     "appName": "رونق سټور",
-    "search": "لټون",
+    "search": "لټون...",
     "all": "ټول",
     "loading": "بارېږي...",
     "error": "ستونزه رامنځته شوه",
@@ -46,7 +46,7 @@
     "whatsapp": "واټس اپ",
     "call": "تلیفون",
     "timing": "وختونه",
-    "search": "دوکانونه لټول...",
+    "search": "لټون...",
     "bannerAlt": "د {store} بینر",
     "loadingMore": "نور دوکانونه لوډېږي…",
     "retryLoadMore": "نور ونه لوډ شول. بیا هڅه وکړئ.",
@@ -56,7 +56,7 @@
     "allCategories": "ټولې کټګورۍ",
     "allBrands": "ټول برانډونه",
     "inStockOnly": "یوازې شته توکي",
-    "searchInShop": "په دې دوکان کې توکي لټول...",
+    "searchInShop": "لټون...",
     "inStock": "په سټاک کې شته",
     "inStockCount": "{count} شته",
     "lowStock": "لږ سټاک",

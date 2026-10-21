@@ -21,7 +21,7 @@ export function ProductFilters({
           type='text'
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          placeholder={t('catalog.searchInShop')}
+          placeholder={t('common.search')}
           className='h-9 bg-card ps-9 text-sm'
         />
       </div>

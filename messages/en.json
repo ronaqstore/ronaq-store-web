@@ -1,7 +1,7 @@
 {
   "common": {
     "appName": "Ronaq Store",
-    "search": "Search",
+    "search": "Search...",
     "all": "All",
     "loading": "Loading...",
     "error": "Something went wrong",
@@ -46,7 +46,7 @@
     "whatsapp": "WhatsApp",
     "call": "Call Shop",
     "timing": "Hours",
-    "search": "Search shops...",
+    "search": "Search...",
     "bannerAlt": "{store} store banner",
     "loadingMore": "Loading more shops…",
     "retryLoadMore": "Couldn’t load more. Tap to retry.",
@@ -56,7 +56,7 @@
     "allCategories": "All Categories",
     "allBrands": "All Brands",
     "inStockOnly": "In Stock Only",
-    "searchInShop": "Search products in this shop...",
+    "searchInShop": "Search...",
     "inStock": "In Stock",
     "inStockCount": "{count} in stock",
     "lowStock": "Low stock",

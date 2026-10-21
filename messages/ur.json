@@ -1,7 +1,7 @@
 {
   "common": {
     "appName": "رونق اسٹور",
-    "search": "تلاش کریں",
+    "search": "تلاش...",
     "all": "تمام",
     "loading": "لوڈ ہو رہا ہے...",
     "error": "کچھ غلط ہو گیا",
@@ -46,7 +46,7 @@
     "whatsapp": "واٹس ایپ",
     "call": "کال کریں",
     "timing": "اوقات",
-    "search": "دکانیں تلاش کریں...",
+    "search": "تلاش...",
     "bannerAlt": "{store} بینر",
     "loadingMore": "مزید دکانیں لوڈ ہو رہی ہیں…",
     "retryLoadMore": "مزید لوڈ نہیں ہو سکیں۔ دوبارہ کوشش کریں۔",
@@ -56,7 +56,7 @@
     "allCategories": "تمام کیٹیگریز",
     "allBrands": "تمام برانڈز",
     "inStockOnly": "صرف دستیاب اشیاء",
-    "searchInShop": "اس دکان میں اشیاء تلاش کریں...",
+    "searchInShop": "تلاش...",
     "inStock": "اسٹاک میں ہے",
     "inStockCount": "{count} دستیاب",
     "lowStock": "کم اسٹاک",

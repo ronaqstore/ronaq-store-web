@@ -25,7 +25,7 @@ export function StoreSearchBar({ searchQuery, onSearchChange }: StoreSearchBarPr
         type='search'
         value={searchQuery}
         onChange={handleSearchChange}
-        placeholder={t('hero.searchPlaceholder')}
+        placeholder={t('common.search')}
         className='h-11 w-full rounded-none border-0 bg-transparent ps-10 pe-11 text-sm shadow-none outline-none ring-0 ring-offset-0 appearance-none focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 sm:h-12 sm:ps-12 sm:text-base [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden'
       />
       {searchQuery ? (
