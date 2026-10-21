@@ -20,11 +20,9 @@ export function ModelCard({ model, storeSlug, priority = false }: ModelCardProps
   const t = useTranslations();
   const href = modelPath(storeSlug, model.key);
   const title = formatProductCardTitle(model.model, model.brand);
-  const priceLabel = model.contactForPrice
-    ? t('catalog.contactForPrice')
-    : model.fromPrice
-      ? t('catalog.fromPrice', { price: formatPrice(model.fromPrice) })
-      : t('catalog.contactForPrice');
+  const priceLabel = model.fromPrice
+    ? t('catalog.fromPrice', { price: formatPrice(model.fromPrice) })
+    : null;
 
   const stockLabel =
     model.availability === 'OUT_OF_STOCK'
@@ -71,14 +69,13 @@ export function ModelCard({ model, storeSlug, priority = false }: ModelCardProps
             {stockLabel}
           </p>
         ) : null}
-        <p
-          className={cn(
-            'mt-auto pt-1.5 text-sm font-extrabold tracking-tight tabular-nums sm:text-base',
-            model.contactForPrice && !model.fromPrice ? 'text-foreground' : 'text-primary'
-          )}
-        >
-          {priceLabel}
-        </p>
+        {priceLabel ? (
+          <p className='mt-auto pt-1.5 text-sm font-extrabold tracking-tight text-primary tabular-nums sm:text-base'>
+            {priceLabel}
+          </p>
+        ) : (
+          <div className='mt-auto pt-1.5' />
+        )}
       </Link>
     </Card>
   );

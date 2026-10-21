@@ -12,8 +12,10 @@ import {
   resolveStoreWhatsAppNumber
 } from '@/lib/formatters';
 import { formatOpeningHoursDisplay } from '@/lib/opening-hours';
+import { hasStoreCoords } from '@/lib/geo';
 import { cn } from '@/lib/utils';
 import type { StoreCardProps } from '@/types/store';
+import { StoreMapLink } from './store-map-link';
 
 export async function StoreCard({ store, priority = false }: StoreCardProps) {
   const t = await getTranslations();
@@ -115,27 +117,35 @@ export async function StoreCard({ store, priority = false }: StoreCardProps) {
           <p className='line-clamp-2 text-sm leading-relaxed text-foreground/85'>{blurb}</p>
         ) : null}
 
-        <div className='mt-auto flex items-center justify-between gap-2 pt-1'>
+        <div className='mt-auto flex flex-wrap items-center justify-between gap-2 pt-1'>
           <Badge variant='secondary' className='w-fit gap-1 text-[11px] font-medium'>
             <Icons.mobile className='h-3 w-3' />
             {t('stores.productsAvailable', { count: productCount })}
           </Badge>
 
-          {whatsappHref ? (
-            <a
-              href={whatsappHref}
-              target='_blank'
-              rel='noopener noreferrer'
-              className={cn(
-                buttonVariants({ variant: 'outline', size: 'sm' }),
-                'pointer-events-auto relative z-20 cursor-pointer gap-1.5 border-emerald-500/30 text-xs text-emerald-700 hover:bg-emerald-500/10 dark:text-emerald-400'
-              )}
-              aria-label={t('stores.whatsapp')}
-            >
-              <Icons.whatsapp className='h-3.5 w-3.5' />
-              {t('stores.whatsapp')}
-            </a>
-          ) : null}
+          <div className='pointer-events-auto relative z-20 flex flex-wrap items-center gap-1.5'>
+            {hasStoreCoords(store) ? (
+              <StoreMapLink
+                store={store}
+                triggerClassName='cursor-pointer border-primary/25 text-primary hover:bg-primary/10'
+              />
+            ) : null}
+            {whatsappHref ? (
+              <a
+                href={whatsappHref}
+                target='_blank'
+                rel='noopener noreferrer'
+                className={cn(
+                  buttonVariants({ variant: 'outline', size: 'sm' }),
+                  'cursor-pointer gap-1.5 border-emerald-500/30 text-xs text-emerald-700 hover:bg-emerald-500/10 dark:text-emerald-400'
+                )}
+                aria-label={t('stores.whatsapp')}
+              >
+                <Icons.whatsapp className='h-3.5 w-3.5' />
+                {t('stores.whatsapp')}
+              </a>
+            ) : null}
+          </div>
         </div>
       </div>
     </article>

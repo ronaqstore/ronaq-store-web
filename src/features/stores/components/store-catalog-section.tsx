@@ -43,7 +43,7 @@ export async function StoreCatalogSection({ store, filters }: StoreCatalogSectio
     getStoreProducts(store.slug, {
       q: filters.q || undefined,
       category: filters.category || undefined,
-      inStock: filters.inStock || undefined,
+      inStock: true,
       limit: 50
     }),
     getStoreModels(store.slug)

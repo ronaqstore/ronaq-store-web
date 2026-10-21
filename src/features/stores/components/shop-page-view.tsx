@@ -1,8 +1,10 @@
 import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 import { StoreHeader } from '@/features/stores/components/store-header';
+import { StoreMapEmbed } from '@/features/stores/components/store-map-embed';
 import { StoreCatalogSection } from '@/features/stores/components/store-catalog-section';
 import { StoreCatalogSkeleton } from '@/features/stores/components/store-catalog-skeleton';
+import { hasStoreCoords } from '@/lib/geo';
 import { Breadcrumbs } from '@/components/seo/breadcrumbs';
 import { JsonLd } from '@/components/seo/json-ld';
 import {
@@ -53,6 +55,13 @@ export async function ShopPageView({ locale, store, filters }: ShopPageViewProps
       </div>
 
       <StoreHeader store={store} />
+
+      {hasStoreCoords(store) ? (
+        <div className='mx-auto max-w-[1600px] px-4 py-4 sm:px-6 sm:py-6 lg:px-8'>
+          <StoreMapEmbed store={store} />
+        </div>
+      ) : null}
+
       <section aria-labelledby='shop-catalog-heading'>
         <h2 id='shop-catalog-heading' className='sr-only'>
           {tCatalog('shopCatalogHeading', { store: store.displayName })}

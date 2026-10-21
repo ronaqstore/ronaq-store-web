@@ -46,7 +46,7 @@ export function ProductCard({
           : '';
 
   const formattedPrice = product.contactForPrice
-    ? t('catalog.contactForPrice')
+    ? null
     : formatPrice(product.retailPrice);
 
   const unitsCount = product.units?.length ?? 0;
@@ -74,7 +74,7 @@ export function ProductCard({
   const whatsappMessage = t('whatsapp.inquireProduct', {
     storeName,
     productName: fullProductName,
-    price: formattedPrice
+    price: formattedPrice ?? t('catalog.inquireWhatsApp')
   });
   const whatsappHref = buildWhatsAppLink(storePhone, whatsappMessage);
   const href = storeSlug
@@ -173,16 +173,15 @@ export function ProductCard({
         </p>
       ) : null}
 
-      <div className='mt-auto flex items-end justify-between gap-2 pt-1.5'>
-        <p
-          className={cn(
-            'text-sm font-extrabold tracking-tight tabular-nums sm:text-base',
-            product.contactForPrice ? 'text-foreground' : 'text-primary'
-          )}
-        >
-          {formattedPrice}
-        </p>
-      </div>
+      {formattedPrice ? (
+        <div className='mt-auto flex items-end justify-between gap-2 pt-1.5'>
+          <p className='text-sm font-extrabold tracking-tight text-primary tabular-nums sm:text-base'>
+            {formattedPrice}
+          </p>
+        </div>
+      ) : (
+        <div className='mt-auto pt-1.5' />
+      )}
     </div>
   );
 

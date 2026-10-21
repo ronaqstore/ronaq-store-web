@@ -9,6 +9,8 @@ export interface StoreListItem {
   name?: string;
   city: string;
   address: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
   phone?: string | null;
   phoneNumber?: string | null;
   whatsappNumber?: string | null;
@@ -31,6 +33,8 @@ export interface StoreProfile {
   displayName: string;
   city: string;
   address: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
   phoneNumber: string;
   whatsappNumber: string | null;
   description: string | null;
@@ -40,6 +44,21 @@ export interface StoreProfile {
   bannerUrl?: string | null;
   googleMapsUrl: string | null;
   openingHours: string | null;
+}
+
+export interface StoreMapEmbedProps {
+  store: Pick<
+    StoreListItem | StoreProfile,
+    'displayName' | 'name' | 'address' | 'city' | 'latitude' | 'longitude'
+  >;
+  className?: string;
+  heightClassName?: string;
+}
+
+export interface StoreMapLinkProps {
+  store: StoreListItem | StoreProfile;
+  triggerClassName?: string;
+  children?: ReactNode;
 }
 
 export interface StoreListQuery {

@@ -44,12 +44,13 @@ export async function ProductDetailView({
   ];
 
   const formattedPrice = product.contactForPrice
-    ? t('catalog.contactForPrice')
+    ? null
     : formatPrice(product.retailPrice);
   const specDetails = [storageLabel, colorLabel].filter(Boolean).join(', ');
   const fullProductName = specDetails
     ? `${displayTitle} (${specDetails})`
     : displayTitle;
+  const whatsappPrice = formattedPrice ?? t('catalog.inquireWhatsApp');
 
   const whatsappHref = buildWhatsAppLink(
     storePhone,
@@ -57,12 +58,12 @@ export async function ProductDetailView({
       ? t('whatsapp.inquireProduct', {
           storeName,
           productName: fullProductName,
-          price: formattedPrice
+          price: whatsappPrice
         })
       : t('whatsapp.buyProduct', {
           storeName,
           productName: fullProductName,
-          price: formattedPrice
+          price: whatsappPrice
         })
   );
 
@@ -147,9 +148,11 @@ export async function ProductDetailView({
             </h1>
           </div>
 
-          <div className='text-3xl font-black tracking-tight text-primary tabular-nums'>
-            {formattedPrice}
-          </div>
+          {formattedPrice ? (
+            <div className='text-3xl font-black tracking-tight text-primary tabular-nums'>
+              {formattedPrice}
+            </div>
+          ) : null}
 
           {product.description ? (
             <div className='space-y-1.5 pt-3 border-t border-border/50'>

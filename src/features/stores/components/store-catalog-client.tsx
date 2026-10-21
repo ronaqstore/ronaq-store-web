@@ -23,7 +23,6 @@ function buildQuery(filters: StoreCatalogFilters): Record<string, string> {
   const query: Record<string, string> = {};
   if (filters.q) query.q = filters.q;
   if (filters.category) query.category = filters.category;
-  if (filters.inStock) query.inStock = '1';
   return query;
 }
 
@@ -64,7 +63,7 @@ export function StoreCatalogClient({
     const query = buildQuery({
       q: trimmed,
       category: filters.category,
-      inStock: filters.inStock
+      inStock: true
     });
 
     startTransition(() => {
@@ -74,7 +73,7 @@ export function StoreCatalogClient({
         router.replace(pathname, { scroll: false });
       }
     });
-  }, [debouncedSearch, filters.q, filters.category, filters.inStock, pathname, router]);
+  }, [debouncedSearch, filters.q, filters.category, pathname, router]);
 
   const handleSelectProduct = (product: StoreProductListItem) => {
     const detail: StoreProductDetail = {
@@ -96,20 +95,12 @@ export function StoreCatalogClient({
       <ProductFilters
         categories={categories}
         selectedCategoryId={filters.category}
-        inStockOnly={filters.inStock}
         searchQuery={searchQuery}
         onCategorySelect={(category) =>
           replaceFilters({
             q: searchQuery.trim(),
             category,
-            inStock: filters.inStock
-          })
-        }
-        onInStockToggle={(inStock) =>
-          replaceFilters({
-            q: searchQuery.trim(),
-            category: filters.category,
-            inStock
+            inStock: true
           })
         }
         onSearchChange={setSearchQuery}

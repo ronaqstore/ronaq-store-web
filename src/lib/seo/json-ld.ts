@@ -173,6 +173,14 @@ export function localBusinessJsonLd(
       addressLocality: store.city || undefined,
       addressCountry: 'PK'
     },
+    geo:
+      store.latitude != null && store.longitude != null
+        ? {
+            '@type': 'GeoCoordinates',
+            latitude: store.latitude,
+            longitude: store.longitude
+          }
+        : undefined,
     openingHours: store.openingHours || undefined
   };
 }

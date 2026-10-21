@@ -22,12 +22,12 @@ export function ProductDetailModal({
   if (!product) return null;
 
   const formattedPrice = product.contactForPrice
-    ? t('catalog.contactForPrice')
+    ? null
     : formatPrice(product.retailPrice);
   const whatsappMessage = t('whatsapp.inquireProductShort', {
     storeName,
     productName: product.name,
-    price: formattedPrice
+    price: formattedPrice ?? t('catalog.inquireWhatsApp')
   });
   const whatsappHref = buildWhatsAppLink(storePhone, whatsappMessage);
 
@@ -74,9 +74,9 @@ export function ProductDetailModal({
 
             <h2 className='text-2xl font-bold text-foreground'>{formatEmpty(product.name)}</h2>
 
-            <div className='text-3xl font-extrabold text-primary'>
-              {formattedPrice}
-            </div>
+            {formattedPrice ? (
+              <div className='text-3xl font-extrabold text-primary'>{formattedPrice}</div>
+            ) : null}
 
             <div className='space-y-1.5 pt-2 border-t border-border/50'>
               <h4 className='text-xs font-semibold uppercase tracking-wider text-muted-foreground'>

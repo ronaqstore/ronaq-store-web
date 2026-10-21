@@ -10,8 +10,10 @@ import {
   resolveStoreWhatsAppNumber
 } from '@/lib/formatters';
 import { formatOpeningHoursDisplay } from '@/lib/opening-hours';
+import { hasStoreCoords } from '@/lib/geo';
 import { cn } from '@/lib/utils';
 import type { StoreHeaderProps } from '@/types/store';
+import { StoreMapLink } from './store-map-link';
 
 export async function StoreHeader({ store }: StoreHeaderProps) {
   const t = await getTranslations();
@@ -119,16 +121,8 @@ export async function StoreHeader({ store }: StoreHeaderProps) {
               </Button>
             )}
 
-            {store.googleMapsUrl ? (
-              <a
-                href={store.googleMapsUrl}
-                target='_blank'
-                rel='noopener noreferrer'
-                className={buttonVariants({ variant: 'ghost', size: 'icon' })}
-                aria-label={t('aria.directions')}
-              >
-                <Icons.externalLink className='h-4 w-4' />
-              </a>
+            {hasStoreCoords(store) ? (
+              <StoreMapLink store={store} triggerClassName='gap-2' />
             ) : null}
           </div>
         </div>

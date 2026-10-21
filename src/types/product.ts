@@ -165,10 +165,8 @@ export interface ProductGridProps {
 export interface ProductFiltersProps {
   categories: StoreCategory[];
   selectedCategoryId: string;
-  inStockOnly: boolean;
   searchQuery: string;
   onCategorySelect: (categoryId: string) => void;
-  onInStockToggle: (inStock: boolean) => void;
   onSearchChange: (search: string) => void;
 }
 

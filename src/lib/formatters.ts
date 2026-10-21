@@ -64,13 +64,13 @@ export function formatPrice(paisa?: string | number | null): string {
 
 export function formatPhone(phone?: string | null): string {
   if (!phone || typeof phone !== 'string') return EMPTY_DISPLAY;
-  const digits = phone.replace(/\D/g, '');
+  let digits = phone.replace(/\D/g, '');
   if (!digits) return EMPTY_DISPLAY;
-  if (digits.length === 11 && digits.startsWith('03')) {
-    return `${digits.slice(0, 4)}-${digits.slice(4)}`;
+  if (digits.startsWith('92') && digits.length >= 12) {
+    digits = `0${digits.slice(2)}`;
   }
-  if (digits.length === 12 && digits.startsWith('92')) {
-    return `0${digits.slice(2, 5)}-${digits.slice(5)}`;
+  if (digits.length === 11 && digits.startsWith('03')) {
+    return digits;
   }
   return phone;
 }
