@@ -12,7 +12,37 @@ import type { FacetedFilterProps } from '@/types/product';
 interface MenuPosition {
   top: number;
   left: number;
-  minWidth: number;
+  width: number;
+}
+
+function FilterOptionRow({
+  label,
+  selected,
+  onSelect
+}: {
+  label: string;
+  selected: boolean;
+  onSelect: () => void;
+}) {
+  return (
+    <button
+      type='button'
+      role='option'
+      aria-selected={selected}
+      className='my-0.5 flex w-full cursor-pointer items-center gap-2.5 rounded-md bg-muted px-2.5 py-2.5 text-start text-sm text-foreground transition-colors hover:bg-muted/80'
+      onClick={onSelect}
+    >
+      <span
+        className={cn(
+          'flex size-4 shrink-0 items-center justify-center rounded-sm border border-primary',
+          selected ? 'bg-primary text-primary-foreground' : 'opacity-50 [&_svg]:invisible'
+        )}
+      >
+        <Icons.check className='size-3' />
+      </span>
+      <span className='truncate'>{label}</span>
+    </button>
+  );
 }
 
 export function FacetedFilter({
@@ -50,14 +80,14 @@ export function FacetedFilter({
       const trigger = rootRef.current;
       if (!trigger) return;
       const rect = trigger.getBoundingClientRect();
-      const menuWidth = Math.max(rect.width, 192);
+      const width = 192;
       const viewportPadding = 8;
-      const maxLeft = window.innerWidth - menuWidth - viewportPadding;
+      const maxLeft = window.innerWidth - width - viewportPadding;
       const left = Math.max(viewportPadding, Math.min(rect.left, maxLeft));
       setPosition({
         top: rect.bottom + 6,
         left,
-        minWidth: menuWidth
+        width
       });
     };
 
@@ -110,68 +140,48 @@ export function FacetedFilter({
               position: 'fixed',
               top: position.top,
               left: position.left,
-              minWidth: position.minWidth,
+              width: position.width,
               zIndex: 1000
             }}
-            className='overflow-hidden rounded-lg border border-border bg-background p-1 shadow-xl'
+            className='flex flex-col overflow-hidden rounded-lg bg-popover p-1.5 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10'
           >
-            <button
-              type='button'
-              role='option'
-              aria-selected={!hasValue}
-              className={cn(
-                'flex w-full cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2 text-start text-sm transition-colors hover:bg-muted',
-                !hasValue && 'bg-muted'
-              )}
-              onClick={() => {
-                onChange('');
-                setOpen(false);
-              }}
-            >
-              <span
-                className={cn(
-                  'flex size-4 shrink-0 items-center justify-center rounded-sm border border-primary',
-                  !hasValue ? 'bg-primary text-primary-foreground' : 'opacity-40'
-                )}
-              >
-                {!hasValue ? <Icons.check className='size-3' /> : null}
-              </span>
-              <span className='truncate'>{allLabel ?? t('filterAll')}</span>
-            </button>
-
-            <div className='bg-border my-1 h-px' />
-
-            <div className='max-h-56 overflow-y-auto'>
-              {options.map((option) => {
-                const isSelected = option.value === value;
-                return (
-                  <button
-                    key={option.value}
-                    type='button'
-                    role='option'
-                    aria-selected={isSelected}
-                    className={cn(
-                      'flex w-full cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2 text-start text-sm transition-colors hover:bg-muted',
-                      isSelected && 'bg-muted'
-                    )}
-                    onClick={() => {
-                      onChange(isSelected ? '' : option.value);
-                      setOpen(false);
-                    }}
-                  >
-                    <span
-                      className={cn(
-                        'flex size-4 shrink-0 items-center justify-center rounded-sm border border-primary',
-                        isSelected ? 'bg-primary text-primary-foreground' : 'opacity-40'
-                      )}
-                    >
-                      {isSelected ? <Icons.check className='size-3' /> : null}
-                    </span>
-                    <span className='truncate'>{option.label}</span>
-                  </button>
-                );
-              })}
+            <div className='max-h-[18.75rem] space-y-0.5 overflow-x-hidden overflow-y-auto p-0.5'>
+              <FilterOptionRow
+                label={allLabel ?? t('filterAll')}
+                selected={!hasValue}
+                onSelect={() => {
+                  onChange('');
+                  setOpen(false);
+                }}
+              />
+              {options.map((option) => (
+                <FilterOptionRow
+                  key={option.value}
+                  label={option.label}
+                  selected={option.value === value}
+                  onSelect={() => {
+                    onChange(option.value === value ? '' : option.value);
+                    setOpen(false);
+                  }}
+                />
+              ))}
             </div>
+
+            {hasValue ? (
+              <>
+                <div className='bg-border my-1 h-px' />
+                <button
+                  type='button'
+                  className='cursor-pointer rounded-md px-2.5 py-1.5 text-center text-sm transition-colors hover:bg-muted'
+                  onClick={() => {
+                    onChange('');
+                    setOpen(false);
+                  }}
+                >
+                  {t('resetFilters')}
+                </button>
+              </>
+            ) : null}
           </div>,
           document.body
         )
@@ -186,18 +196,14 @@ export function FacetedFilter({
         aria-expanded={open}
         aria-haspopup='listbox'
         aria-controls={open ? listId : undefined}
-        className={cn(
-          'h-8 gap-1.5 border-dashed bg-background font-normal shadow-none',
-          hasValue && 'border-solid',
-          open && 'border-foreground/40'
-        )}
+        className={cn('h-8 gap-1.5 border-dashed font-normal', hasValue && 'border-solid')}
         onClick={() => setOpen(!open)}
       >
         {hasValue ? (
           <span
             role='button'
             tabIndex={0}
-            className='text-muted-foreground hover:text-foreground -ms-0.5 rounded-sm'
+            className='text-muted-foreground hover:text-foreground -ms-0.5 rounded-sm opacity-70 transition-opacity hover:opacity-100'
             aria-label={t('clearFilter', { title })}
             onClick={clearSelection}
             onKeyDown={(event) => {
@@ -209,7 +215,7 @@ export function FacetedFilter({
             <Icons.circleX className='size-4' />
           </span>
         ) : (
-          <Icons.filter className='size-4 text-muted-foreground' />
+          <Icons.filter className='size-4' />
         )}
         <span className='truncate'>{title}</span>
         {selected ? (
