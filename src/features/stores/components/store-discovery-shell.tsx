@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import { Skeleton } from '@/components/ui/skeleton';
 import { usePathname, useRouter } from '@/i18n/navigation';
-import { useDebouncedValue } from '@/hooks/use-debounced-value';
+import { useDebouncedUrlSearch } from '@/hooks/use-debounced-url-search';
 import { StoreHero } from './store-hero';
 import { StoreSearchBar } from './store-search-bar';
 import type { StoreDiscoveryShellProps } from '@/types/store';
@@ -14,25 +14,25 @@ export function StoreDiscoveryShell({ searchQuery: urlSearch, children }: StoreD
   const router = useRouter();
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
-  const [searchQuery, setSearchQuery] = useState(urlSearch);
-  const debouncedSearch = useDebouncedValue(searchQuery, 400);
+  const {
+    searchQuery,
+    setSearchQuery,
+    debouncedQuery,
+    shouldSyncUrl,
+    markUrlSync
+  } = useDebouncedUrlSearch(urlSearch, 400);
 
   useEffect(() => {
-    setSearchQuery(urlSearch);
-  }, [urlSearch]);
-
-  useEffect(() => {
-    const trimmed = debouncedSearch.trim();
-    if (trimmed === urlSearch) return;
-
+    if (!shouldSyncUrl) return;
+    markUrlSync(debouncedQuery);
     startTransition(() => {
-      if (trimmed) {
-        router.replace({ pathname, query: { q: trimmed } }, { scroll: false });
+      if (debouncedQuery) {
+        router.replace({ pathname, query: { q: debouncedQuery } }, { scroll: false });
       } else {
         router.replace(pathname, { scroll: false });
       }
     });
-  }, [debouncedSearch, urlSearch, pathname, router]);
+  }, [debouncedQuery, shouldSyncUrl, pathname, router]);
 
   return (
     <div>

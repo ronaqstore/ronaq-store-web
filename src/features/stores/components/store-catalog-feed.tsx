@@ -4,7 +4,6 @@ import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { ProductGrid } from '@/components/products/product-grid';
-import { ProductGridSkeleton } from '@/components/products/product-grid-skeleton';
 import { ModelCard } from '@/components/products/model-card';
 import { Icons } from '@/components/icons';
 import { Spinner } from '@/components/ui/spinner';
@@ -48,8 +47,7 @@ export function StoreCatalogFeed({
   productsTotal,
   productsPage: initialPage,
   productsTotalPages,
-  filters,
-  isFilterPending = false
+  filters
 }: StoreCatalogFeedProps) {
   const t = useTranslations();
   const [selectedProduct, setSelectedProduct] = useState<StoreProductDetail | null>(null);
@@ -72,7 +70,7 @@ export function StoreCatalogFeed({
   }, [initialProducts, initialPage, productsTotal, productsTotalPages, filters.category, filters.q]);
 
   const loadMore = useCallback(async () => {
-    if (loadingRef.current || !hasMore || isFilterPending) return;
+    if (loadingRef.current || !hasMore) return;
     loadingRef.current = true;
     setLoadingMore(true);
     setLoadError(false);
@@ -97,7 +95,7 @@ export function StoreCatalogFeed({
     setHasMore(response.page < response.totalPages);
     setLoadingMore(false);
     loadingRef.current = false;
-  }, [filters, hasMore, isFilterPending, page, store.slug]);
+  }, [filters, hasMore, page, store.slug]);
 
   const handleRetryLoadMore = () => {
     loadingRef.current = false;
@@ -106,7 +104,7 @@ export function StoreCatalogFeed({
 
   useEffect(() => {
     const node = sentinelRef.current;
-    if (!node || !hasMore || isFilterPending) return;
+    if (!node || !hasMore) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -119,7 +117,7 @@ export function StoreCatalogFeed({
 
     observer.observe(node);
     return () => observer.disconnect();
-  }, [hasMore, isFilterPending, loadMore]);
+  }, [hasMore, loadMore]);
 
   const visibleModels = useMemo(
     () => filterModelsForCatalog(allModels, products, filters),
@@ -147,18 +145,7 @@ export function StoreCatalogFeed({
   };
 
   const showEmpty =
-    !isFilterPending &&
-    visibleModels.length === 0 &&
-    accessoryProducts.length === 0 &&
-    !loadingMore;
-
-  if (isFilterPending) {
-    return (
-      <div className='space-y-3'>
-        <ProductGridSkeleton count={8} />
-      </div>
-    );
-  }
+    visibleModels.length === 0 && accessoryProducts.length === 0 && !loadingMore;
 
   return (
     <div className='space-y-5'>

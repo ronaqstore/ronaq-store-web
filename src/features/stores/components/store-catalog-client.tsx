@@ -1,13 +1,10 @@
 'use client';
 
-import { useEffect, useState, useTransition } from 'react';
-import { useTranslations } from 'next-intl';
+import { useEffect, useTransition } from 'react';
 import { ProductFilters } from '@/components/products/product-filters';
-import { Skeleton } from '@/components/ui/skeleton';
 import { usePathname, useRouter } from '@/i18n/navigation';
-import { useDebouncedValue } from '@/hooks/use-debounced-value';
-import type { StoreCatalogClientProps, StoreCatalogFilters } from '@/types/store';
-import { StoreCatalogFeed } from './store-catalog-feed';
+import { useDebouncedUrlSearch } from '@/hooks/use-debounced-url-search';
+import type { StoreCatalogShellProps, StoreCatalogFilters } from '@/types/store';
 
 function buildQuery(filters: StoreCatalogFilters): Record<string, string> {
   const query: Record<string, string> = {};
@@ -16,26 +13,21 @@ function buildQuery(filters: StoreCatalogFilters): Record<string, string> {
   return query;
 }
 
-export function StoreCatalogClient({
-  store,
+export function StoreCatalogShell({
   categories,
-  initialProducts,
-  allModels,
-  productsTotal,
-  productsPage,
-  productsTotalPages,
-  filters
-}: StoreCatalogClientProps) {
-  const t = useTranslations();
+  filters,
+  children
+}: StoreCatalogShellProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const [isPending, startTransition] = useTransition();
-  const [searchQuery, setSearchQuery] = useState(filters.q);
-  const debouncedSearch = useDebouncedValue(searchQuery, 400);
-
-  useEffect(() => {
-    setSearchQuery(filters.q);
-  }, [filters.q]);
+  const [, startTransition] = useTransition();
+  const {
+    searchQuery,
+    setSearchQuery,
+    debouncedQuery,
+    shouldSyncUrl,
+    markUrlSync
+  } = useDebouncedUrlSearch(filters.q, 400);
 
   const replaceFilters = (next: StoreCatalogFilters) => {
     const query = buildQuery(next);
@@ -49,25 +41,17 @@ export function StoreCatalogClient({
   };
 
   useEffect(() => {
-    const trimmed = debouncedSearch.trim();
-    if (trimmed === filters.q) return;
-
-    const query = buildQuery({
-      q: trimmed,
+    if (!shouldSyncUrl) return;
+    markUrlSync(debouncedQuery);
+    replaceFilters({
+      q: debouncedQuery,
       category: filters.category,
       inStock: filters.inStock
     });
-
-    startTransition(() => {
-      if (Object.keys(query).length > 0) {
-        router.replace({ pathname, query }, { scroll: false });
-      } else {
-        router.replace(pathname, { scroll: false });
-      }
-    });
-  }, [debouncedSearch, filters.q, filters.category, filters.inStock, pathname, router]);
+  }, [debouncedQuery, shouldSyncUrl, filters.category, filters.inStock]);
 
   const handleCategorySelect = (category: string) => {
+    markUrlSync(searchQuery.trim());
     replaceFilters({
       q: searchQuery.trim(),
       category,
@@ -85,26 +69,7 @@ export function StoreCatalogClient({
         onSearchChange={setSearchQuery}
       />
 
-      <div className='flex items-center justify-between text-xs text-muted-foreground'>
-        {isPending ? (
-          <span className='inline-flex items-center gap-2' aria-busy='true'>
-            <Skeleton className='h-3 w-24' />
-            <Skeleton className='h-3 w-12' />
-            <span className='sr-only'>{t('catalog.loadingMore')}</span>
-          </span>
-        ) : null}
-      </div>
-
-      <StoreCatalogFeed
-        store={store}
-        initialProducts={initialProducts}
-        allModels={allModels}
-        productsTotal={productsTotal}
-        productsPage={productsPage}
-        productsTotalPages={productsTotalPages}
-        filters={filters}
-        isFilterPending={isPending}
-      />
+      {children}
     </div>
   );
 }

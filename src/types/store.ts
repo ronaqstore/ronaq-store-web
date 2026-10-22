@@ -101,15 +101,10 @@ export interface StoreCatalogFilters {
   inStock: boolean;
 }
 
-export interface StoreCatalogClientProps {
-  store: StoreProfile;
+export interface StoreCatalogShellProps {
   categories: import('./product').StoreCategory[];
-  initialProducts: import('./product').StoreProductListItem[];
-  allModels: import('./product').StoreModelListItem[];
-  productsTotal: number;
-  productsPage: number;
-  productsTotalPages: number;
   filters: StoreCatalogFilters;
+  children: ReactNode;
 }
 
 export interface StoreCatalogFeedProps {
@@ -120,7 +115,6 @@ export interface StoreCatalogFeedProps {
   productsPage: number;
   productsTotalPages: number;
   filters: StoreCatalogFilters;
-  isFilterPending?: boolean;
 }
 
 export interface StoreCatalogSectionProps {
