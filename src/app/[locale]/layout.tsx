@@ -9,6 +9,7 @@ import NextTopLoader from 'nextjs-toploader';
 import { isLocale, isRtlLocale, locales, type AppLocale } from '@/i18n/request';
 import { ThemeProvider } from '@/components/theme-provider';
 import { I18nProvider } from '@/components/i18n-provider';
+import { LiveDataRefresh } from '@/components/live-data-refresh';
 import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
 import type { LocaleLayoutProps } from '@/types/common';
@@ -116,6 +117,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
         <NextTopLoader color='var(--primary)' showSpinner={false} />
         <ThemeProvider>
           <I18nProvider locale={locale} messages={messages}>
+            <LiveDataRefresh />
             <Navbar />
             <main id='main-content' className='flex-1 min-w-0'>
               {children}

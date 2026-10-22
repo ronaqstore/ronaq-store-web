@@ -66,7 +66,9 @@ export interface LocaleAppErrorProps {
   reset: () => void;
 }
 
-export type PublicFetchCache = { revalidate: number } | { cache: 'no-store' };
+export type PublicFetchCache =
+  | { revalidate: number; tags?: string[] }
+  | { cache: 'no-store'; tags?: string[] };
 
 export interface ApiResponse<T> {
   success: boolean;
