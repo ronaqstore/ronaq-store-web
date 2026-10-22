@@ -177,7 +177,7 @@ export function StoreCatalogFeed({
           <div className='grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3 xl:grid-cols-4'>
             {visibleModels.map((model, index) => (
               <ModelCard
-                key={model.key}
+                key={`${model.key}-${index}`}
                 model={model}
                 storeSlug={store.slug}
                 priority={index < 4}

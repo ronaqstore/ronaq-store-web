@@ -154,9 +154,9 @@ export function FacetedFilter({
                   setOpen(false);
                 }}
               />
-              {options.map((option) => (
+              {options.map((option, index) => (
                 <FilterOptionRow
-                  key={option.value}
+                  key={`${option.value}-${index}`}
                   label={option.label}
                   selected={option.value === value}
                   onSelect={() => {

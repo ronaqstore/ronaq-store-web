@@ -36,9 +36,9 @@ export function ProductFilters({
         >
           {t('catalog.allCategories')}
         </Button>
-        {categories.map((category) => (
+        {categories.map((category, index) => (
           <Button
-            key={category.id}
+            key={`${category.id}-${index}`}
             type='button'
             variant={selectedCategoryId === category.id ? 'secondary' : 'ghost'}
             size='sm'

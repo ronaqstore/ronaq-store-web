@@ -286,7 +286,7 @@ export async function ProductDetailView({
           <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
             {relatedProducts.map((item, index) => (
               <ProductCard
-                key={item.id}
+                key={`${item.id}-${index}`}
                 product={item}
                 storeSlug={slug}
                 storeName={storeName}
