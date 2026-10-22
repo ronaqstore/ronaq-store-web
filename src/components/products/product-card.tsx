@@ -3,14 +3,12 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { Icons } from '@/components/icons';
-import { buttonVariants } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { PreviewableImage } from '@/components/media/previewable-image';
 import { PLACEHOLDER_PRODUCT_IMAGE } from '@/constants/placeholders';
 import {
   formatPrice,
-  buildWhatsAppLink,
   formatEmpty,
   formatProductCardTitle,
   formatStorageLabel,
@@ -25,8 +23,6 @@ import type { ProductCardProps } from '@/types/product';
 export function ProductCard({
   product,
   storeSlug,
-  storeName,
-  storePhone,
   onSelectProduct,
   priority = false,
   linkToModel = true
@@ -45,9 +41,7 @@ export function ProductCard({
           ? formatTitleCase(product.condition)
           : '';
 
-  const formattedPrice = product.contactForPrice
-    ? null
-    : formatPrice(product.retailPrice);
+  const formattedPrice = formatPrice(product.retailPrice);
 
   const unitsCount = product.units?.length ?? 0;
   const stockCount =
@@ -68,15 +62,6 @@ export function ProductCard({
         ? t('catalog.outOfStock')
         : null;
 
-  const specForWhatsApp = [storageLabel, colorLabel].filter(Boolean).join(', ');
-  const fullProductName = specForWhatsApp ? `${title} (${specForWhatsApp})` : title;
-
-  const whatsappMessage = t('whatsapp.inquireProduct', {
-    storeName,
-    productName: fullProductName,
-    price: formattedPrice ?? t('catalog.inquireWhatsApp')
-  });
-  const whatsappHref = buildWhatsAppLink(storePhone, whatsappMessage);
   const href = storeSlug
     ? linkToModel && product.trackingType === 'SERIALIZED' && product.modelKey
       ? modelPath(storeSlug, product.modelKey)
@@ -216,22 +201,6 @@ export function ProductCard({
         </button>
       )}
 
-      {product.contactForPrice && storePhone ? (
-        <div className='px-3 pb-3 sm:px-3.5 sm:pb-3.5'>
-          <a
-            href={whatsappHref}
-            target='_blank'
-            rel='noopener noreferrer'
-            className={cn(
-              buttonVariants({ size: 'sm' }),
-              'h-8 w-full gap-1.5 bg-emerald-600 text-[11px] text-white shadow-sm hover:bg-emerald-700 sm:text-xs'
-            )}
-          >
-            <Icons.whatsapp className='h-3.5 w-3.5' />
-            {t('catalog.inquireWhatsApp')}
-          </a>
-        </div>
-      ) : null}
     </Card>
   );
 }

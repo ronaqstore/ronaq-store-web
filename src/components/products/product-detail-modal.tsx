@@ -6,30 +6,20 @@ import { buttonVariants } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { PreviewableImage } from '@/components/media/previewable-image';
 import { PLACEHOLDER_PRODUCT_IMAGE } from '@/constants/placeholders';
-import { formatPrice, buildWhatsAppLink, formatEmpty } from '@/lib/formatters';
+import { formatPrice, formatEmpty } from '@/lib/formatters';
 import { StockBadge } from '@/components/products/stock-badge';
 import { cn } from '@/lib/utils';
 import type { ProductDetailModalProps } from '@/types/product';
 
 export function ProductDetailModal({
   product,
-  storeName,
-  storePhone,
   onClose
 }: ProductDetailModalProps) {
   const t = useTranslations();
 
   if (!product) return null;
 
-  const formattedPrice = product.contactForPrice
-    ? null
-    : formatPrice(product.retailPrice);
-  const whatsappMessage = t('whatsapp.inquireProductShort', {
-    storeName,
-    productName: product.name,
-    price: formattedPrice ?? t('catalog.inquireWhatsApp')
-  });
-  const whatsappHref = buildWhatsAppLink(storePhone, whatsappMessage);
+  const formattedPrice = formatPrice(product.retailPrice);
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in'>
@@ -103,22 +93,6 @@ export function ProductDetailModal({
             </div>
           </div>
 
-          {product.contactForPrice && storePhone ? (
-            <div className='pt-2'>
-              <a
-                href={whatsappHref}
-                target='_blank'
-                rel='noopener noreferrer'
-                className={cn(
-                  buttonVariants({ size: 'lg' }),
-                  'w-full gap-2 bg-emerald-600 font-bold text-white shadow-md hover:bg-emerald-700'
-                )}
-              >
-                <Icons.whatsapp className='h-5 w-5' />
-                {t('catalog.inquireWhatsApp')}
-              </a>
-            </div>
-          ) : null}
         </div>
       </div>
     </div>

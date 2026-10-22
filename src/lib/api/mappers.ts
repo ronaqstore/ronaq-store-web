@@ -109,8 +109,7 @@ function mapProduct(raw: ApiProduct): StoreProductListItem {
     categoryName: raw.category ?? '',
     brandId: null,
     brandName: raw.brand ?? null,
-    retailPrice: raw.contactForPrice || raw.price == null ? '' : String(raw.price),
-    contactForPrice: Boolean(raw.contactForPrice),
+    retailPrice: raw.price == null ? '' : String(raw.price),
     ptaStatus: mapPtaStatus(raw.ptaStatus),
     authenticity:
       raw.authenticity === 'ORIGINAL' || raw.authenticity === 'COPY'
@@ -181,7 +180,6 @@ export function mapStoreModel(raw: ApiStoreModel): StoreModelListItem {
     variantCount: raw.variantCount,
     coverImage: raw.coverImage ?? null,
     fromPrice: raw.fromPrice == null ? null : String(raw.fromPrice),
-    contactForPrice: raw.fromPrice == null,
     availability: raw.availability
   };
 }

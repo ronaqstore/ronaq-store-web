@@ -38,7 +38,6 @@ export interface StoreProductListItem {
   brandId: string | null;
   brandName: string | null;
   retailPrice: string;
-  contactForPrice: boolean;
   ptaStatus: string;
   authenticity: 'ORIGINAL' | 'COPY' | '';
   condition: string;
@@ -69,7 +68,6 @@ export interface StoreProductDetail {
   brandId: string | null;
   brandName: string | null;
   retailPrice: string;
-  contactForPrice: boolean;
   ptaStatus: string;
   authenticity: 'ORIGINAL' | 'COPY' | '';
   condition: string;
@@ -111,7 +109,6 @@ export interface StoreModelListItem {
   variantCount: number;
   coverImage: string | null;
   fromPrice: string | null;
-  contactForPrice: boolean;
   availability: StoreAvailability;
 }
 
@@ -125,8 +122,8 @@ export interface StoreModelDetail {
 export interface ProductCardProps {
   product: StoreProductListItem;
   storeSlug?: string;
-  storeName: string;
-  storePhone: string;
+  storeName?: string;
+  storePhone?: string;
   onSelectProduct?: (product: StoreProductListItem) => void;
   priority?: boolean;
   linkToModel?: boolean;
@@ -192,8 +189,8 @@ export interface FacetedFilterProps {
 
 export interface ProductDetailModalProps {
   product: StoreProductDetail | null;
-  storeName: string;
-  storePhone: string;
+  storeName?: string;
+  storePhone?: string;
   onClose: () => void;
 }
 

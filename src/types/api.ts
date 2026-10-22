@@ -39,7 +39,6 @@ export interface ApiProduct {
   brand?: string;
   category?: string;
   price?: number | null;
-  contactForPrice?: boolean;
   availability?: StoreAvailability;
   stockCount?: number | null;
   ptaStatus?: string | null;

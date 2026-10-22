@@ -43,28 +43,20 @@ export async function ProductDetailView({
     { name: displayTitle, path }
   ];
 
-  const formattedPrice = product.contactForPrice
-    ? null
-    : formatPrice(product.retailPrice);
+  const formattedPrice = formatPrice(product.retailPrice);
   const specDetails = [storageLabel, colorLabel].filter(Boolean).join(', ');
   const fullProductName = specDetails
     ? `${displayTitle} (${specDetails})`
     : displayTitle;
-  const whatsappPrice = formattedPrice ?? t('catalog.inquireWhatsApp');
+  const whatsappPrice = formattedPrice ?? '';
 
   const whatsappHref = buildWhatsAppLink(
     storePhone,
-    product.contactForPrice
-      ? t('whatsapp.inquireProduct', {
-          storeName,
-          productName: fullProductName,
-          price: whatsappPrice
-        })
-      : t('whatsapp.buyProduct', {
-          storeName,
-          productName: fullProductName,
-          price: whatsappPrice
-        })
+    t('whatsapp.buyProduct', {
+      storeName,
+      productName: fullProductName,
+      price: whatsappPrice
+    })
   );
 
   return (
@@ -265,7 +257,7 @@ export async function ProductDetailView({
             )}
           >
             <Icons.whatsapp className='h-5 w-5' />
-            {product.contactForPrice ? t('catalog.inquireWhatsApp') : t('catalog.orderWhatsApp')}
+            {t('catalog.orderWhatsApp')}
           </a>
         ) : null}
       </div>

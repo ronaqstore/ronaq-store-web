@@ -110,7 +110,7 @@ export function productJsonLd(input: ProductJsonLdInput): Record<string, unknown
     }
   };
 
-  if (!product.contactForPrice && product.retailPrice) {
+  if (product.retailPrice) {
     const price = Number(product.retailPrice);
     if (Number.isFinite(price)) {
       offer.price = price;
