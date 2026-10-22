@@ -35,10 +35,10 @@ function FilterOptionRow({
       <span
         className={cn(
           'flex size-4 shrink-0 items-center justify-center rounded-sm border border-primary',
-          selected ? 'bg-primary text-primary-foreground' : 'opacity-50 [&_svg]:invisible'
+          selected ? 'bg-primary text-white' : 'opacity-50 [&_svg]:invisible'
         )}
       >
-        <Icons.check className='size-3' />
+        <Icons.check className='size-3 text-current' />
       </span>
       <span className='truncate'>{label}</span>
     </button>
