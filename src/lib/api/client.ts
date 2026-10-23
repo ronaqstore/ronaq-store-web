@@ -12,15 +12,26 @@ export async function publicApiRequest<T>(
 
   try {
     const url = `${API_BASE_URL}/public/${endpoint.replace(/^\/+/, '')}`;
+    const nextOptions =
+      'cache' in cache
+        ? {
+            cache: cache.cache,
+            ...(cache.tags && cache.tags.length > 0 ? { next: { tags: cache.tags } } : {})
+          }
+        : {
+            next: {
+              revalidate: cache.revalidate,
+              ...(cache.tags && cache.tags.length > 0 ? { tags: cache.tags } : {})
+            }
+          };
+
     const response = await fetch(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json'
       },
-      ...('cache' in cache
-        ? { cache: cache.cache }
-        : { next: { revalidate: cache.revalidate } })
+      ...nextOptions
     });
 
     if (!response.ok) {

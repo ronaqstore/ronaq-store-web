@@ -51,12 +51,24 @@ export interface ProductPageProps {
   params: Promise<ProductRouteParams>;
 }
 
+export interface ModelRouteParams {
+  locale: string;
+  slug: string;
+  modelKey: string;
+}
+
+export interface ModelPageProps {
+  params: Promise<ModelRouteParams>;
+}
+
 export interface LocaleAppErrorProps {
   error: Error & { digest?: string };
   reset: () => void;
 }
 
-export type PublicFetchCache = { revalidate: number } | { cache: 'no-store' };
+export type PublicFetchCache =
+  | { revalidate: number; tags?: string[] }
+  | { cache: 'no-store'; tags?: string[] };
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -71,4 +83,11 @@ export interface ThemeProviderProps {
 export interface NotFoundViewProps {
   onBack: () => void;
   onHome: () => void;
+}
+
+export interface TruncateTextProps {
+  children: ReactNode;
+  className?: string;
+  title?: string;
+  lines?: 1 | 2 | 3;
 }

@@ -7,7 +7,30 @@
 @theme {
   --font-sans: var(--font-poppins), 'Poppins', system-ui, -apple-system, sans-serif;
   --font-poppins: var(--font-poppins), 'Poppins', sans-serif;
-  --font-urdu: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', Tahoma, sans-serif;
+  --font-urdu:
+    var(--font-noto-nastaliq), 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting',
+    Tahoma, sans-serif;
+  --font-pashto:
+    var(--font-noto-naskh), 'Noto Naskh Arabic', 'Noto Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
 }
 
 :root {
@@ -66,9 +89,31 @@
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-poppins), 'Poppins', system-ui, -apple-system, sans-serif;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings: 'rlig' 1, 'calt' 1;
     overscroll-behavior-y: none;
     min-height: 100dvh;
+  }
+
+  /* Urdu: cascading Nastaliq (needs taller leading) */
+  html[lang='ur'] body {
+    font-family: var(--font-urdu) !important;
+    line-height: 1.95;
+    letter-spacing: 0;
+  }
+
+  html[lang='ur'] :where(h1, h2, h3, h4, h5, h6) {
+    line-height: 2.05;
+  }
+
+  /* Pashto: upright Naskh like digital Pashto text */
+  html[lang='ps'] body {
+    font-family: var(--font-pashto) !important;
+    line-height: 1.75;
+    letter-spacing: 0;
+  }
+
+  html[lang='ps'] :where(h1, h2, h3, h4, h5, h6) {
+    line-height: 1.85;
   }
   @media (display-mode: standalone) {
     html,
@@ -84,9 +129,46 @@
   }
 }
 
+/*
+  Pointer cursor for interactive controls.
+  Kept outside @layer so it beats Tailwind utilities like cursor-default.
+*/
+button:not(:disabled):not([aria-disabled='true']),
+a[href],
+[role='button']:not([aria-disabled='true']),
+[role='link'],
+[role='menuitem']:not([aria-disabled='true']),
+[role='option']:not([aria-disabled='true']),
+[role='tab']:not([aria-disabled='true']),
+[role='checkbox']:not([aria-disabled='true']),
+[role='radio']:not([aria-disabled='true']),
+[role='switch']:not([aria-disabled='true']),
+[role='combobox']:not([aria-disabled='true']),
+summary,
+label[for],
+select:not(:disabled),
+input[type='button']:not(:disabled),
+input[type='submit']:not(:disabled),
+input[type='reset']:not(:disabled),
+input[type='checkbox']:not(:disabled),
+input[type='radio']:not(:disabled),
+input[type='file']:not(:disabled),
+[data-slot='button']:not(:disabled),
+[data-slot$='-trigger']:not(:disabled),
+[data-slot$='-item']:not([aria-disabled='true']),
+.cursor-pointer {
+  cursor: pointer;
+}
+
 
 .font-urdu {
-  font-family: var(--font-urdu);
+  font-family: var(--font-urdu) !important;
+  line-height: 1.95;
+}
+
+.font-pashto {
+  font-family: var(--font-pashto) !important;
+  line-height: 1.75;
 }
 
 .hero-atmosphere {

@@ -1,0 +1,77 @@
+# Ronaq Store Web — coding rules (`npm run check`)
+
+Always apply these rules when changing the public storefront. Gate: `npm run check` (or `npm run check -- --only <id>`).
+
+## How to work
+
+1. Prefer named types in `src/types/` (or feature types files) — never inline `{ ... }` object types in props/params/generics.
+2. Zero comments in `src/` — no `//`, `/* */`, or JSDoc. Use clear names.
+3. Multi-statement JSX handlers must be named functions — not inline closures with 2+ statements.
+4. UI strings via next-intl message keys — no hardcoded user-facing copy.
+5. Respect file length limits; split before you grow past them.
+
+## Check catalog (what each script enforces)
+
+| Check | Rule |
+| --- | --- |
+| **secrets** | No hardcoded API keys, tokens, passwords. |
+| **hardcoded-text** | No raw UI strings; use `messages/*.json` + next-intl. |
+| **locale-sync** | Locale JSON keys stay synchronized across languages. |
+| **arch-rules** | No raw `process.env` outside config; no inline `style={}`; no `as any`; RTL-safe classes (`ms`/`me`/`ps`/`pe`/`inset-s`/`inset-e`, not `ml`/`mr`); no hex colors (theme tokens); no generic `throw new Error()` — use domain/`AppError`. |
+| **tailwind-classes** | No deprecated Tailwind positioning: use `inset-s-*` / `inset-e-*` instead of `start-*` / `end-*`. Keep `ms-/me-/ps-/pe-` and `text-start`/`text-end`. |
+| **structure** | Only allowed `src/` top-level dirs and root files. |
+| **metadata** | Every `page.tsx` is a server component with SEO `metadata` / `openGraph`. |
+| **types** | Ban `any`, `!`, `@ts-ignore`, `as unknown`, bare `Function` / `Object`. |
+| **nest-type** | Ban inline/nested object type literals in params/props/generics — export named types from `src/types/`. |
+| **api-urls** | No hardcoded `http(s)://` outside approved config. |
+| **comments** | Zero comments in `src/`. |
+| **console** | No leftover `console.log` in app code. |
+| **feature-boundaries** | Keep feature isolation; share via `components/`, `lib/`, `types/`. |
+| **banned-deps** | No axios / react-hook-form / moment / dayjs / lodash / bcrypt on the client. Use project fetch client + approved form/date libs. |
+| **tenancy** | Storefront must respect shop/slug tenancy; no cross-shop leakage. |
+| **financial-safety** | Display money via shared formatters; no ad-hoc float money math. |
+| **error-boundaries** | Keep required route error boundaries. |
+| **catch-handling** | Meaningful catch handling — no empty catches. |
+| **max-lines** | Pages ≤ 100; layouts ≤ 300; hooks ≤ 300; API/schemas ≤ 350; components ≤ 480; default ≤ 400. |
+| **storage-safety** | Safe browser storage only. |
+| **button-safety** | Explicit `type="button"` / `type="submit"` on buttons in forms. |
+| **accessibility** | Semantic HTML / accessible labels and navigation. |
+| **react-purity** | No side effects during render. |
+| **nextjs-features** | App Router best practices enforced by the auditor. |
+| **mutation-hooks** | Mutations follow project patterns. |
+| **clean-handlers** | Named handlers for multi-statement JSX events. |
+| **list-tables** | List UIs use the approved responsive table patterns when applicable. |
+| **unused** / **orphans** / **knip** | No dead code, unused imports, or orphan modules. |
+| **duplicates** / **duplicate-audit** | Avoid copy-paste clones. |
+| **lint** / **typecheck** / **test** / **build** | Must pass. |
+
+## Types pattern
+
+```ts
+// ❌
+function Card(props: { title: string; href: string }) {}
+
+// ✅
+import type { StoreCardProps } from '@/types/store'
+function Card(props: StoreCardProps) {}
+```
+
+## Handlers pattern
+
+```tsx
+// ❌
+onClick={() => { track(); router.push(href) }}
+
+// ✅
+const handleClick = () => {
+  track()
+  router.push(href)
+}
+<button type="button" onClick={handleClick} />
+```
+
+## Storefront notes
+
+- Prefer server components by default; mark `'use client'` only when needed.
+- Images/logos follow existing media helpers and placeholders.
+- Keep RTL-safe Tailwind (logical properties) for ur/ps locales.

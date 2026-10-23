@@ -3,7 +3,9 @@ import type {
   ApiPaginatedProducts,
   ApiPaginatedStores,
   ApiProduct,
-  ApiStore
+  ApiStore,
+  ApiStoreModel,
+  ApiStoreModelDetail
 } from '@/types/api';
 import type {
   PaginatedStoresResponse,
@@ -13,6 +15,8 @@ import type {
 import type {
   PaginatedProductsResponse,
   StoreCategory,
+  StoreModelDetail,
+  StoreModelListItem,
   StoreProductDetail,
   StoreProductListItem
 } from '@/types/product';
@@ -25,6 +29,8 @@ function mapStoreItem(raw: ApiStore): StoreListItem {
     name: raw.displayName,
     city: raw.city ?? '',
     address: raw.address ?? null,
+    latitude: raw.latitude ?? null,
+    longitude: raw.longitude ?? null,
     phone: raw.phoneNumber ?? null,
     phoneNumber: raw.phoneNumber ?? null,
     whatsappNumber: raw.whatsappNumber ?? null,
@@ -34,7 +40,8 @@ function mapStoreItem(raw: ApiStore): StoreListItem {
     heroBannerUrl: raw.bannerUrl ?? null,
     bannerUrl: raw.bannerUrl ?? null,
     productCount: raw.totalProducts ?? 0,
-    totalProducts: raw.totalProducts ?? 0
+    totalProducts: raw.totalProducts ?? 0,
+    openingHours: raw.openingHours ?? null
   };
 }
 
@@ -61,6 +68,8 @@ export function mapStoreProfile(raw: ApiStore | null): StoreProfile | null {
     displayName: raw.displayName,
     city: raw.city ?? '',
     address: raw.address ?? null,
+    latitude: raw.latitude ?? null,
+    longitude: raw.longitude ?? null,
     phoneNumber: raw.phoneNumber ?? '',
     whatsappNumber: raw.whatsappNumber ?? null,
     description: raw.about ?? null,
@@ -76,24 +85,45 @@ export function mapStoreProfile(raw: ApiStore | null): StoreProfile | null {
 function mapPtaStatus(status?: string | null): string {
   if (status === 'PTA_APPROVED') return 'APPROVED';
   if (status === 'NON_PTA') return 'NON_PTA';
+  if (status === 'JV') return 'JV';
+  if (status === 'BYPASS') return 'BYPASS';
+  if (status === 'MDM_BYPASS') return 'MDM_BYPASS';
   return status ?? '';
 }
 
 function mapProduct(raw: ApiProduct): StoreProductListItem {
   const availability = raw.availability ?? 'OUT_OF_STOCK';
+  const specs = raw.specs
+    ? {
+        model: raw.specs.model ?? null,
+        color: raw.specs.color ?? null,
+        ram: raw.specs.ram ?? null,
+        storage: raw.specs.storage ?? null
+      }
+    : null;
   return {
     id: raw.id,
     name: raw.name,
-    sku: '',
+    sku: raw.sku ?? '',
     categoryId: '',
     categoryName: raw.category ?? '',
     brandId: null,
     brandName: raw.brand ?? null,
-    retailPrice: raw.contactForPrice || raw.price == null ? '' : String(raw.price),
-    contactForPrice: Boolean(raw.contactForPrice),
+    retailPrice: raw.price == null ? '' : String(raw.price),
     ptaStatus: mapPtaStatus(raw.ptaStatus),
-    condition: '',
+    authenticity:
+      raw.authenticity === 'ORIGINAL' || raw.authenticity === 'COPY'
+        ? raw.authenticity
+        : '',
+    condition: raw.condition ?? '',
     warrantyType: '',
+    trackingType: raw.trackingType,
+    modelKey: raw.modelKey ?? null,
+    model: raw.specs?.model ?? null,
+    color: raw.specs?.color ?? null,
+    ram: raw.specs?.ram ?? null,
+    storage: raw.specs?.storage ?? null,
+    specs,
     primaryImageUrl: raw.images?.[0] ?? null,
     images: (raw.images ?? []).map((url, index) => ({
       id: `${raw.id}-${index}`,
@@ -104,7 +134,15 @@ function mapProduct(raw: ApiProduct): StoreProductListItem {
     stockCount: raw.stockCount ?? null,
     inStock: availability !== 'OUT_OF_STOCK',
     totalQuantity: raw.stockCount ?? 0,
-    description: raw.description ?? null
+    description: raw.description ?? null,
+    units: (raw.units ?? []).map((unit) => ({
+      id: unit.id,
+      imeiMasked: unit.imeiMasked,
+      condition: unit.condition,
+      batteryHealth: unit.batteryHealth ?? null,
+      price: unit.price == null ? null : String(unit.price),
+      defectNotes: unit.defectNotes ?? null
+    }))
   };
 }
 
@@ -131,6 +169,33 @@ export function mapProductDetail(raw: ApiProduct | null): StoreProductDetail | n
     ...base,
     description: raw.description ?? null,
     images: base.images ?? []
+  };
+}
+
+export function mapStoreModel(raw: ApiStoreModel): StoreModelListItem {
+  return {
+    key: raw.key,
+    brand: raw.brand,
+    model: raw.model,
+    variantCount: raw.variantCount,
+    coverImage: raw.coverImage ?? null,
+    fromPrice: raw.fromPrice == null ? null : String(raw.fromPrice),
+    availability: raw.availability
+  };
+}
+
+export function mapStoreModels(raw: ApiStoreModel[] | null): StoreModelListItem[] {
+  if (!raw) return [];
+  return raw.map(mapStoreModel);
+}
+
+export function mapStoreModelDetail(raw: ApiStoreModelDetail | null): StoreModelDetail | null {
+  if (!raw) return null;
+  return {
+    key: raw.key,
+    brand: raw.brand,
+    model: raw.model,
+    variants: (raw.variants ?? []).map(mapProduct)
   };
 }
 

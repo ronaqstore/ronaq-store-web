@@ -1,10 +1,12 @@
 'use client';
 
 import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslations } from 'next-intl';
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { SmartImage } from '@/components/media/smart-image';
+import { PLACEHOLDER_PRODUCT_IMAGE } from '@/constants/placeholders';
 import { isPreviewableImageSrc } from '@/lib/media';
 import type { ImageLightboxProps } from '@/types/media';
 
@@ -26,12 +28,13 @@ export function ImageLightbox({ src, alt, open, onOpenChange }: ImageLightboxPro
   }, [open, onOpenChange]);
 
   if (!open || !isPreviewableImageSrc(src)) return null;
+  if (typeof document === 'undefined') return null;
 
   const handleClose = () => {
     onOpenChange(false);
   };
 
-  return (
+  return createPortal(
     <div
       className='fixed inset-0 z-[80] flex items-center justify-center bg-background/90 p-4 backdrop-blur-sm animate-in fade-in'
       role='dialog'
@@ -48,23 +51,27 @@ export function ImageLightbox({ src, alt, open, onOpenChange }: ImageLightboxPro
         type='button'
         variant='ghost'
         size='icon'
-        className='absolute end-4 top-4 z-10 h-10 w-10 rounded-full bg-background/80'
+        className='absolute inset-e-4 top-4 z-20 h-10 w-10 rounded-full bg-background/80'
         onClick={handleClose}
         aria-label={t('aria.closeModal')}
       >
         <Icons.close className='h-5 w-5' />
       </Button>
 
-      <div className='relative z-10 h-[min(90vh,900px)] w-full max-w-5xl'>
-        <SmartImage
-          src={src.trim()}
-          alt={alt}
-          fill
-          priority
-          className='object-contain'
-          sizes='(max-width: 1024px) 100vw, 1024px'
-        />
+      <div className='pointer-events-none relative z-10 flex h-[min(90vh,900px)] w-full max-w-5xl items-center justify-center'>
+        <div className='pointer-events-auto relative h-full w-full'>
+          <SmartImage
+            src={src.trim()}
+            alt={alt}
+            fill
+            priority
+            className='object-contain'
+            sizes='(max-width: 1024px) 100vw, 1024px'
+            fallbackSrc={PLACEHOLDER_PRODUCT_IMAGE}
+          />
+        </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

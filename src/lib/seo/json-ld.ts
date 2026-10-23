@@ -110,7 +110,7 @@ export function productJsonLd(input: ProductJsonLdInput): Record<string, unknown
     }
   };
 
-  if (!product.contactForPrice && product.retailPrice) {
+  if (product.retailPrice) {
     const price = Number(product.retailPrice);
     if (Number.isFinite(price)) {
       offer.price = price;
@@ -173,6 +173,14 @@ export function localBusinessJsonLd(
       addressLocality: store.city || undefined,
       addressCountry: 'PK'
     },
+    geo:
+      store.latitude != null && store.longitude != null
+        ? {
+            '@type': 'GeoCoordinates',
+            latitude: store.latitude,
+            longitude: store.longitude
+          }
+        : undefined,
     openingHours: store.openingHours || undefined
   };
 }

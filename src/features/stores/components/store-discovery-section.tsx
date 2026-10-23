@@ -1,14 +1,27 @@
+import { STORES_PAGE_SIZE } from '@/constants/site';
 import { getPublicStores } from '@/features/stores/api/service';
-import { StoreDiscoveryResults } from '@/features/stores/components/store-discovery-results';
+import { StoreDiscoveryFeed } from '@/features/stores/components/store-discovery-feed';
 import type { StoreDiscoverySectionProps } from '@/types/store';
 
 export async function StoreDiscoverySection({ searchQuery }: StoreDiscoverySectionProps) {
   const response = await getPublicStores({
     q: searchQuery || undefined,
-    limit: 50
+    page: 1,
+    limit: STORES_PAGE_SIZE
   });
 
   const stores = response?.items ?? [];
+  const total = response?.total ?? 0;
+  const page = response?.page ?? 1;
+  const totalPages = response?.totalPages ?? 1;
 
-  return <StoreDiscoveryResults stores={stores} />;
+  return (
+    <StoreDiscoveryFeed
+      initialStores={stores}
+      total={total}
+      page={page}
+      totalPages={totalPages}
+      searchQuery={searchQuery}
+    />
+  );
 }

@@ -37,7 +37,7 @@ export function LanguageSwitcher() {
         type='button'
         variant={currentLocale === 'ps' ? 'secondary' : 'ghost'}
         size='sm'
-        className='h-7 px-2 text-xs'
+        className='h-7 px-2 text-xs font-pashto'
         onClick={() => handleSwitch('ps')}
       >
         پښتو

@@ -33,7 +33,7 @@ export function ProductImageGallery({ images, productName }: ProductImageGallery
         <div className='flex flex-wrap gap-2'>
           {sorted.map((image, index) => (
             <button
-              key={image.id}
+              key={`${image.id}-${index}`}
               type='button'
               onClick={() => setActiveIndex(index)}
               className={cn(

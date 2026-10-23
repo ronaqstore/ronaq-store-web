@@ -9,6 +9,8 @@ export interface StoreListItem {
   name?: string;
   city: string;
   address: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
   phone?: string | null;
   phoneNumber?: string | null;
   whatsappNumber?: string | null;
@@ -21,6 +23,7 @@ export interface StoreListItem {
   logoUrl: string | null;
   productCount?: number;
   totalProducts?: number;
+  openingHours?: string | null;
 }
 
 export interface StoreProfile {
@@ -30,6 +33,8 @@ export interface StoreProfile {
   displayName: string;
   city: string;
   address: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
   phoneNumber: string;
   whatsappNumber: string | null;
   description: string | null;
@@ -39,6 +44,21 @@ export interface StoreProfile {
   bannerUrl?: string | null;
   googleMapsUrl: string | null;
   openingHours: string | null;
+}
+
+export interface StoreMapEmbedProps {
+  store: Pick<
+    StoreListItem | StoreProfile,
+    'displayName' | 'name' | 'address' | 'city' | 'latitude' | 'longitude'
+  >;
+  className?: string;
+  heightClassName?: string;
+}
+
+export interface StoreMapLinkProps {
+  store: StoreListItem | StoreProfile;
+  triggerClassName?: string;
+  children?: ReactNode;
 }
 
 export interface StoreListQuery {
@@ -66,7 +86,7 @@ export interface StoreDiscoveryShellProps {
   children: ReactNode;
 }
 
-export interface StoreHeroProps {
+export interface StoreSearchBarProps {
   searchQuery: string;
   onSearchChange: (search: string) => void;
 }
@@ -81,10 +101,19 @@ export interface StoreCatalogFilters {
   inStock: boolean;
 }
 
-export interface StoreCatalogClientProps {
-  store: StoreProfile;
+export interface StoreCatalogShellProps {
   categories: import('./product').StoreCategory[];
-  products: import('./product').StoreProductListItem[];
+  filters: StoreCatalogFilters;
+  children: ReactNode;
+}
+
+export interface StoreCatalogFeedProps {
+  store: StoreProfile;
+  initialProducts: import('./product').StoreProductListItem[];
+  allModels: import('./product').StoreModelListItem[];
+  productsTotal: number;
+  productsPage: number;
+  productsTotalPages: number;
   filters: StoreCatalogFilters;
 }
 
@@ -103,10 +132,10 @@ export interface StoreDiscoverySectionProps {
   searchQuery: string;
 }
 
-export interface StoreDiscoveryResultsProps {
-  stores: StoreListItem[];
+export interface StoreDiscoveryFeedProps {
+  initialStores: StoreListItem[];
+  total: number;
+  page: number;
+  totalPages: number;
+  searchQuery: string;
 }
-
-
-
-

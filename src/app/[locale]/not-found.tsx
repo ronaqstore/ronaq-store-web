@@ -1,7 +1,8 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { Icons } from '@/components/icons';
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 export default async function NotFound() {
   const t = await getTranslations();
@@ -18,16 +19,12 @@ export default async function NotFound() {
         <p className='text-sm text-muted-foreground'>{t('errors.notFoundDescription')}</p>
       </div>
       <div className='flex flex-wrap items-center justify-center gap-3'>
-        <Link href='/'>
-          <Button type='button' className='gap-2'>
-            <Icons.arrowLeft className='h-4 w-4' />
-            {t('errors.backHome')}
-          </Button>
+        <Link href='/' className={cn(buttonVariants(), 'gap-2')}>
+          <Icons.arrowLeft className='h-4 w-4' />
+          {t('errors.backHome')}
         </Link>
-        <a href='#shops'>
-          <Button type='button' variant='outline'>
-            {t('nav.stores')}
-          </Button>
+        <a href='#shops' className={buttonVariants({ variant: 'outline' })}>
+          {t('nav.stores')}
         </a>
       </div>
     </div>

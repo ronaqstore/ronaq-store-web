@@ -3,137 +3,204 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { Icons } from '@/components/icons';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { PreviewableImage } from '@/components/media/previewable-image';
 import { PLACEHOLDER_PRODUCT_IMAGE } from '@/constants/placeholders';
-import { formatPrice, buildWhatsAppLink, formatEmpty } from '@/lib/formatters';
-import { StockBadge } from '@/components/products/stock-badge';
-import { productPath } from '@/lib/seo/slug';
+import {
+  formatPrice,
+  formatEmpty,
+  formatProductCardTitle,
+  formatStorageLabel,
+  formatColorLabel,
+  formatTitleCase
+} from '@/lib/formatters';
+import { TruncateText } from '@/components/ui/truncate-text';
+import { modelPath, productPath } from '@/lib/seo/slug';
+import { cn } from '@/lib/utils';
 import type { ProductCardProps } from '@/types/product';
 
 export function ProductCard({
   product,
   storeSlug,
-  storeName,
-  storePhone,
   onSelectProduct,
-  priority = false
+  priority = false,
+  linkToModel = true
 }: ProductCardProps) {
   const t = useTranslations();
 
-  const formattedPrice = product.contactForPrice
-    ? t('catalog.contactForPrice')
-    : formatPrice(product.retailPrice);
+  const title = formatProductCardTitle(product.name, product.brandName);
+  const storageLabel = formatStorageLabel(product.storage);
+  const colorLabel = formatColorLabel(product.color);
+  const conditionLabel =
+    product.condition === 'NEW'
+      ? t('catalog.brandNew')
+      : product.condition === 'USED'
+        ? t('catalog.used')
+        : product.condition
+          ? formatTitleCase(product.condition)
+          : '';
 
-  const whatsappMessage = t('whatsapp.inquireProduct', {
-    storeName,
-    productName: product.name,
-    price: formattedPrice
-  });
-  const whatsappHref = buildWhatsAppLink(storePhone, whatsappMessage);
-  const href = storeSlug ? productPath(storeSlug, product.name, product.id) : undefined;
+  const formattedPrice = formatPrice(product.retailPrice);
 
-  const getPtaBadge = () => {
-    switch (product.ptaStatus) {
-      case 'APPROVED':
-        return (
-          <Badge variant='success' className='gap-1 text-[10px]'>
-            <Icons.shieldCheck className='h-3 w-3' />
-            {t('catalog.ptaApproved')}
-          </Badge>
-        );
-      case 'NON_PTA':
-        return (
-          <Badge variant='warning' className='text-[10px]'>
-            {t('catalog.ptaNon')}
-          </Badge>
-        );
-      case 'JV':
-        return (
-          <Badge variant='secondary' className='text-[10px]'>
-            {t('catalog.ptaJv')}
-          </Badge>
-        );
-      default:
-        return null;
-    }
-  };
+  const unitsCount = product.units?.length ?? 0;
+  const stockCount =
+    product.stockCount != null && product.stockCount > 0
+      ? product.stockCount
+      : unitsCount > 0
+        ? unitsCount
+        : product.totalQuantity > 0
+          ? product.totalQuantity
+          : null;
+
+  const stockLabel =
+    stockCount != null && stockCount > 0
+      ? product.trackingType === 'SERIALIZED' || unitsCount > 0
+        ? t('catalog.inStockPhones', { count: stockCount })
+        : t('catalog.inStockCount', { count: stockCount })
+      : product.availability === 'OUT_OF_STOCK'
+        ? t('catalog.outOfStock')
+        : null;
+
+  const href = storeSlug
+    ? linkToModel && product.trackingType === 'SERIALIZED' && product.modelKey
+      ? modelPath(storeSlug, product.modelKey)
+      : productPath(storeSlug, product.name, product.id)
+    : undefined;
+
+  const statusBadges = (
+    <>
+      {product.ptaStatus === 'APPROVED' ? (
+        <Badge variant='success' className='gap-1 px-1.5 py-0.5 text-[10px] font-semibold'>
+          <Icons.shieldCheck className='h-3 w-3' />
+          {t('catalog.ptaApproved')}
+        </Badge>
+      ) : null}
+      {product.ptaStatus === 'NON_PTA' ? (
+        <Badge variant='warning' className='px-1.5 py-0.5 text-[10px] font-semibold'>
+          {t('catalog.ptaNon')}
+        </Badge>
+      ) : null}
+      {product.ptaStatus === 'JV' ? (
+        <Badge variant='secondary' className='px-1.5 py-0.5 text-[10px] font-semibold'>
+          {t('catalog.ptaJv')}
+        </Badge>
+      ) : null}
+      {product.ptaStatus === 'BYPASS' ? (
+        <Badge variant='secondary' className='px-1.5 py-0.5 text-[10px] font-semibold'>
+          {t('catalog.ptaBypass')}
+        </Badge>
+      ) : null}
+      {product.ptaStatus === 'MDM_BYPASS' ? (
+        <Badge variant='secondary' className='px-1.5 py-0.5 text-[10px] font-semibold'>
+          {t('catalog.ptaMdmBypass')}
+        </Badge>
+      ) : null}
+      {product.authenticity === 'ORIGINAL' ? (
+        <Badge variant='success' className='px-1.5 py-0.5 text-[10px] font-semibold'>
+          {t('catalog.authenticityOriginal')}
+        </Badge>
+      ) : null}
+      {product.authenticity === 'COPY' ? (
+        <Badge variant='secondary' className='px-1.5 py-0.5 text-[10px] font-semibold'>
+          {t('catalog.authenticityCopy')}
+        </Badge>
+      ) : null}
+    </>
+  );
+
+  const hasStatusBadges =
+    Boolean(product.ptaStatus) ||
+    product.authenticity === 'ORIGINAL' ||
+    product.authenticity === 'COPY';
+
+  const specParts = [storageLabel, colorLabel, conditionLabel].filter(Boolean);
 
   const details = (
-    <div className='space-y-2 p-4'>
-      <div className='flex items-center gap-1.5 text-xs text-muted-foreground'>
-        <span>{formatEmpty(product.brandName)}</span>
-        <span>•</span>
-        <span>{formatEmpty(product.categoryName)}</span>
-      </div>
+    <div className='flex flex-1 flex-col gap-1.5 p-3 sm:gap-2 sm:p-3.5'>
+      {hasStatusBadges ? (
+        <div className='flex flex-wrap items-center gap-1'>{statusBadges}</div>
+      ) : null}
 
-      <h3 className='line-clamp-2 text-sm font-bold leading-snug text-foreground transition-colors group-hover:text-primary'>
-        {formatEmpty(product.name)}
-      </h3>
+      {product.brandName ? (
+        <p className='text-[10px] font-semibold tracking-[0.08em] text-muted-foreground uppercase sm:text-[11px]'>
+          {formatTitleCase(product.brandName)}
+        </p>
+      ) : null}
 
-      <div className='flex items-baseline justify-between pt-1'>
-        <span className='text-lg font-extrabold tracking-tight text-primary'>
-          {formattedPrice}
-        </span>
-      </div>
+      <TruncateText
+        lines={2}
+        className='text-[13px] font-bold leading-snug text-foreground transition-colors group-hover:text-primary sm:text-sm'
+      >
+        {title}
+      </TruncateText>
+
+      {specParts.length > 0 ? (
+        <p className='text-[11px] leading-relaxed text-muted-foreground sm:text-xs'>
+          {specParts.join(' · ')}
+        </p>
+      ) : product.categoryName ? (
+        <p className='text-[11px] text-muted-foreground sm:text-xs'>
+          {formatTitleCase(product.categoryName)}
+        </p>
+      ) : null}
+
+      {stockLabel ? (
+        <p
+          className={cn(
+            'text-[11px] font-medium sm:text-xs',
+            product.availability === 'OUT_OF_STOCK'
+              ? 'text-destructive'
+              : 'text-emerald-700 dark:text-emerald-400'
+          )}
+        >
+          {stockLabel}
+        </p>
+      ) : null}
+
+      {formattedPrice ? (
+        <div className='mt-auto flex items-end justify-between gap-2 pt-1.5'>
+          <p className='text-sm font-extrabold tracking-tight text-primary tabular-nums sm:text-base'>
+            {formattedPrice}
+          </p>
+        </div>
+      ) : (
+        <div className='mt-auto pt-1.5' />
+      )}
     </div>
   );
 
   return (
-    <Card className='group flex flex-col justify-between overflow-hidden rounded-2xl border border-border/70 bg-card transition-all duration-300 hover:border-primary/40 hover:shadow-lg'>
-      <div className='relative h-48 w-full overflow-hidden border-b border-border/50 bg-muted/40'>
+    <Card className='group flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border border-border/80 bg-card shadow-none transition-all duration-200 hover:border-primary/30 hover:shadow-md sm:rounded-2xl'>
+      <div className='relative aspect-square w-full overflow-hidden bg-muted/25 sm:aspect-[4/3]'>
         <PreviewableImage
           src={product.primaryImageUrl}
-          alt={formatEmpty(product.name)}
+          alt={formatEmpty(title)}
           priority={priority}
           className='absolute inset-0 h-full w-full'
-          imageClassName='object-contain p-4 transition-transform duration-300 group-hover:scale-105'
-          sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+          imageClassName='object-contain p-4 transition-transform duration-300 group-hover:scale-[1.04] sm:p-5'
+          sizes='(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw'
           fallbackSrc={PLACEHOLDER_PRODUCT_IMAGE}
         />
-
-        <div className='pointer-events-none absolute top-2.5 start-2.5 flex flex-col gap-1'>
-          {getPtaBadge()}
-        </div>
-
-        <div className='pointer-events-none absolute top-2.5 end-2.5'>
-          <StockBadge availability={product.availability} stockCount={product.stockCount} />
-        </div>
       </div>
 
       {href ? (
         <Link
           href={href}
-          className='block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+          className='flex flex-1 cursor-pointer flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
         >
           {details}
         </Link>
       ) : (
         <button
           type='button'
-          className='cursor-pointer text-start'
+          className='flex flex-1 cursor-pointer flex-col text-start'
           onClick={() => onSelectProduct?.(product)}
         >
           {details}
         </button>
       )}
 
-      {product.contactForPrice && storePhone ? (
-        <div className='p-4 pt-0'>
-          <a href={whatsappHref} target='_blank' rel='noopener noreferrer' className='block w-full'>
-            <Button
-              type='button'
-              size='sm'
-              className='w-full gap-2 bg-emerald-600 text-xs text-white shadow-sm hover:bg-emerald-700'
-            >
-              <Icons.whatsapp className='h-4 w-4' />
-              {t('catalog.inquireWhatsApp')}
-            </Button>
-          </a>
-        </div>
-      ) : null}
     </Card>
   );
 }

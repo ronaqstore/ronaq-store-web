@@ -13,19 +13,64 @@ export function formatEmpty(
   return String(value);
 }
 
+export function formatTitleCase(value: string | null | undefined): string {
+  if (!value?.trim()) return '';
+  return value
+    .trim()
+    .split(/\s+/)
+    .map((word) => {
+      if (/^\d/.test(word)) return word.toUpperCase();
+      if (word.length <= 3 && word === word.toUpperCase()) return word;
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
+    .join(' ');
+}
+
+export function formatStorageLabel(storage: string | null | undefined): string {
+  if (!storage?.trim()) return '';
+  const raw = storage.trim();
+  if (/\b(gb|tb|mb)\b/i.test(raw)) return raw.toUpperCase().replace(/\s+/g, ' ');
+  if (/^\d+(\.\d+)?$/.test(raw)) {
+    const n = Number(raw);
+    if (n >= 1024) return `${(n / 1024).toString().replace(/\.0$/, '')} TB`;
+    return `${raw} GB`;
+  }
+  return raw;
+}
+
+export function formatColorLabel(color: string | null | undefined): string {
+  if (!color?.trim()) return '';
+  return formatTitleCase(color);
+}
+
+export function formatProductCardTitle(
+  name: string | null | undefined,
+  brandName?: string | null
+): string {
+  const titled = formatTitleCase(name);
+  if (!titled) return EMPTY_DISPLAY;
+  const brand = formatTitleCase(brandName);
+  if (!brand) return titled;
+  if (titled.toLowerCase().startsWith(brand.toLowerCase())) return titled;
+  return titled;
+}
+
 export function formatPrice(paisa?: string | number | null): string {
   if (paisa == null) return EMPTY_DISPLAY;
   const numericPaisa = typeof paisa === 'string' ? Number(paisa) : paisa;
   if (Number.isNaN(numericPaisa)) return EMPTY_DISPLAY;
-  return `Rs. ${Math.round(fromPaisa(numericPaisa)).toLocaleString('en-PK')}`;
+  return `Rs ${Math.round(fromPaisa(numericPaisa)).toLocaleString('en-PK')}`;
 }
 
 export function formatPhone(phone?: string | null): string {
   if (!phone || typeof phone !== 'string') return EMPTY_DISPLAY;
-  const digits = phone.replace(/\D/g, '');
+  let digits = phone.replace(/\D/g, '');
   if (!digits) return EMPTY_DISPLAY;
+  if (digits.startsWith('92') && digits.length >= 12) {
+    digits = `0${digits.slice(2)}`;
+  }
   if (digits.length === 11 && digits.startsWith('03')) {
-    return `${digits.slice(0, 4)}-${digits.slice(4)}`;
+    return digits;
   }
   return phone;
 }
