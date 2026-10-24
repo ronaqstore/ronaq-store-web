@@ -88,42 +88,40 @@ export function MarketplaceSearchBar({
     onCommitSearch(next);
   }, [composing, debouncedDraft, lastCommitted, onCommitSearch]);
 
+  const modelsRequestIdRef = useRef(0);
+
   useEffect(() => {
     if (!open || activeModel || debouncedDraft.length < MARKETPLACE_SEARCH_MIN_LEN) {
+      modelsRequestIdRef.current += 1;
       setSuggestions([]);
       setTotalGroups(0);
       setLoading(false);
       return;
     }
 
-    let cancelled = false;
-    const controller = new AbortController();
+    const requestId = modelsRequestIdRef.current + 1;
+    modelsRequestIdRef.current = requestId;
+    setSuggestions([]);
+    setTotalGroups(0);
     setLoading(true);
+
     void searchMarketplaceModels({
       q: debouncedDraft,
       city: cityId,
-      limit: 8,
-      signal: controller.signal
+      limit: 8
     })
       .then((result) => {
-        if (cancelled) return;
+        if (modelsRequestIdRef.current !== requestId) return;
         setSuggestions(result.items);
         setTotalGroups(result.total);
         setLoading(false);
-        setOpen(true);
       })
-      .catch((error: unknown) => {
-        if (cancelled) return;
-        if (error instanceof DOMException && error.name === 'AbortError') return;
+      .catch(() => {
+        if (modelsRequestIdRef.current !== requestId) return;
         setSuggestions([]);
         setTotalGroups(0);
         setLoading(false);
       });
-
-    return () => {
-      cancelled = true;
-      controller.abort();
-    };
   }, [activeModel, cityId, debouncedDraft, open]);
 
   useEffect(() => {

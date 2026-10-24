@@ -20,6 +20,7 @@ import { cn } from '@/lib/utils';
 import { CityPreferenceGate } from '@/components/city/city-preference-gate';
 import { FilterSheet } from './filter-sheet';
 import { MarketplaceSearchBar } from './marketplace-search-bar';
+import { MarketplaceSkeleton } from './marketplace-skeleton';
 import { QuickFilterChips } from './quick-filter-chips';
 import { ActiveFilterChips } from './active-filter-chips';
 import { MarketplaceSortDropdown } from './marketplace-sort-dropdown';
@@ -384,14 +385,8 @@ export function MarketplaceShell({
           className='mb-4'
         />
 
-        <div
-          className={cn(
-            'transition-opacity duration-150',
-            isPending && 'opacity-60'
-          )}
-          aria-busy={isPending}
-        >
-          {children}
+        <div aria-busy={isPending}>
+          {isPending ? <MarketplaceSkeleton /> : children}
         </div>
       </section>
     </div>
