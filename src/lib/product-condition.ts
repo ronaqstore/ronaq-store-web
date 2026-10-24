@@ -1,11 +1,14 @@
-import type { StoreProductUnit } from '@/types/product';
+import type {
+  ProductConditionDisplay,
+  ProductConditionInput,
+  ProductConditionMessageKey
+} from '@/types/product';
 
-export type ProductConditionDisplay = 'NEW' | 'USED' | 'MIXED';
+export type { ProductConditionDisplay } from '@/types/product';
 
-export function resolveProductCondition(product: {
-  condition?: string | null;
-  units?: StoreProductUnit[] | null;
-}): ProductConditionDisplay | null {
+export function resolveProductCondition(
+  product: ProductConditionInput
+): ProductConditionDisplay | null {
   const units = product.units ?? [];
   if (units.length > 0) {
     const hasNew = units.some((unit) => unit.condition === 'NEW');
@@ -22,7 +25,7 @@ export function resolveProductCondition(product: {
 
 export function productConditionMessageKey(
   condition: ProductConditionDisplay
-): 'conditionNew' | 'conditionUsed' | 'conditionMixed' {
+): ProductConditionMessageKey {
   if (condition === 'NEW') return 'conditionNew';
   if (condition === 'USED') return 'conditionUsed';
   return 'conditionMixed';

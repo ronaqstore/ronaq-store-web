@@ -29,6 +29,18 @@ export interface StoreProductUnit {
   defectNotes: string | null;
 }
 
+export type ProductConditionDisplay = 'NEW' | 'USED' | 'MIXED';
+
+export type ProductConditionMessageKey =
+  | 'conditionNew'
+  | 'conditionUsed'
+  | 'conditionMixed';
+
+export interface ProductConditionInput {
+  condition?: string | null;
+  units?: StoreProductUnit[] | null;
+}
+
 export interface StoreProductListItem {
   id: string;
   name: string;

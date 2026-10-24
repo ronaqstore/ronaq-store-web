@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { Icons } from '@/components/icons';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { PreviewableImage } from '@/components/media/previewable-image';
 import { PLACEHOLDER_SHOP_LOGO } from '@/constants/placeholders';
 import {
@@ -108,12 +108,7 @@ export async function StoreHeader({ store }: StoreHeaderProps) {
                   <Icons.phone className='h-4 w-4' />
                   <span dir='ltr'>{formatPhone(store.phoneNumber)}</span>
                 </a>
-              ) : (
-                <Button type='button' variant='outline' className='gap-2' disabled>
-                  <Icons.phone className='h-4 w-4' />
-                  <span>{formatEmpty(null)}</span>
-                </Button>
-              )}
+              ) : null}
 
               {hasStoreCoords(store) ? (
                 <StoreMapLink store={store} triggerClassName='gap-2' />

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -15,7 +15,7 @@ import {
   sanitizeMarketplaceText
 } from '@/lib/marketplace-filters';
 import { cn } from '@/lib/utils';
-import { CityPreferenceGate } from './city-preference-gate';
+import { CityPreferenceGate } from '@/components/city/city-preference-gate';
 import { MarketplaceFilterSidebar } from './marketplace-filter-sidebar';
 import { MarketplaceSearchBar } from './marketplace-search-bar';
 import type {
@@ -54,8 +54,6 @@ export function MarketplaceShell({
   const [cityGateOpen, setCityGateOpen] = useState(!hasCityPreference);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [draftFilters, setDraftFilters] = useState<MarketplaceListingFilters>(filters);
-  const appliedFiltersRef = useRef(filters);
-  appliedFiltersRef.current = filters;
   const {
     searchQuery,
     setSearchQuery,
@@ -73,7 +71,6 @@ export function MarketplaceShell({
 
   useEffect(() => {
     if (!filtersOpen) return;
-    setDraftFilters(appliedFiltersRef.current);
     const previous = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     return () => {

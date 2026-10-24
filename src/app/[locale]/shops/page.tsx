@@ -1,12 +1,17 @@
 import type { Metadata } from 'next';
+import { cookies } from 'next/headers';
 import { Suspense } from 'react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { getMarketplaceHubLabel } from '@/features/marketplace/api/service';
 import { StoreDiscoverySection } from '@/features/stores/components/store-discovery-section';
 import { StoreDiscoveryShell } from '@/features/stores/components/store-discovery-shell';
 import { StoreDiscoverySkeleton } from '@/features/stores/components/store-discovery-skeleton';
 import { JsonLd } from '@/components/seo/json-ld';
 import { breadcrumbJsonLd } from '@/lib/seo/json-ld';
 import { buildPageMetadata, isSearchNoIndex } from '@/lib/seo/metadata';
+import { CITY_PREFERENCE_COOKIE } from '@/constants/city-preference';
+import { resolveCityPreferenceFromCookie } from '@/lib/city-preference';
+import { sanitizeMarketplaceText } from '@/lib/marketplace-filters';
 import type { HomePageProps } from '@/types/common';
 
 export const revalidate = 30;
@@ -30,8 +35,13 @@ export default async function ShopsPage({ params, searchParams }: HomePageProps)
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const { q: rawQ } = await searchParams;
-  const q = rawQ?.trim() ?? '';
+  const resolvedSearch = await searchParams;
+  const q = sanitizeMarketplaceText(resolvedSearch.q);
+  const cookieStore = await cookies();
+  const { cityId, hasPreference } = resolveCityPreferenceFromCookie(
+    cookieStore.get(CITY_PREFERENCE_COOKIE)?.value
+  );
+  const selectedCityName = await getMarketplaceHubLabel(cityId);
   const t = await getTranslations({ locale, namespace: 'metadata' });
 
   return (
@@ -43,9 +53,14 @@ export default async function ShopsPage({ params, searchParams }: HomePageProps)
           { name: t('shopsTitle'), path: '/shops' }
         ])}
       />
-      <StoreDiscoveryShell searchQuery={q}>
-        <Suspense key={q || 'all'} fallback={<StoreDiscoverySkeleton />}>
-          <StoreDiscoverySection searchQuery={q} />
+      <StoreDiscoveryShell
+        searchQuery={q}
+        cityId={cityId}
+        selectedCityName={selectedCityName}
+        hasCityPreference={hasPreference}
+      >
+        <Suspense key={`${cityId}:${q || 'all'}`} fallback={<StoreDiscoverySkeleton />}>
+          <StoreDiscoverySection searchQuery={q} cityId={cityId} />
         </Suspense>
       </StoreDiscoveryShell>
     </>

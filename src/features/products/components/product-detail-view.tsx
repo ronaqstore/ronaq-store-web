@@ -13,6 +13,7 @@ import {
   formatPrice,
   buildWhatsAppLink,
   formatEmpty,
+  formatPhone,
   formatProductCardTitle,
   formatStorageLabel,
   formatColorLabel,
@@ -37,7 +38,8 @@ export async function ProductDetailView({
 }: ProductDetailViewProps) {
   const t = await getTranslations();
   const storeName = store.displayName;
-  const storePhone = resolveStoreWhatsAppNumber(store);
+  const whatsappNumber = resolveStoreWhatsAppNumber(store);
+  const contactNumber = store.phoneNumber?.trim() || '';
   const path = productPath(slug, product.name, product.id);
   const displayTitle = formatProductCardTitle(product.name, product.brandName);
   const storageLabel = formatStorageLabel(product.storage);
@@ -59,14 +61,18 @@ export async function ProductDetailView({
     : displayTitle;
   const whatsappPrice = formattedPrice ?? '';
 
-  const whatsappHref = buildWhatsAppLink(
-    storePhone,
-    t('whatsapp.buyProduct', {
-      storeName,
-      productName: fullProductName,
-      price: whatsappPrice
-    })
-  );
+  const whatsappHref = whatsappNumber
+    ? buildWhatsAppLink(
+        whatsappNumber,
+        t('whatsapp.buyProduct', {
+          storeName,
+          productName: fullProductName,
+          price: whatsappPrice
+        })
+      )
+    : null;
+  const contactHref = contactNumber ? `tel:${contactNumber}` : null;
+  const hasContactActions = Boolean(whatsappHref || contactHref);
 
   return (
     <article className='mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:px-8 space-y-8'>
@@ -250,19 +256,40 @@ export async function ProductDetailView({
           </div>
         </div>
 
-        {storePhone ? (
-          <a
-            href={whatsappHref}
-            target='_blank'
-            rel='noopener noreferrer'
+        {hasContactActions ? (
+          <div
             className={cn(
-              buttonVariants({ size: 'lg' }),
-              'w-full gap-2 bg-emerald-600 font-bold text-white hover:bg-emerald-700'
+              'grid gap-2',
+              whatsappHref && contactHref ? 'sm:grid-cols-2' : 'grid-cols-1'
             )}
           >
-            <Icons.whatsapp className='h-5 w-5' />
-            {t('catalog.orderWhatsApp')}
-          </a>
+            {whatsappHref ? (
+              <a
+                href={whatsappHref}
+                target='_blank'
+                rel='noopener noreferrer'
+                className={cn(
+                  buttonVariants({ size: 'lg' }),
+                  'w-full gap-2 bg-emerald-600 font-bold text-white hover:bg-emerald-700'
+                )}
+              >
+                <Icons.whatsapp className='h-5 w-5' />
+                {t('catalog.orderWhatsApp')}
+              </a>
+            ) : null}
+            {contactHref ? (
+              <a
+                href={contactHref}
+                className={cn(
+                  buttonVariants({ size: 'lg', variant: whatsappHref ? 'outline' : 'default' }),
+                  'w-full gap-2 font-bold'
+                )}
+              >
+                <Icons.phone className='h-5 w-5' />
+                <span dir='ltr'>{formatPhone(contactNumber)}</span>
+              </a>
+            ) : null}
+          </div>
         ) : null}
       </div>
 
