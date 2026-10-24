@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { Icons } from '@/components/icons';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { searchMarketplaceModels } from '@/features/marketplace/api/service';
 import { PLACEHOLDER_PRODUCT_IMAGE } from '@/constants/placeholders';
@@ -18,6 +19,23 @@ import type {
   MarketplaceModelSuggestion,
   MarketplaceSearchBarProps
 } from '@/types/marketplace';
+
+function ModelSuggestionsSkeleton() {
+  return (
+    <>
+      {Array.from({ length: 4 }).map((_, index) => (
+        <li key={index} className='flex items-center gap-3 px-3.5 py-2.5' aria-hidden>
+          <Skeleton className='h-11 w-11 shrink-0 rounded-lg' />
+          <div className='min-w-0 flex-1 space-y-2'>
+            <Skeleton className='h-4 w-3/4' />
+            <Skeleton className='h-3 w-1/3' />
+          </div>
+          <Skeleton className='h-4 w-4 shrink-0 rounded' />
+        </li>
+      ))}
+    </>
+  );
+}
 
 export function MarketplaceSearchBar({
   searchQuery,
@@ -165,12 +183,8 @@ export function MarketplaceSearchBar({
             </span>
           </div>
 
-          <ul className='max-h-80 overflow-y-auto py-1.5'>
-            {loading && suggestions.length === 0 ? (
-              <li className='px-4 py-6 text-center text-sm text-muted-foreground'>
-                {t('common.loading')}
-              </li>
-            ) : null}
+          <ul className='max-h-80 overflow-y-auto py-1.5' aria-busy={loading}>
+            {loading && suggestions.length === 0 ? <ModelSuggestionsSkeleton /> : null}
             {!loading && suggestions.length === 0 ? (
               <li className='px-4 py-6 text-center text-sm text-muted-foreground'>
                 {t('marketplace.noProductsFound')}

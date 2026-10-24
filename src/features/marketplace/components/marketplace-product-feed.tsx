@@ -11,7 +11,7 @@ import { marketplaceCityQueryParam } from '@/lib/city-preference';
 import { mapMarketplaceProductsResponse } from '@/lib/api/mappers';
 import { toPaisaFromRs } from '@/lib/marketplace-filters';
 import { cn } from '@/lib/utils';
-import { MarketplaceProductCard } from './marketplace-product-card';
+import { MarketplaceProductCard } from '@/components/products/marketplace-product-card';
 import type {
   ApiPaginatedMarketplaceProducts,
   MarketplaceFeedProps,

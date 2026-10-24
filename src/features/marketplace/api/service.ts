@@ -138,3 +138,26 @@ export async function resolveNearestHub(
     cache: 'no-store'
   });
 }
+
+export async function getMarketplaceRelatedProducts(
+  productId: string,
+  cityId?: string | null,
+  limit = 8
+): Promise<PaginatedMarketplaceProducts | null> {
+  if (!productId.trim()) return null;
+  const params = new URLSearchParams({
+    productId: productId.trim(),
+    limit: String(Math.min(Math.max(limit, 1), 24))
+  });
+  const city = marketplaceCityQueryParam(cityId);
+  if (city) params.set('city', city);
+
+  const raw = await publicApiRequest<ApiPaginatedMarketplaceProducts>(
+    `marketplace/related-products?${params.toString()}`,
+    {
+      revalidate: PUBLIC_REVALIDATE_SECONDS,
+      tags: ['marketplace-related', `marketplace-related-${productId}`]
+    }
+  );
+  return mapMarketplaceProductsResponse(raw);
+}

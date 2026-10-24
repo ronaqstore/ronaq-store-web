@@ -4,7 +4,7 @@ import { Icons } from '@/components/icons';
 import { buttonVariants } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ProductImageGallery } from '@/components/products/product-image-gallery';
-import { ProductCard } from '@/components/products/product-card';
+import { MarketplaceProductCard } from '@/components/products/marketplace-product-card';
 import { Breadcrumbs } from '@/components/seo/breadcrumbs';
 import { JsonLd } from '@/components/seo/json-ld';
 import { breadcrumbJsonLd, productJsonLd } from '@/lib/seo/json-ld';
@@ -28,7 +28,8 @@ export async function ProductDetailView({
   slug,
   store,
   product,
-  relatedProducts = []
+  relatedProducts = [],
+  relatedBrowseHref = '/'
 }: ProductDetailViewProps) {
   const t = await getTranslations();
   const storeName = store.displayName;
@@ -266,23 +267,20 @@ export async function ProductDetailView({
         <section aria-labelledby='related-products-heading' className='space-y-4'>
           <div className='flex items-end justify-between gap-3'>
             <h2 id='related-products-heading' className='text-xl font-bold tracking-tight'>
-              {t('catalog.relatedProducts')}
+              {t('catalog.relatedAccessories')}
             </h2>
             <Link
-              href={`/shop/${slug}`}
+              href={relatedBrowseHref}
               className='text-sm font-medium text-primary hover:underline'
             >
-              {t('catalog.viewShopCatalog')}
+              {t('catalog.browseMoreAccessories')}
             </Link>
           </div>
-          <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
+          <div className='grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4'>
             {relatedProducts.map((item, index) => (
-              <ProductCard
+              <MarketplaceProductCard
                 key={`${item.id}-${index}`}
                 product={item}
-                storeSlug={slug}
-                storeName={storeName}
-                storePhone={storePhone}
                 priority={index === 0}
               />
             ))}

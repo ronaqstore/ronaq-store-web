@@ -204,7 +204,8 @@ export interface ProductDetailViewProps {
   slug: string;
   store: import('./store').StoreProfile;
   product: StoreProductDetail;
-  relatedProducts?: StoreProductListItem[];
+  relatedProducts?: import('./marketplace').MarketplaceProduct[];
+  relatedBrowseHref?: string;
 }
 
 export interface StockBadgeProps {
