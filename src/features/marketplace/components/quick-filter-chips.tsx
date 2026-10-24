@@ -1,0 +1,204 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { Icons } from '@/components/icons';
+import { mergeMarketplaceFilters } from '@/lib/marketplace-filters';
+import { cn } from '@/lib/utils';
+import type { QuickFilterChipsProps, MarketplaceListingFilters } from '@/types/marketplace';
+
+export function QuickFilterChips({
+  filters,
+  onChange,
+  onOpenFilters,
+  activeFilterCount,
+  className
+}: QuickFilterChipsProps) {
+  const t = useTranslations('marketplace');
+  const [optimistic, setOptimistic] = useState<MarketplaceListingFilters>(filters);
+
+  useEffect(() => {
+    setOptimistic(filters);
+  }, [filters]);
+
+  const isAllActive =
+    !optimistic.category &&
+    optimistic.inStock === undefined &&
+    !optimistic.ptaStatus &&
+    !optimistic.condition;
+
+  const commit = (next: MarketplaceListingFilters) => {
+    setOptimistic(next);
+    onChange(next);
+  };
+
+  const handleToggle = (updates: Partial<MarketplaceListingFilters>) => {
+    commit(mergeMarketplaceFilters(optimistic, updates));
+  };
+
+  const handleSelectAll = () => {
+    commit(
+      mergeMarketplaceFilters(optimistic, {
+        category: undefined,
+        inStock: undefined,
+        ptaStatus: undefined,
+        condition: undefined
+      })
+    );
+  };
+
+  return (
+    <div
+      className={cn(
+        'flex items-center gap-2 overflow-x-auto py-1 ps-4 pe-4 sm:ps-0 sm:pe-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden snap-x snap-mandatory',
+        className
+      )}
+      role='toolbar'
+      aria-label={t('filtersHeading')}
+    >
+      <button
+        type='button'
+        onClick={onOpenFilters}
+        className={cn(
+          'snap-start inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-2 text-sm font-medium transition-colors select-none active:scale-[0.98]',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+          activeFilterCount > 0
+            ? 'border-primary bg-primary/10 text-primary font-semibold'
+            : 'border-border/80 bg-card text-foreground hover:bg-muted/60'
+        )}
+      >
+        <Icons.filter className='h-3.5 w-3.5' />
+        <span>{t('filtersHeading')}</span>
+        {activeFilterCount > 0 ? (
+          <span className='ms-1 rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-bold text-primary-foreground leading-none'>
+            {activeFilterCount}
+          </span>
+        ) : null}
+      </button>
+
+      <div className='h-4 w-px bg-border/60 shrink-0' aria-hidden />
+
+      <button
+        type='button'
+        onClick={handleSelectAll}
+        className={cn(
+          'snap-start shrink-0 rounded-full border px-3.5 py-2 text-sm font-medium transition-colors select-none active:scale-[0.98]',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+          isAllActive
+            ? 'border-primary bg-primary text-primary-foreground shadow-xs'
+            : 'border-border/80 bg-card text-foreground hover:bg-muted/60'
+        )}
+      >
+        {t('quickFilterAll')}
+      </button>
+
+      <button
+        type='button'
+        onClick={() =>
+          handleToggle({
+            category: optimistic.category === 'Mobile Phones' ? undefined : 'Mobile Phones'
+          })
+        }
+        className={cn(
+          'snap-start shrink-0 rounded-full border px-3.5 py-2 text-sm font-medium transition-colors select-none active:scale-[0.98]',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+          optimistic.category === 'Mobile Phones'
+            ? 'border-primary bg-primary text-primary-foreground shadow-xs'
+            : 'border-border/80 bg-card text-foreground hover:bg-muted/60'
+        )}
+      >
+        {t('quickFilterMobiles')}
+      </button>
+
+      <button
+        type='button'
+        onClick={() =>
+          handleToggle({
+            category: optimistic.category === 'Accessories' ? undefined : 'Accessories'
+          })
+        }
+        className={cn(
+          'snap-start shrink-0 rounded-full border px-3.5 py-2 text-sm font-medium transition-colors select-none active:scale-[0.98]',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+          optimistic.category === 'Accessories'
+            ? 'border-primary bg-primary text-primary-foreground shadow-xs'
+            : 'border-border/80 bg-card text-foreground hover:bg-muted/60'
+        )}
+      >
+        {t('quickFilterAccessories')}
+      </button>
+
+      <button
+        type='button'
+        onClick={() =>
+          handleToggle({
+            inStock: optimistic.inStock === true ? undefined : true
+          })
+        }
+        className={cn(
+          'snap-start shrink-0 rounded-full border px-3.5 py-2 text-sm font-medium transition-colors select-none active:scale-[0.98]',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+          optimistic.inStock === true
+            ? 'border-primary bg-primary text-primary-foreground shadow-xs'
+            : 'border-border/80 bg-card text-foreground hover:bg-muted/60'
+        )}
+      >
+        {t('quickFilterInStock')}
+      </button>
+
+      <button
+        type='button'
+        onClick={() =>
+          handleToggle({
+            ptaStatus: optimistic.ptaStatus === 'PTA_APPROVED' ? undefined : 'PTA_APPROVED'
+          })
+        }
+        className={cn(
+          'snap-start shrink-0 rounded-full border px-3.5 py-2 text-sm font-medium transition-colors select-none active:scale-[0.98]',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+          optimistic.ptaStatus === 'PTA_APPROVED'
+            ? 'border-primary bg-primary text-primary-foreground shadow-xs'
+            : 'border-border/80 bg-card text-foreground hover:bg-muted/60'
+        )}
+      >
+        {t('quickFilterPta')}
+      </button>
+
+      <button
+        type='button'
+        onClick={() =>
+          handleToggle({
+            condition: optimistic.condition === 'NEW' ? undefined : 'NEW'
+          })
+        }
+        className={cn(
+          'snap-start shrink-0 rounded-full border px-3.5 py-2 text-sm font-medium transition-colors select-none active:scale-[0.98]',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+          optimistic.condition === 'NEW'
+            ? 'border-primary bg-primary text-primary-foreground shadow-xs'
+            : 'border-border/80 bg-card text-foreground hover:bg-muted/60'
+        )}
+      >
+        {t('quickFilterNew')}
+      </button>
+
+      <button
+        type='button'
+        onClick={() =>
+          handleToggle({
+            condition: optimistic.condition === 'USED' ? undefined : 'USED'
+          })
+        }
+        className={cn(
+          'snap-start shrink-0 rounded-full border px-3.5 py-2 text-sm font-medium transition-colors select-none active:scale-[0.98]',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+          optimistic.condition === 'USED'
+            ? 'border-primary bg-primary text-primary-foreground shadow-xs'
+            : 'border-border/80 bg-card text-foreground hover:bg-muted/60'
+        )}
+      >
+        {t('quickFilterUsed')}
+      </button>
+    </div>
+  );
+}

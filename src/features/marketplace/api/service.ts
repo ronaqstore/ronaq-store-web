@@ -3,6 +3,8 @@ import { publicApiRequest } from '@/lib/api/client';
 import { mapMarketplaceProductsResponse } from '@/lib/api/mappers';
 import { PUBLIC_REVALIDATE_SECONDS } from '@/constants/site';
 import { marketplaceCityQueryParam } from '@/lib/city-preference';
+import { MARKETPLACE_SEARCH_MAX_LEN } from '@/lib/marketplace-filters';
+import { trackMarketplaceProductsRequest } from '@/lib/marketplace-request-log';
 import type {
   ApiMarketplaceModelsResponse,
   ApiPaginatedMarketplaceHubs,
@@ -69,7 +71,7 @@ export async function getMarketplaceProducts(
   const city = marketplaceCityQueryParam(query.city);
   if (city) params.set('city', city);
   if (query.modelKey) params.set('modelKey', query.modelKey.slice(0, 160));
-  else if (query.q) params.set('q', query.q.slice(0, 100));
+  else if (query.q) params.set('q', query.q.slice(0, MARKETPLACE_SEARCH_MAX_LEN));
   if (query.category) params.set('category', query.category);
   if (query.brand) params.set('brand', query.brand);
   if (typeof query.inStock === 'boolean') params.set('inStock', String(query.inStock));
@@ -81,6 +83,12 @@ export async function getMarketplaceProducts(
   if (query.sort) params.set('sort', query.sort);
   if (query.page) params.set('page', String(query.page));
   if (query.limit) params.set('limit', String(query.limit));
+
+  const paramRecord: Record<string, string> = {};
+  params.forEach((value, key) => {
+    paramRecord[key] = value;
+  });
+  trackMarketplaceProductsRequest('ssr', paramRecord);
 
   const qs = params.toString() ? `?${params.toString()}` : '';
   const raw = await publicApiRequest<ApiPaginatedMarketplaceProducts>(

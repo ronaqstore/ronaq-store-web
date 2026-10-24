@@ -1,3 +1,5 @@
+import { designTokens } from '@/design/tokens';
+
 export const APP_NAME = 'Ronaq Store';
 export const APP_SHORT_NAME = 'Ronaq';
 export const APP_DESCRIPTION =
@@ -14,9 +16,9 @@ export const SEO_KEYWORDS = [
   'WhatsApp shop pakistan'
 ];
 
-export const PWA_THEME_COLOR_LIGHT = '#059669';
-export const PWA_THEME_COLOR_DARK = '#064e3b';
-export const PWA_BACKGROUND_COLOR = '#059669';
+export const PWA_THEME_COLOR_LIGHT = designTokens.colors.brand.light;
+export const PWA_THEME_COLOR_DARK = designTokens.colors.brand.dark;
+export const PWA_BACKGROUND_COLOR = designTokens.colors.brand.light;
 
 export const PUBLIC_REVALIDATE_SECONDS = 30;
 

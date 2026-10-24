@@ -23,6 +23,7 @@ export async function MarketplaceSection({
     ptaStatus: filters.ptaStatus,
     authenticity: filters.authenticity,
     sort: filters.sort,
+    category: filters.category,
     page: 1,
     limit: PRODUCTS_PAGE_SIZE
   });

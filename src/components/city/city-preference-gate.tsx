@@ -206,7 +206,7 @@ export function CityPreferenceGate({
   if (!open) return null;
 
   return (
-    <div className='fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center'>
+    <div className='fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-4'>
       <button
         type='button'
         className='absolute inset-0 bg-background/80 backdrop-blur-sm'
@@ -217,8 +217,10 @@ export function CityPreferenceGate({
         role='dialog'
         aria-modal='true'
         aria-labelledby='city-gate-title'
-        className='relative w-full max-w-lg rounded-3xl border border-border bg-card p-5 shadow-2xl sm:p-6'
+        className='relative flex flex-col w-full max-h-[90dvh] rounded-t-3xl border-t border-border bg-card p-5 shadow-2xl sm:max-h-[85vh] sm:max-w-md sm:rounded-3xl sm:border sm:p-6 pb-[max(1rem,env(safe-area-inset-bottom))]'
       >
+        <div className='mx-auto h-1.5 w-12 rounded-full bg-muted-foreground/30 mb-2 sm:hidden' />
+
         <Button
           type='button'
           variant='ghost'
@@ -230,29 +232,31 @@ export function CityPreferenceGate({
           <Icons.close className='h-4 w-4' />
         </Button>
 
-        <div className='space-y-2 pe-8'>
-          <h2 id='city-gate-title' className='text-xl font-bold tracking-tight text-foreground'>
+        <div className='space-y-1 pe-8 shrink-0'>
+          <h2 id='city-gate-title' className='text-lg sm:text-xl font-bold tracking-tight text-foreground'>
             {t('marketplace.cityGateTitle')}
           </h2>
-          <p className='text-sm text-muted-foreground'>{t('marketplace.cityGateSubtitle')}</p>
+          <p className='text-xs sm:text-sm text-muted-foreground leading-relaxed'>
+            {t('marketplace.cityGateSubtitle')}
+          </p>
         </div>
 
-        <div className='relative mt-4'>
-          <Icons.search className='pointer-events-none absolute inset-s-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
+        <div className='relative mt-3 shrink-0'>
+          <Icons.search className='pointer-events-none absolute inset-s-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
           <input
             type='search'
             value={citySearch}
             onChange={(event) => setCitySearch(event.target.value)}
             placeholder={t('marketplace.searchCity')}
-            className='h-11 w-full rounded-2xl border border-border bg-background pe-3 ps-9 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring'
+            className='h-12 w-full rounded-2xl border border-border bg-background pe-4 ps-10 text-base outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary'
             autoComplete='off'
           />
         </div>
 
-        <div className='relative mt-3'>
+        <div className='relative mt-3 flex-1 min-h-0'>
           <div
             ref={listRef}
-            className='max-h-72 space-y-2 overflow-y-auto pe-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden'
+            className='h-full max-h-64 sm:max-h-72 space-y-1.5 overflow-y-auto pe-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden'
             onScroll={onListScroll}
           >
             {loading ? <CityListSkeleton /> : null}
@@ -264,15 +268,15 @@ export function CityPreferenceGate({
                     type='button'
                     onClick={handleAllCities}
                     className={cn(
-                      'flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-start text-sm font-medium transition-colors',
+                      'flex min-h-[48px] w-full items-center justify-between rounded-xl border px-4 py-3 text-start text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
                       selectedId === CITY_PREFERENCE_ALL
                         ? 'border-primary bg-primary/10 text-foreground'
-                        : 'border-border bg-background hover:bg-muted/60'
+                        : 'border-border/80 bg-background hover:bg-muted/60'
                     )}
                   >
                     <span>{t('marketplace.allCities')}</span>
                     {selectedId === CITY_PREFERENCE_ALL ? (
-                      <Icons.check className='h-4 w-4' />
+                      <Icons.check className='h-4 w-4 text-primary' />
                     ) : null}
                   </button>
                 ) : null}
@@ -282,14 +286,14 @@ export function CityPreferenceGate({
                     type='button'
                     onClick={() => handleSelectHub(hub)}
                     className={cn(
-                      'flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-start text-sm font-medium transition-colors',
+                      'flex min-h-[48px] w-full items-center justify-between rounded-xl border px-4 py-3 text-start text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
                       selectedId === hub.id
                         ? 'border-primary bg-primary/10 text-foreground'
-                        : 'border-border bg-background hover:bg-muted/60'
+                        : 'border-border/80 bg-background hover:bg-muted/60'
                     )}
                   >
                     <span>{hub.name}</span>
-                    {selectedId === hub.id ? <Icons.check className='h-4 w-4' /> : null}
+                    {selectedId === hub.id ? <Icons.check className='h-4 w-4 text-primary' /> : null}
                   </button>
                 ))}
                 {hubs.length === 0 ? (
@@ -318,14 +322,14 @@ export function CityPreferenceGate({
         </div>
 
         {locateError ? (
-          <p className='mt-3 text-xs text-destructive'>{t('marketplace.locationFailed')}</p>
+          <p className='mt-2 text-xs text-destructive shrink-0'>{t('marketplace.locationFailed')}</p>
         ) : null}
 
-        <div className='mt-5 grid gap-2 sm:grid-cols-2'>
+        <div className='mt-4 grid gap-2.5 sm:grid-cols-2 shrink-0'>
           <Button
             type='button'
             variant='outline'
-            className='w-full'
+            className='h-12 min-h-[48px] rounded-xl font-bold w-full border-border/80'
             disabled={locating || loading}
             onClick={handleUseLocation}
           >
@@ -338,7 +342,7 @@ export function CityPreferenceGate({
           </Button>
           <Button
             type='button'
-            className='w-full'
+            className='h-12 min-h-[48px] rounded-xl font-bold w-full shadow-sm'
             disabled={loading}
             onClick={handleContinue}
           >

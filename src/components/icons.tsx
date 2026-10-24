@@ -40,7 +40,10 @@ import {
   IconZoomIn,
   IconTruck,
   IconDiscountCheck,
-  IconCircleCheck
+  IconCircleCheck,
+  IconHome,
+  IconUser,
+  IconWifiOff
 } from '@tabler/icons-react';
 
 export const Icons = {
@@ -85,6 +88,9 @@ export const Icons = {
   maximize: IconMaximize,
   refresh: IconRefresh,
   spinner: IconLoader2,
-  download: IconDownload
+  download: IconDownload,
+  home: IconHome,
+  user: IconUser,
+  wifiOff: IconWifiOff
 };
 

@@ -133,13 +133,15 @@ export interface StoreModelDetail {
 }
 
 export interface ProductCardProps {
-  product: StoreProductListItem;
+  product: StoreProductListItem | import('./marketplace').MarketplaceProduct;
   storeSlug?: string;
   storeName?: string;
   storePhone?: string;
   onSelectProduct?: (product: StoreProductListItem) => void;
   priority?: boolean;
   linkToModel?: boolean;
+  prefetch?: boolean;
+  className?: string;
 }
 
 export interface ModelVariantsClientProps {
@@ -277,4 +279,12 @@ export interface ProductDetailViewProps {
 export interface StockBadgeProps {
   availability: StoreAvailability;
   stockCount: number | null;
+}
+
+export interface ResultsCountSkeletonProps {
+  className?: string;
+}
+
+export interface QuickFilterChipsSkeletonProps {
+  className?: string;
 }

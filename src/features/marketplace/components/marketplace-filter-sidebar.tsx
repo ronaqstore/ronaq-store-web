@@ -52,7 +52,7 @@ function FilterSection({
         aria-expanded={open}
         aria-controls={panelId}
         onClick={handleToggle}
-        className='flex w-full items-center justify-between gap-2 py-3 text-start'
+        className='flex min-h-[48px] w-full items-center justify-between gap-2 px-1 py-3 text-start rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary'
       >
         <span className='text-sm font-semibold tracking-tight text-foreground'>{title}</span>
         <Icons.chevronDown
@@ -63,7 +63,7 @@ function FilterSection({
         />
       </button>
       {open ? (
-        <div id={panelId} className='space-y-2 pb-4'>
+        <div id={panelId} className='space-y-1.5 pb-3'>
           {children}
         </div>
       ) : null}
@@ -82,22 +82,22 @@ function OptionRow({
       type='button'
       onClick={onClick}
       className={cn(
-        'flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-start text-sm transition-colors',
+        'flex min-h-[48px] w-full items-center gap-3 rounded-xl px-3 py-2.5 text-start text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
         active
-          ? 'bg-primary/10 font-medium text-foreground'
+          ? 'bg-primary/10 font-semibold text-foreground'
           : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground'
       )}
     >
       <span
         className={cn(
-          'flex h-4 w-4 shrink-0 items-center justify-center border',
-          shape === 'radio' ? 'rounded-full' : 'rounded',
+          'flex h-5 w-5 shrink-0 items-center justify-center border',
+          shape === 'radio' ? 'rounded-full' : 'rounded-md',
           active
             ? 'border-primary bg-primary text-primary-foreground'
-            : 'border-border bg-background'
+            : 'border-border/80 bg-background'
         )}
       >
-        {active ? <Icons.check className='h-2.5 w-2.5' /> : null}
+        {active ? <Icons.check className='h-3 w-3' /> : null}
       </span>
       <span className='truncate'>{label}</span>
     </button>
@@ -145,12 +145,27 @@ export function MarketplaceFilterSidebar({
     patch({ minPriceRs: nextMin, maxPriceRs: nextMax });
   };
 
+  const restorePriceDraftFromFilters = () => {
+    const min = filters.minPriceRs ?? MARKETPLACE_PRICE_BOUNDS.min;
+    const max = filters.maxPriceRs ?? MARKETPLACE_PRICE_BOUNDS.max;
+    setDraftMin(String(min));
+    setDraftMax(String(max));
+    setSliderValue([min, max]);
+  };
+
   const commitPriceFromInputs = () => {
-    const min = Number(draftMin);
-    const max = Number(draftMax);
-    if (!Number.isFinite(min) || !Number.isFinite(max)) return;
-    const flooredMin = Math.floor(min);
-    const flooredMax = Math.floor(max);
+    const minRaw = draftMin.trim();
+    const maxRaw = draftMax.trim();
+    if (!minRaw || !maxRaw || !/^\d+$/.test(minRaw) || !/^\d+$/.test(maxRaw)) {
+      restorePriceDraftFromFilters();
+      return;
+    }
+    const flooredMin = Number(minRaw);
+    const flooredMax = Number(maxRaw);
+    if (!Number.isFinite(flooredMin) || !Number.isFinite(flooredMax)) {
+      restorePriceDraftFromFilters();
+      return;
+    }
     setSliderValue([
       Math.max(MARKETPLACE_PRICE_BOUNDS.min, Math.min(flooredMin, flooredMax)),
       Math.min(MARKETPLACE_PRICE_BOUNDS.max, Math.max(flooredMin, flooredMax))
@@ -162,25 +177,21 @@ export function MarketplaceFilterSidebar({
     setSliderValue(next);
     setDraftMin(String(next[0]));
     setDraftMax(String(next[1]));
+  };
+
+  const handleSliderCommit = (next: [number, number]) => {
+    setSliderValue(next);
+    setDraftMin(String(next[0]));
+    setDraftMax(String(next[1]));
     commitPriceDraft(next[0], next[1]);
   };
 
   const handleDraftMinChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setDraftMin(value);
-    const min = Number(value);
-    const max = Number(draftMax);
-    if (!Number.isFinite(min) || !Number.isFinite(max)) return;
-    commitPriceDraft(Math.floor(min), Math.floor(max));
+    setDraftMin(event.target.value);
   };
 
   const handleDraftMaxChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setDraftMax(value);
-    const min = Number(draftMin);
-    const max = Number(value);
-    if (!Number.isFinite(min) || !Number.isFinite(max)) return;
-    commitPriceDraft(Math.floor(min), Math.floor(max));
+    setDraftMax(event.target.value);
   };
 
   const handlePriceKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -276,6 +287,7 @@ export function MarketplaceFilterSidebar({
               step={MARKETPLACE_PRICE_BOUNDS.step}
               value={sliderValue}
               onChange={handleSliderChange}
+              onValueCommit={handleSliderCommit}
             />
             <div className='grid grid-cols-2 gap-2'>
               <div className='space-y-1'>
@@ -295,7 +307,7 @@ export function MarketplaceFilterSidebar({
                     onChange={handleDraftMinChange}
                     onBlur={commitPriceFromInputs}
                     onKeyDown={handlePriceKeyDown}
-                    className='h-9 ps-8'
+                    className='h-11 ps-8 text-base rounded-xl'
                   />
                 </div>
               </div>
@@ -316,7 +328,7 @@ export function MarketplaceFilterSidebar({
                     onChange={handleDraftMaxChange}
                     onBlur={commitPriceFromInputs}
                     onKeyDown={handlePriceKeyDown}
-                    className='h-9 ps-8'
+                    className='h-11 ps-8 text-base rounded-xl'
                   />
                 </div>
               </div>

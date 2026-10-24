@@ -90,3 +90,12 @@ export function buildWhatsAppLink(rawPhone?: string | null, message = ''): strin
 export function resolveStoreWhatsAppNumber(store: StoreWhatsAppContact): string {
   return store.whatsappNumber?.trim() || '';
 }
+
+export function formatNumber(value: number, locale = 'en'): string {
+  try {
+    const resolvedLocale = locale === 'ur' ? 'ur-PK' : locale === 'ps' ? 'ps-AF' : 'en-PK';
+    return new Intl.NumberFormat(resolvedLocale).format(value);
+  } catch {
+    return value.toLocaleString('en-PK');
+  }
+}

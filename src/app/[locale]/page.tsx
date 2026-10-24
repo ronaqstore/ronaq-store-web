@@ -12,6 +12,7 @@ import { buildPageMetadata, isSearchNoIndex } from '@/lib/seo/metadata';
 import { CITY_PREFERENCE_COOKIE } from '@/constants/city-preference';
 import { resolveCityPreferenceFromCookie } from '@/lib/city-preference';
 import {
+  commitMarketplaceSearchQuery,
   parseMarketplaceListingFilters,
   sanitizeMarketplaceText
 } from '@/lib/marketplace-filters';
@@ -39,7 +40,8 @@ export default async function HomePage({ params, searchParams }: HomePageProps) 
   setRequestLocale(locale);
 
   const resolvedSearch = await searchParams;
-  const q = sanitizeMarketplaceText(resolvedSearch.q);
+  const committedQ = commitMarketplaceSearchQuery(resolvedSearch.q);
+  const q = committedQ ?? '';
   const modelKey = sanitizeMarketplaceText(resolvedSearch.model, 160) || null;
   const filters = parseMarketplaceListingFilters(resolvedSearch);
   const cookieStore = await cookies();
@@ -55,21 +57,6 @@ export default async function HomePage({ params, searchParams }: HomePageProps) 
     { question: t('q3'), answer: t('a3') }
   ]);
 
-  const resultsFreshness = sanitizeMarketplaceText(resolvedSearch.rf, 32);
-
-  const suspenseKey = [
-    cityId,
-    modelKey || q || 'all',
-    filters.condition ?? '',
-    filters.minPriceRs ?? '',
-    filters.maxPriceRs ?? '',
-    filters.inStock === true ? '1' : filters.inStock === false ? '0' : '',
-    filters.ptaStatus ?? '',
-    filters.authenticity ?? '',
-    filters.sort ?? '',
-    resultsFreshness
-  ].join(':');
-
   return (
     <>
       <JsonLd id='ld-home' data={homeGraphJsonLd(locale)} />
@@ -82,7 +69,7 @@ export default async function HomePage({ params, searchParams }: HomePageProps) 
         hasCityPreference={hasPreference}
         filters={filters}
       >
-        <Suspense key={suspenseKey} fallback={<MarketplaceSkeleton />}>
+        <Suspense fallback={<MarketplaceSkeleton />}>
           <MarketplaceSection
             searchQuery={q}
             modelKey={modelKey}

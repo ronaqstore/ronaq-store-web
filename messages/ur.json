@@ -17,7 +17,9 @@
     "stores": "دکانیں تلاش کریں",
     "forOwners": "دکانداروں کے لیے",
     "openDukan": "اپنی دکان بنائیں",
-    "login": "لاگ ان"
+    "login": "لاگ ان",
+    "search": "تلاش",
+    "account": "اکاؤنٹ"
   },
   "marketplace": {
     "heroTitle": "اپنے قریب فون اور لوازمات تلاش کریں",
@@ -60,7 +62,19 @@
     "authenticityHeading": "اصلیت",
     "filterAuthAll": "سب",
     "sortHeading": "ترتیب",
-    "showResults": "نتائج دکھائیں"
+    "showResults": "نتائج دکھائیں",
+    "quickFilterAll": "سب",
+    "quickFilterMobiles": "موبائلز",
+    "quickFilterAccessories": "لوازمات",
+    "quickFilterInStock": "اسٹاک میں موجود",
+    "quickFilterPta": "پی ٹی اے تصدیق شدہ",
+    "quickFilterNew": "نیا",
+    "quickFilterUsed": "استعمال شدہ",
+    "offlineNotice": "آپ آف لائن ہیں۔ محفوظ شدہ پروڈکٹس دکھائی جا رہی ہیں۔",
+    "emptyStateTitle": "کوئی پروڈکٹ نہیں ملی",
+    "emptyStateDesc": "تلاش تبدیل کریں یا فلٹرز صاف کر کے دیکھیں۔",
+    "errorStateTitle": "پروڈکٹس لوڈ نہیں ہو سکیں",
+    "errorStateDesc": "پروڈکٹس حاصل کرتے وقت مسئلہ پیش آیا۔ براہ کرم دوبارہ کوشش کریں۔"
   },
   "pwa": {
     "installTitle": "رَونق اسٹور انسٹال کریں",
@@ -253,7 +267,9 @@
     "tiktok": "ٹک ٹاک پر فالو کریں",
     "youtube": "یوٹیوب پر دیکھیں",
     "call": "فون کال کریں",
-    "breadcrumb": "برڈ کرمب"
+    "breadcrumb": "برڈ کرمب",
+    "bottomNav": "موبائل نیویگیشن",
+    "removeFilter": "فلٹر ہٹائیں {label}"
   },
   "whatsapp": {
     "inquireProduct": "السلام علیکم {storeName}، میں آپ کے رونق اسٹور پر درج \"{productName}\" ({price}) خریدنے میں دلچسپی رکھتا/رکھتی ہوں۔ کیا یہ دستیاب ہے؟",

@@ -6,7 +6,11 @@ import { Icons } from '@/components/icons';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { SmartImage } from '@/components/media/smart-image';
-import { PLACEHOLDER_PRODUCT_IMAGE, productImageSrc } from '@/constants/placeholders';
+import {
+  PLACEHOLDER_PRODUCT_IMAGE,
+  productImageSrc,
+  IMAGE_PLACEHOLDER_BLUR
+} from '@/constants/placeholders';
 import {
   formatPrice,
   formatEmpty,
@@ -18,13 +22,19 @@ import {
 import { modelPath, productPath } from '@/lib/seo/slug';
 import { cn } from '@/lib/utils';
 import type { ProductCardProps } from '@/types/product';
+import type { MarketplaceProduct } from '@/types/marketplace';
+
+const BLUR_PLACEHOLDER =
+  'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4IDgiPjxyZWN0IHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IiNmMmY0ZjciLz48L3N2Zz4=';
 
 export function ProductCard({
   product,
   storeSlug,
   onSelectProduct,
   priority = false,
-  linkToModel = true
+  linkToModel = true,
+  prefetch = true,
+  className
 }: ProductCardProps) {
   const t = useTranslations();
 
@@ -63,11 +73,15 @@ export function ProductCard({
         ? t('catalog.outOfStock')
         : null;
 
-  const href = storeSlug
-    ? linkToModel && product.trackingType === 'SERIALIZED' && product.modelKey
-      ? modelPath(storeSlug, product.modelKey)
-      : productPath(storeSlug, product.name, product.id)
-    : undefined;
+  const shop = 'shop' in product ? (product as MarketplaceProduct).shop : undefined;
+
+  const href = shop?.slug
+    ? productPath(shop.slug, product.name, product.id)
+    : storeSlug
+      ? linkToModel && product.trackingType === 'SERIALIZED' && product.modelKey
+        ? modelPath(storeSlug, product.modelKey)
+        : productPath(storeSlug, product.name, product.id)
+      : undefined;
 
   const statusBadges = (
     <>
@@ -123,17 +137,19 @@ export function ProductCard({
 
   const cardContent = (
     <>
-      <div className='relative aspect-square w-full overflow-hidden bg-muted/20'>
+      <div className='relative aspect-square w-full shrink-0 overflow-hidden bg-muted/20'>
         <SmartImage
           src={productImageSrc(product.primaryImageUrl)}
           alt={formatEmpty(title)}
           fill
           priority={priority}
+          placeholder={IMAGE_PLACEHOLDER_BLUR}
+          blurDataURL={BLUR_PLACEHOLDER}
           className={cn(
             'object-cover transition-transform duration-200 ease-out [@media(hover:hover)]:group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:transform-none select-none',
             isOutOfStock ? 'grayscale opacity-80' : ''
           )}
-          sizes='(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw'
+          sizes='(max-width:639px) 50vw, (max-width:1023px) 33vw, (max-width:1535px) 25vw, 20vw'
           fallbackSrc={PLACEHOLDER_PRODUCT_IMAGE}
         />
 
@@ -145,7 +161,7 @@ export function ProductCard({
         ) : null}
       </div>
 
-      <div className='flex flex-1 flex-col p-2.5 sm:p-3.5 md:p-4'>
+      <div className='flex flex-1 flex-col p-3 sm:p-4'>
         {hasStatusBadges ? (
           <div className='flex flex-wrap items-center gap-1 mb-1.5'>{statusBadges}</div>
         ) : null}
@@ -162,12 +178,20 @@ export function ProductCard({
           {title}
         </h3>
 
-        {specParts.length > 0 ? (
-          <p className='text-[11px] text-muted-foreground truncate pt-0.5 pb-2'>
+        {shop ? (
+          <div className='flex items-center gap-1 text-xs text-muted-foreground pt-1 pb-1.5 truncate'>
+            <Icons.store className='h-3.5 w-3.5 shrink-0 text-muted-foreground/70' />
+            <span className='truncate'>
+              {shop.displayName}
+              {shop.city ? ` · ${shop.city}` : ''}
+            </span>
+          </div>
+        ) : specParts.length > 0 ? (
+          <p className='text-xs text-muted-foreground truncate pt-0.5 pb-1'>
             {specParts.join(' · ')}
           </p>
         ) : product.categoryName ? (
-          <p className='text-[11px] text-muted-foreground truncate pt-0.5 pb-2'>
+          <p className='text-xs text-muted-foreground truncate pt-0.5 pb-1'>
             {formatTitleCase(product.categoryName)}
           </p>
         ) : null}
@@ -180,12 +204,12 @@ export function ProductCard({
           {isOutOfStock ? (
             <div className='inline-flex items-center gap-1 text-[11px] font-medium text-muted-foreground'>
               <span className='h-1.5 w-1.5 rounded-full bg-muted-foreground/60' />
-              <span>{t('catalog.outOfStock')}</span>
+              <span className='hidden min-[360px]:inline'>{t('catalog.outOfStock')}</span>
             </div>
           ) : (
             <div className='inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400'>
               <span className='h-1.5 w-1.5 rounded-full bg-emerald-500' />
-              <span>{stockLabel ?? t('catalog.inStock')}</span>
+              <span className='hidden min-[360px]:inline'>{stockLabel ?? t('catalog.inStock')}</span>
             </div>
           )}
         </div>
@@ -194,10 +218,16 @@ export function ProductCard({
   );
 
   return (
-    <Card className='group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/80 bg-card shadow-xs transition-all duration-200 [@media(hover:hover)]:hover:-translate-y-1 [@media(hover:hover)]:hover:shadow-md motion-reduce:transition-none motion-reduce:hover:transform-none'>
+    <Card
+      className={cn(
+        'group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/80 bg-card shadow-xs transition-all duration-200 [@media(hover:hover)]:hover:-translate-y-1 [@media(hover:hover)]:hover:shadow-md motion-reduce:transition-none motion-reduce:hover:transform-none active:scale-[0.99]',
+        className
+      )}
+    >
       {href ? (
         <Link
           href={href}
+          prefetch={prefetch}
           className='flex flex-1 flex-col rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2'
         >
           {cardContent}

@@ -1,6 +1,15 @@
 'use client';
 
-import { useEffect, useId, useRef, useState, type ChangeEvent } from 'react';
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type CompositionEvent,
+  type FormEvent,
+  type KeyboardEvent
+} from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Icons } from '@/components/icons';
@@ -11,7 +20,9 @@ import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { searchMarketplaceModels } from '@/features/marketplace/api/service';
 import { PLACEHOLDER_PRODUCT_IMAGE } from '@/constants/placeholders';
 import {
+  commitMarketplaceSearchQuery,
   MARKETPLACE_SEARCH_MAX_LEN,
+  MARKETPLACE_SEARCH_MIN_LEN,
   sanitizeMarketplaceText
 } from '@/lib/marketplace-filters';
 import { cn } from '@/lib/utils';
@@ -38,29 +49,47 @@ function ModelSuggestionsSkeleton() {
 }
 
 export function MarketplaceSearchBar({
-  searchQuery,
-  onSearchChange,
+  committedQuery,
   cityId,
   modelKey,
+  onCommitSearch,
   onSelectModel,
-  onSearchAll,
-  onClearModel
+  onClearSearch
 }: MarketplaceSearchBarProps) {
   const t = useTranslations();
   const listId = useId();
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [draft, setDraft] = useState(committedQuery);
+  const [composing, setComposing] = useState(false);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<MarketplaceModelSuggestion[]>([]);
   const [totalGroups, setTotalGroups] = useState(0);
-  const debouncedQuery = useDebouncedValue(
-    sanitizeMarketplaceText(searchQuery),
-    450
-  );
+  const [lastCommitted, setLastCommitted] = useState(committedQuery);
+
+  useEffect(() => {
+    setDraft(committedQuery);
+    setLastCommitted(committedQuery);
+  }, [committedQuery]);
+
+  const draftForDebounce = composing
+    ? lastCommitted
+    : sanitizeMarketplaceText(draft);
+  const debouncedDraft = useDebouncedValue(draftForDebounce, 350);
   const activeModel = Boolean(modelKey);
 
   useEffect(() => {
-    if (activeModel || debouncedQuery.length < 2) {
+    if (composing) return;
+    const next = commitMarketplaceSearchQuery(debouncedDraft);
+    if (next == null) return;
+    if (next === lastCommitted) return;
+    setLastCommitted(next);
+    onCommitSearch(next);
+  }, [composing, debouncedDraft, lastCommitted, onCommitSearch]);
+
+  useEffect(() => {
+    if (!open || activeModel || debouncedDraft.length < MARKETPLACE_SEARCH_MIN_LEN) {
       setSuggestions([]);
       setTotalGroups(0);
       setLoading(false);
@@ -71,7 +100,7 @@ export function MarketplaceSearchBar({
     const controller = new AbortController();
     setLoading(true);
     void searchMarketplaceModels({
-      q: debouncedQuery,
+      q: debouncedDraft,
       city: cityId,
       limit: 8,
       signal: controller.signal
@@ -95,7 +124,7 @@ export function MarketplaceSearchBar({
       cancelled = true;
       controller.abort();
     };
-  }, [activeModel, cityId, debouncedQuery]);
+  }, [activeModel, cityId, debouncedDraft, open]);
 
   useEffect(() => {
     const onPointerDown = (event: MouseEvent) => {
@@ -107,32 +136,53 @@ export function MarketplaceSearchBar({
     return () => document.removeEventListener('mousedown', onPointerDown);
   }, []);
 
+  const commitImmediate = (raw: string) => {
+    const next = commitMarketplaceSearchQuery(raw);
+    if (next == null) {
+      setOpen(false);
+      inputRef.current?.blur();
+      return;
+    }
+    setDraft(next);
+    setLastCommitted(next);
+    onCommitSearch(next);
+    setOpen(false);
+    inputRef.current?.blur();
+  };
+
   const clearSearch = () => {
-    onSearchChange('');
-    onClearModel();
+    setDraft('');
+    setLastCommitted('');
+    onClearSearch();
     setSuggestions([]);
     setOpen(false);
   };
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    onSearchChange(e.target.value);
-    if (modelKey) onClearModel();
+    const next = Array.from(e.target.value)
+      .slice(0, MARKETPLACE_SEARCH_MAX_LEN)
+      .join('');
+    setDraft(next);
     setOpen(true);
   };
 
   const handleSelect = (item: MarketplaceModelSuggestion) => {
     onSelectModel(item);
     setOpen(false);
+    inputRef.current?.blur();
   };
 
   const handleSearchAll = () => {
-    onSearchAll(searchQuery.trim());
-    setOpen(false);
+    commitImmediate(draft);
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Escape') {
+      if (draft) {
+        clearSearch();
+      }
       setOpen(false);
+      inputRef.current?.blur();
       return;
     }
     if (event.key === 'Enter') {
@@ -141,18 +191,47 @@ export function MarketplaceSearchBar({
     }
   };
 
-  const showDropdown = open && !activeModel && searchQuery.trim().length >= 2;
+  const handleCompositionStart = () => {
+    setComposing(true);
+  };
+
+  const handleCompositionEnd = (event: CompositionEvent<HTMLInputElement>) => {
+    setComposing(false);
+    setDraft(event.currentTarget.value.slice(0, MARKETPLACE_SEARCH_MAX_LEN));
+  };
+
+  const handleFormSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    handleSearchAll();
+  };
+
+  const showDropdown =
+    open && !activeModel && sanitizeMarketplaceText(draft).length >= MARKETPLACE_SEARCH_MIN_LEN;
 
   return (
-    <div ref={rootRef} className='relative mx-auto w-full max-w-xl'>
-      <div className='relative flex w-full items-center overflow-hidden rounded-xl border border-border bg-card shadow-sm'>
+    <div ref={rootRef} className='relative w-full max-w-2xl'>
+      <form
+        className='relative flex w-full items-center overflow-hidden rounded-xl border border-border bg-card shadow-sm'
+        onSubmit={handleFormSubmit}
+        role='search'
+      >
         <Icons.search className='pointer-events-none absolute inset-s-3.5 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-muted-foreground sm:inset-s-4 sm:h-5 sm:w-5' />
         <Input
+          ref={inputRef}
+          id='marketplace-search-input'
           type='search'
-          value={searchQuery}
+          inputMode='search'
+          enterKeyHint='search'
+          autoCapitalize='off'
+          value={draft}
           onChange={handleSearchChange}
+          onCompositionStart={handleCompositionStart}
+          onCompositionEnd={handleCompositionEnd}
           onFocus={() => {
-            if (sanitizeMarketplaceText(searchQuery).length >= 2 && !activeModel) {
+            if (
+              sanitizeMarketplaceText(draft).length >= MARKETPLACE_SEARCH_MIN_LEN &&
+              !activeModel
+            ) {
               setOpen(true);
             }
           }}
@@ -164,9 +243,9 @@ export function MarketplaceSearchBar({
           autoComplete='off'
           maxLength={MARKETPLACE_SEARCH_MAX_LEN}
           spellCheck={false}
-          className='h-11 w-full rounded-none border-0 bg-transparent ps-10 pe-11 text-sm shadow-none outline-none ring-0 ring-offset-0 appearance-none focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 sm:h-12 sm:ps-12 sm:text-base [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden'
+          className='h-12 w-full rounded-none border-0 bg-transparent ps-10 pe-11 text-base shadow-none outline-none ring-0 ring-offset-0 appearance-none focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 sm:ps-12 [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden'
         />
-        {searchQuery ? (
+        {draft ? (
           <Button
             type='button'
             variant='ghost'
@@ -178,7 +257,7 @@ export function MarketplaceSearchBar({
             <Icons.close className='h-4 w-4' />
           </Button>
         ) : null}
-      </div>
+      </form>
 
       {showDropdown ? (
         <div
@@ -232,7 +311,7 @@ export function MarketplaceSearchBar({
                       {t('marketplace.modelListingCount', { count: item.count })}
                     </span>
                   </span>
-                  <Icons.chevronRight className='h-4 w-4 shrink-0 text-muted-foreground' />
+                  <Icons.chevronRight className='h-4 w-4 shrink-0 text-muted-foreground rtl:rotate-180' />
                 </button>
               </li>
             ))}

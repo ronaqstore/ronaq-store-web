@@ -1,15 +1,19 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useTranslations } from 'next-intl';
-import { Icons } from '@/components/icons';
+import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
+import { useRouter, usePathname } from '@/i18n/navigation';
 import { ProductGridSkeleton } from '@/components/products/product-grid-skeleton';
 import { Spinner } from '@/components/ui/spinner';
+import { EmptyState } from '@/components/common/empty-state';
+import { ErrorState } from '@/components/common/error-state';
 import { PRODUCTS_PAGE_SIZE } from '@/constants/site';
 import { publicApiRequest } from '@/lib/api/client';
 import { marketplaceCityQueryParam } from '@/lib/city-preference';
 import { mapMarketplaceProductsResponse } from '@/lib/api/mappers';
 import { toPaisaFromRs } from '@/lib/marketplace-filters';
+import { trackMarketplaceProductsRequest } from '@/lib/marketplace-request-log';
+import { formatNumber } from '@/lib/formatters';
 import { cn } from '@/lib/utils';
 import { MarketplaceProductCard } from '@/components/products/marketplace-product-card';
 import type {
@@ -24,7 +28,8 @@ async function fetchMarketplacePage(
   modelKey: string | null,
   cityId: string,
   filters: MarketplaceListingFilters,
-  page: number
+  page: number,
+  signal?: AbortSignal
 ) {
   const params = new URLSearchParams();
   if (modelKey) params.set('modelKey', modelKey);
@@ -43,11 +48,20 @@ async function fetchMarketplacePage(
   if (filters.ptaStatus) params.set('ptaStatus', filters.ptaStatus);
   if (filters.authenticity) params.set('authenticity', filters.authenticity);
   if (filters.sort) params.set('sort', filters.sort);
+  if (filters.category) params.set('category', filters.category);
   params.set('page', String(page));
   params.set('limit', String(PRODUCTS_PAGE_SIZE));
+
+  const paramRecord: Record<string, string> = {};
+  params.forEach((value, key) => {
+    paramRecord[key] = value;
+  });
+  trackMarketplaceProductsRequest('client', paramRecord);
+
   const raw = await publicApiRequest<ApiPaginatedMarketplaceProducts>(
     `marketplace/products?${params.toString()}`,
-    { cache: 'no-store' }
+    { cache: 'no-store' },
+    signal
   );
   return mapMarketplaceProductsResponse(raw);
 }
@@ -63,6 +77,9 @@ export function MarketplaceProductFeed({
   filters
 }: MarketplaceFeedProps) {
   const t = useTranslations();
+  const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
   const [products, setProducts] = useState<MarketplaceProduct[]>(initialProducts);
   const [page, setPage] = useState(initialPage);
   const [hasMore, setHasMore] = useState(initialPage < totalPages);
@@ -70,12 +87,16 @@ export function MarketplaceProductFeed({
   const [loadError, setLoadError] = useState(false);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const loadingRef = useRef(false);
+  const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
+    abortRef.current?.abort();
+    abortRef.current = null;
     setProducts(initialProducts);
     setPage(initialPage);
     setHasMore(initialPage < totalPages);
     setLoadError(false);
+    setLoading(false);
     loadingRef.current = false;
   }, [initialProducts, initialPage, totalPages, searchQuery, modelKey, cityId, filters]);
 
@@ -85,31 +106,50 @@ export function MarketplaceProductFeed({
     setLoading(true);
     setLoadError(false);
 
-    const nextPage = page + 1;
-    const response = await fetchMarketplacePage(
-      searchQuery,
-      modelKey,
-      cityId,
-      filters,
-      nextPage
-    );
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
 
-    if (!response) {
+    const nextPage = page + 1;
+    try {
+      const response = await fetchMarketplacePage(
+        searchQuery,
+        modelKey,
+        cityId,
+        filters,
+        nextPage,
+        controller.signal
+      );
+
+      if (abortRef.current !== controller || controller.signal.aborted) return;
+
+      if (!response) {
+        setLoadError(true);
+        setLoading(false);
+        loadingRef.current = false;
+        return;
+      }
+
+      setProducts((prev) => {
+        const seen = new Set(prev.map((p) => p.id));
+        const appended = response.items.filter((p) => !seen.has(p.id));
+        return [...prev, ...appended];
+      });
+      setPage(response.page);
+      setHasMore(response.page < response.totalPages);
+      setLoading(false);
+      loadingRef.current = false;
+    } catch (error: unknown) {
+      if (abortRef.current !== controller) return;
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        setLoading(false);
+        loadingRef.current = false;
+        return;
+      }
       setLoadError(true);
       setLoading(false);
       loadingRef.current = false;
-      return;
     }
-
-    setProducts((prev) => {
-      const seen = new Set(prev.map((p) => p.id));
-      const appended = response.items.filter((p) => !seen.has(p.id));
-      return [...prev, ...appended];
-    });
-    setPage(response.page);
-    setHasMore(response.page < response.totalPages);
-    setLoading(false);
-    loadingRef.current = false;
   }, [cityId, filters, hasMore, modelKey, page, searchQuery]);
 
   useEffect(() => {
@@ -122,7 +162,7 @@ export function MarketplaceProductFeed({
           void loadMore();
         }
       },
-      { rootMargin: '320px 0px' }
+      { rootMargin: '600px 0px' }
     );
 
     observer.observe(node);
@@ -134,33 +174,37 @@ export function MarketplaceProductFeed({
     void loadMore();
   };
 
+  const sortedProducts = useMemo(() => {
+    return [...products].sort((a, b) => {
+      const aIn = a.availability === 'IN_STOCK' ? 0 : 1;
+      const bIn = b.availability === 'IN_STOCK' ? 0 : 1;
+      return aIn - bIn;
+    });
+  }, [products]);
+
   if (products.length === 0) {
     return (
-      <div className='flex flex-col items-center justify-center space-y-3 rounded-2xl border border-dashed border-border p-8 py-16 text-center'>
-        <div className='flex h-12 w-12 items-center justify-center rounded-2xl bg-muted text-muted-foreground'>
-          <Icons.mobile className='h-6 w-6' />
-        </div>
-        <h3 className='text-base font-semibold text-foreground'>
-          {t('marketplace.noProductsFound')}
-        </h3>
-        <p className='text-xs text-muted-foreground'>
-          {t('marketplace.productsFound', { count: 0 })}
-        </p>
-      </div>
+      <EmptyState
+        onAction={() => {
+          router.replace(pathname, { scroll: false });
+        }}
+      />
     );
   }
 
   return (
-    <div className='space-y-3'>
-      <p className='text-xs text-muted-foreground'>
-        {t('marketplace.productsFound', { count: total })}
+    <div className='space-y-4 sm:space-y-6'>
+      <p className='text-xs sm:text-sm font-medium text-muted-foreground'>
+        {t('marketplace.productsFound', { count: formatNumber(total, locale) })}
       </p>
-      <div className='grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-4'>
-        {products.map((product, index) => (
+
+      <div className='grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 lg:gap-6'>
+        {sortedProducts.map((product, index) => (
           <MarketplaceProductCard
             key={product.id}
             product={product}
             priority={index < 4}
+            prefetch={false}
           />
         ))}
       </div>
@@ -168,12 +212,12 @@ export function MarketplaceProductFeed({
       <div
         ref={sentinelRef}
         className={cn(
-          'flex flex-col items-center justify-start gap-3 pt-4 pb-8',
+          'flex flex-col items-center justify-start gap-3 pt-6 pb-8',
           hasMore || loading ? 'min-h-40' : 'min-h-10'
         )}
       >
         {loading ? (
-          <div className='w-full space-y-3' aria-live='polite'>
+          <div className='w-full space-y-4' aria-live='polite'>
             <div className='flex items-center justify-center gap-2 text-sm text-muted-foreground'>
               <Spinner className='size-4' />
               <span>{t('marketplace.loadingMore')}</span>
@@ -182,16 +226,12 @@ export function MarketplaceProductFeed({
           </div>
         ) : null}
         {loadError ? (
-          <button
-            type='button'
-            className='cursor-pointer text-sm text-primary underline-offset-4 hover:underline'
-            onClick={handleRetryLoadMore}
-          >
-            {t('marketplace.retryLoadMore')}
-          </button>
+          <div className='w-full max-w-md pt-2'>
+            <ErrorState onRetry={handleRetryLoadMore} />
+          </div>
         ) : null}
         {!hasMore && !loading ? (
-          <p className='text-xs text-muted-foreground'>{t('marketplace.endOfList')}</p>
+          <p className='text-xs sm:text-sm text-muted-foreground'>{t('marketplace.endOfList')}</p>
         ) : null}
       </div>
     </div>

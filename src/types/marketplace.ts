@@ -49,6 +49,7 @@ export interface MarketplaceListingFilters {
   ptaStatus?: 'PTA_APPROVED' | 'NON_PTA' | 'JV' | 'BYPASS' | 'MDM_BYPASS';
   authenticity?: 'ORIGINAL' | 'COPY';
   sort?: 'newest' | 'price_asc' | 'price_desc';
+  category?: string;
 }
 
 export interface MarketplaceProductListQuery {
@@ -186,14 +187,17 @@ export interface MarketplaceFiltersBarProps {
   showHeader?: boolean;
 }
 
+export type MarketplaceSearchParamValue = string | string[] | undefined;
+
 export interface MarketplaceFilterParseInput {
-  condition?: string;
-  minPrice?: string;
-  maxPrice?: string;
-  inStock?: string;
-  pta?: string;
-  authenticity?: string;
-  sort?: string;
+  condition?: MarketplaceSearchParamValue;
+  minPrice?: MarketplaceSearchParamValue;
+  maxPrice?: MarketplaceSearchParamValue;
+  inStock?: MarketplaceSearchParamValue;
+  pta?: MarketplaceSearchParamValue;
+  authenticity?: MarketplaceSearchParamValue;
+  sort?: MarketplaceSearchParamValue;
+  category?: MarketplaceSearchParamValue;
 }
 
 export interface MarketplaceHomeQueryInput {
@@ -257,16 +261,85 @@ export interface CityPreferenceResolution {
 }
 
 export interface MarketplaceSearchBarProps {
-  searchQuery: string;
-  onSearchChange: (search: string) => void;
+  committedQuery: string;
   cityId: string;
   modelKey: string | null;
+  onCommitSearch: (query: string) => void;
   onSelectModel: (model: MarketplaceModelSuggestion) => void;
-  onSearchAll: (query: string) => void;
-  onClearModel: () => void;
+  onClearSearch: () => void;
 }
 
 export interface MarketplaceProductCardProps {
   product: MarketplaceProduct;
   priority?: boolean;
+  prefetch?: boolean;
+}
+
+export interface QuickFilterChipsProps {
+  filters: MarketplaceListingFilters;
+  onChange: (next: MarketplaceListingFilters) => void;
+  onOpenFilters: () => void;
+  activeFilterCount: number;
+  className?: string;
+}
+
+export interface ActiveFilterChipItem {
+  id: string;
+  label: string;
+  onRemove: () => void;
+}
+
+export interface ActiveFilterChipsProps {
+  filters: MarketplaceListingFilters;
+  searchQuery?: string;
+  modelKey?: string | null;
+  onChange: (next: MarketplaceListingFilters) => void;
+  onClearSearch?: () => void;
+  onClearAll: () => void;
+  className?: string;
+}
+
+export interface FilterSheetProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  filters: MarketplaceListingFilters;
+  onApplyFilters: (filters: MarketplaceListingFilters) => void;
+  totalResults?: number;
+}
+
+export interface EmptyStateProps {
+  title?: string;
+  description?: string;
+  onAction?: () => void;
+  actionLabel?: string;
+  className?: string;
+}
+
+export interface ErrorStateProps {
+  title?: string;
+  description?: string;
+  onRetry?: () => void;
+  retryLabel?: string;
+  className?: string;
+}
+
+export interface OfflineBannerProps {
+  className?: string;
+}
+
+export interface BottomNavProps {
+  className?: string;
+}
+
+export type MarketplaceSortValue = 'newest' | 'price_asc' | 'price_desc';
+
+export interface MarketplaceSortOption {
+  value: MarketplaceSortValue;
+  label: string;
+}
+
+export interface MarketplaceSortDropdownProps {
+  value?: MarketplaceSortValue;
+  onChange: (value: MarketplaceSortValue) => void;
+  className?: string;
 }

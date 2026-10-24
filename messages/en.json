@@ -17,7 +17,9 @@
     "stores": "Explore Shops",
     "forOwners": "Shop Owners",
     "openDukan": "Open Your Store",
-    "login": "Login"
+    "login": "Login",
+    "search": "Search",
+    "account": "Account"
   },
   "marketplace": {
     "heroTitle": "Find phones & accessories near you",
@@ -60,7 +62,19 @@
     "authenticityHeading": "Authenticity",
     "filterAuthAll": "All",
     "sortHeading": "Sort by",
-    "showResults": "Show results"
+    "showResults": "Show results",
+    "quickFilterAll": "All",
+    "quickFilterMobiles": "Mobiles",
+    "quickFilterAccessories": "Accessories",
+    "quickFilterInStock": "In stock",
+    "quickFilterPta": "PTA Approved",
+    "quickFilterNew": "New",
+    "quickFilterUsed": "Used",
+    "offlineNotice": "You are offline. Showing cached products.",
+    "emptyStateTitle": "No products found",
+    "emptyStateDesc": "Try clearing your filters or changing your search term.",
+    "errorStateTitle": "Couldn't load products",
+    "errorStateDesc": "Something went wrong while fetching products. Please try again."
   },
   "pwa": {
     "installTitle": "Install Ronaq Store",
@@ -253,7 +267,9 @@
     "tiktok": "Follow on TikTok",
     "youtube": "Watch on YouTube",
     "call": "Call Phone",
-    "breadcrumb": "Breadcrumb"
+    "breadcrumb": "Breadcrumb",
+    "bottomNav": "Mobile bottom navigation",
+    "removeFilter": "Remove filter {label}"
   },
   "whatsapp": {
     "inquireProduct": "Hello {storeName}, I am interested in buying \"{productName}\" ({price}) listed on your Ronaq Store. Is it available in stock?",

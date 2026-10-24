@@ -17,7 +17,9 @@
     "stores": "دوکانونه لټول",
     "forOwners": "د دوکاندارانو لپاره",
     "openDukan": "خپل دوکان جوړ کړئ",
-    "login": "ننوتل"
+    "login": "ننوتل",
+    "search": "لټون",
+    "account": "حساب"
   },
   "marketplace": {
     "heroTitle": "خپل نږدې تلیفونونه او لوازم ومومئ",
@@ -60,7 +62,19 @@
     "authenticityHeading": "اصليت",
     "filterAuthAll": "ټول",
     "sortHeading": "ترتیب",
-    "showResults": "پایلې وښایاست"
+    "showResults": "پایلې وښایاست",
+    "quickFilterAll": "ټول",
+    "quickFilterMobiles": "موبایلونه",
+    "quickFilterAccessories": "لوازم",
+    "quickFilterInStock": "په سټاک کې شتون لري",
+    "quickFilterPta": "د PTA لخوا تصدیق شوی",
+    "quickFilterNew": "نوی",
+    "quickFilterUsed": "کارول شوی",
+    "offlineNotice": "تاسو آفلاین یاست. خوندي شوي توکي ښودل کېږي.",
+    "emptyStateTitle": "هیڅ توکی ونه موندل شو",
+    "emptyStateDesc": "خپل فلټرونه پاک کړئ یا بل څه وپلټئ.",
+    "errorStateTitle": "توکي ونه لوډ شول",
+    "errorStateDesc": "د توکو ترلاسه کولو کې ستونزه راغله. مهرباني وکړئ بیا هڅه وکړئ."
   },
   "pwa": {
     "installTitle": "رَونق سټور نصب کړئ",
@@ -253,7 +267,9 @@
     "tiktok": "په ټک ټاک تعقیب کړئ",
     "youtube": "په یوټیوب وګورئ",
     "call": "ټلیفون وکړئ",
-    "breadcrumb": "بریډکرمب"
+    "breadcrumb": "بریډکرمب",
+    "bottomNav": "د موبایل نیویګیشن",
+    "removeFilter": "فلټر لرې کړئ {label}"
   },
   "whatsapp": {
     "inquireProduct": "السلام علیکم {storeName}، زه ستاسو په رونق پلورنځي کې د \"{productName}\" ({price}) پیرودلو لیواله یم. ایا دا شتون لري؟",

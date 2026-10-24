@@ -9,6 +9,7 @@ export interface PriceRangeSliderProps {
   step?: number;
   value: [number, number];
   onChange: (next: [number, number]) => void;
+  onValueCommit?: (next: [number, number]) => void;
   className?: string;
 }
 
@@ -18,6 +19,7 @@ export function PriceRangeSlider({
   step = 1000,
   value,
   onChange,
+  onValueCommit,
   className
 }: PriceRangeSliderProps) {
   const [low, high] = value;
@@ -43,6 +45,13 @@ export function PriceRangeSlider({
     [highPct, lowPct]
   );
 
+  const commit = useCallback(() => {
+    onValueCommit?.(value);
+  }, [onValueCommit, value]);
+
+  const thumbClassName =
+    'pointer-events-none absolute inset-0 z-20 m-0 h-6 w-full appearance-none bg-transparent [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:size-6 [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-primary [&::-moz-range-thumb]:bg-background [&::-moz-range-thumb]:shadow-md [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:z-30 [&::-webkit-slider-thumb]:size-6 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-primary [&::-webkit-slider-thumb]:bg-background [&::-webkit-slider-thumb]:shadow-md';
+
   return (
     <div className={cn('relative h-6 w-full touch-none select-none', className)}>
       <div className='absolute top-1/2 h-1.5 w-full -translate-y-1/2 rounded-full bg-muted' />
@@ -61,7 +70,11 @@ export function PriceRangeSlider({
           const nextLow = Number(event.target.value);
           onChange(clampPair(nextLow, Math.max(nextLow, high)));
         }}
-        className='pointer-events-none absolute inset-0 z-20 m-0 h-6 w-full appearance-none bg-transparent [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-primary [&::-moz-range-thumb]:bg-background [&::-moz-range-thumb]:shadow-md [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:z-30 [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-primary [&::-webkit-slider-thumb]:bg-background [&::-webkit-slider-thumb]:shadow-md'
+        onPointerUp={commit}
+        onMouseUp={commit}
+        onTouchEnd={commit}
+        onBlur={commit}
+        className={thumbClassName}
       />
       <input
         type='range'
@@ -74,7 +87,11 @@ export function PriceRangeSlider({
           const nextHigh = Number(event.target.value);
           onChange(clampPair(Math.min(low, nextHigh), nextHigh));
         }}
-        className='pointer-events-none absolute inset-0 z-30 m-0 h-6 w-full appearance-none bg-transparent [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-primary [&::-moz-range-thumb]:bg-background [&::-moz-range-thumb]:shadow-md [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:z-40 [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-primary [&::-webkit-slider-thumb]:bg-background [&::-webkit-slider-thumb]:shadow-md'
+        onPointerUp={commit}
+        onMouseUp={commit}
+        onTouchEnd={commit}
+        onBlur={commit}
+        className={cn(thumbClassName, 'z-30 [&::-webkit-slider-thumb]:z-40')}
       />
     </div>
   );
