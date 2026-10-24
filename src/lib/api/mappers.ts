@@ -20,6 +20,12 @@ import type {
   StoreProductDetail,
   StoreProductListItem
 } from '@/types/product';
+import type {
+  ApiMarketplaceProduct,
+  ApiPaginatedMarketplaceProducts,
+  MarketplaceProduct,
+  PaginatedMarketplaceProducts
+} from '@/types/marketplace';
 
 function mapStoreItem(raw: ApiStore): StoreListItem {
   return {
@@ -91,7 +97,7 @@ function mapPtaStatus(status?: string | null): string {
   return status ?? '';
 }
 
-function mapProduct(raw: ApiProduct): StoreProductListItem {
+export function mapProduct(raw: ApiProduct): StoreProductListItem {
   const availability = raw.availability ?? 'OUT_OF_STOCK';
   const specs = raw.specs
     ? {
@@ -218,4 +224,33 @@ export function mapCategoriesResponse(
     slug: item.id,
     productCount: 0
   }));
+}
+
+export function mapMarketplaceProduct(raw: ApiMarketplaceProduct): MarketplaceProduct {
+  const base = mapProduct(raw as ApiProduct);
+  return {
+    ...base,
+    shop: {
+      slug: raw.shop.slug,
+      displayName: raw.shop.displayName,
+      city: raw.shop.city ?? null,
+      whatsappNumber: raw.shop.whatsappNumber ?? null
+    }
+  };
+}
+
+export function mapMarketplaceProductsResponse(
+  raw: ApiPaginatedMarketplaceProducts | null
+): PaginatedMarketplaceProducts | null {
+  if (!raw) return null;
+  const pageSize = raw.pageSize ?? raw.limit ?? 24;
+  const total = raw.total ?? 0;
+  const page = raw.page ?? 1;
+  return {
+    items: (raw.items ?? []).map(mapMarketplaceProduct),
+    total,
+    page,
+    limit: pageSize,
+    totalPages: pageSize > 0 ? Math.max(1, Math.ceil(total / pageSize)) : 1
+  };
 }

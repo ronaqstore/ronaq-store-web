@@ -32,12 +32,14 @@ import {
   IconSparkles,
   IconShieldCheck,
   IconRefresh,
-  IconLoader2
+  IconLoader2,
+  IconTag
 } from '@tabler/icons-react';
 
 export const Icons = {
   store: IconBuildingStore,
   search: IconSearch,
+  tag: IconTag,
   mapPin: IconMapPin,
   phone: IconPhone,
   whatsapp: IconBrandWhatsapp,

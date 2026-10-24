@@ -42,12 +42,12 @@ export function Navbar() {
             >
               {t('nav.home')}
             </Link>
-            <a
-              href='#shops'
+            <Link
+              href='/shops'
               className='text-muted-foreground transition-colors hover:text-foreground'
             >
               {t('nav.stores')}
-            </a>
+            </Link>
           </nav>
         </div>
 
@@ -84,9 +84,9 @@ export function Navbar() {
             <Link href='/' onClick={closeMobile} className='py-1 text-foreground'>
               {t('nav.home')}
             </Link>
-            <a href='#shops' onClick={closeMobile} className='py-1 text-foreground'>
+            <Link href='/shops' onClick={closeMobile} className='py-1 text-foreground'>
               {t('nav.stores')}
-            </a>
+            </Link>
           </div>
           <div className='flex items-center justify-between border-t border-border pt-3'>
             <LanguageSwitcher />
