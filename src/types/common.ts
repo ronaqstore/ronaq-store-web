@@ -27,6 +27,7 @@ export interface HomeSearchParams {
   pta?: string;
   authenticity?: string;
   sort?: string;
+  rf?: string;
 }
 
 export interface HomePageProps {

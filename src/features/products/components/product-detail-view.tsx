@@ -20,6 +20,10 @@ import {
   resolveStoreWhatsAppNumber
 } from '@/lib/formatters';
 import { StockBadge } from '@/components/products/stock-badge';
+import {
+  productConditionMessageKey,
+  resolveProductCondition
+} from '@/lib/product-condition';
 import { cn } from '@/lib/utils';
 import type { ProductDetailViewProps } from '@/types/product';
 
@@ -45,6 +49,10 @@ export async function ProductDetailView({
   ];
 
   const formattedPrice = formatPrice(product.retailPrice);
+  const condition = resolveProductCondition(product);
+  const conditionLabel = condition
+    ? t(`catalog.${productConditionMessageKey(condition)}`)
+    : null;
   const specDetails = [storageLabel, colorLabel].filter(Boolean).join(', ');
   const fullProductName = specDetails
     ? `${displayTitle} (${specDetails})`
@@ -121,11 +129,8 @@ export async function ProductDetailView({
             {product.authenticity === 'COPY' ? (
               <Badge variant='secondary'>{t('catalog.authenticityCopy')}</Badge>
             ) : null}
-            {product.condition === 'NEW' ? (
-              <Badge variant='outline'>{t('catalog.brandNew')}</Badge>
-            ) : null}
-            {product.condition === 'USED' ? (
-              <Badge variant='outline'>{t('catalog.used')}</Badge>
+            {conditionLabel ? (
+              <Badge variant='outline'>{conditionLabel}</Badge>
             ) : null}
             <StockBadge availability={product.availability} stockCount={product.stockCount} />
           </div>
@@ -209,15 +214,13 @@ export async function ProductDetailView({
                   </span>
                 </div>
               ) : null}
-              {product.condition ? (
+              {conditionLabel ? (
                 <div className='rounded-xl bg-muted/40 p-3 space-y-0.5'>
-                  <span className='block text-muted-foreground text-[11px]'>{t('catalog.condition')}</span>
+                  <span className='block text-muted-foreground text-[11px]'>
+                    {t('catalog.condition')}
+                  </span>
                   <span className='font-semibold text-foreground text-sm'>
-                    {product.condition === 'NEW'
-                      ? t('catalog.brandNew')
-                      : product.condition === 'USED'
-                        ? t('catalog.used')
-                        : product.condition}
+                    {conditionLabel}
                   </span>
                 </div>
               ) : null}

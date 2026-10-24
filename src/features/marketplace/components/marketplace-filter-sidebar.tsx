@@ -137,7 +137,7 @@ export function MarketplaceFilterSidebar({
     onChange(next);
   };
 
-  const applyPrice = (minRs: number, maxRs: number) => {
+  const commitPriceDraft = (minRs: number, maxRs: number) => {
     const low = Math.max(MARKETPLACE_PRICE_BOUNDS.min, Math.min(minRs, maxRs));
     const high = Math.min(MARKETPLACE_PRICE_BOUNDS.max, Math.max(minRs, maxRs));
     const nextMin = low <= MARKETPLACE_PRICE_BOUNDS.min ? undefined : low;
@@ -145,29 +145,46 @@ export function MarketplaceFilterSidebar({
     patch({ minPriceRs: nextMin, maxPriceRs: nextMax });
   };
 
-  const commitInputs = () => {
+  const commitPriceFromInputs = () => {
     const min = Number(draftMin);
     const max = Number(draftMax);
     if (!Number.isFinite(min) || !Number.isFinite(max)) return;
-    applyPrice(Math.floor(min), Math.floor(max));
+    const flooredMin = Math.floor(min);
+    const flooredMax = Math.floor(max);
+    setSliderValue([
+      Math.max(MARKETPLACE_PRICE_BOUNDS.min, Math.min(flooredMin, flooredMax)),
+      Math.min(MARKETPLACE_PRICE_BOUNDS.max, Math.max(flooredMin, flooredMax))
+    ]);
+    commitPriceDraft(flooredMin, flooredMax);
   };
 
   const handleSliderChange = (next: [number, number]) => {
     setSliderValue(next);
     setDraftMin(String(next[0]));
     setDraftMax(String(next[1]));
+    commitPriceDraft(next[0], next[1]);
   };
 
   const handleDraftMinChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setDraftMin(event.target.value);
+    const value = event.target.value;
+    setDraftMin(value);
+    const min = Number(value);
+    const max = Number(draftMax);
+    if (!Number.isFinite(min) || !Number.isFinite(max)) return;
+    commitPriceDraft(Math.floor(min), Math.floor(max));
   };
 
   const handleDraftMaxChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setDraftMax(event.target.value);
+    const value = event.target.value;
+    setDraftMax(value);
+    const min = Number(draftMin);
+    const max = Number(value);
+    if (!Number.isFinite(min) || !Number.isFinite(max)) return;
+    commitPriceDraft(Math.floor(min), Math.floor(max));
   };
 
   const handlePriceKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') commitInputs();
+    if (event.key === 'Enter') commitPriceFromInputs();
   };
 
   const ptaLabel = (status: (typeof PTA_OPTIONS)[number]) => {
@@ -232,14 +249,14 @@ export function MarketplaceFilterSidebar({
           />
           <OptionRow
             active={filters.condition === 'NEW'}
-            label={t('catalog.brandNew')}
+            label={t('catalog.conditionNew')}
             onClick={() =>
               patch({ condition: filters.condition === 'NEW' ? undefined : 'NEW' })
             }
           />
           <OptionRow
             active={filters.condition === 'USED'}
-            label={t('catalog.used')}
+            label={t('catalog.conditionUsed')}
             onClick={() =>
               patch({ condition: filters.condition === 'USED' ? undefined : 'USED' })
             }
@@ -253,18 +270,13 @@ export function MarketplaceFilterSidebar({
               <span className='text-xs font-normal text-muted-foreground'>—</span>
               <span>{formatMarketplacePriceRs(sliderValue[1])}</span>
             </div>
-            <div
-              onPointerUp={() => applyPrice(sliderValue[0], sliderValue[1])}
-              onTouchEnd={() => applyPrice(sliderValue[0], sliderValue[1])}
-            >
-              <PriceRangeSlider
-                min={MARKETPLACE_PRICE_BOUNDS.min}
-                max={MARKETPLACE_PRICE_BOUNDS.max}
-                step={MARKETPLACE_PRICE_BOUNDS.step}
-                value={sliderValue}
-                onChange={handleSliderChange}
-              />
-            </div>
+            <PriceRangeSlider
+              min={MARKETPLACE_PRICE_BOUNDS.min}
+              max={MARKETPLACE_PRICE_BOUNDS.max}
+              step={MARKETPLACE_PRICE_BOUNDS.step}
+              value={sliderValue}
+              onChange={handleSliderChange}
+            />
             <div className='grid grid-cols-2 gap-2'>
               <div className='space-y-1'>
                 <label className='text-[11px] font-medium text-muted-foreground'>
@@ -281,7 +293,7 @@ export function MarketplaceFilterSidebar({
                     max={MARKETPLACE_PRICE_BOUNDS.max}
                     value={draftMin}
                     onChange={handleDraftMinChange}
-                    onBlur={commitInputs}
+                    onBlur={commitPriceFromInputs}
                     onKeyDown={handlePriceKeyDown}
                     className='h-9 ps-8'
                   />
@@ -302,21 +314,13 @@ export function MarketplaceFilterSidebar({
                     max={MARKETPLACE_PRICE_BOUNDS.max}
                     value={draftMax}
                     onChange={handleDraftMaxChange}
-                    onBlur={commitInputs}
+                    onBlur={commitPriceFromInputs}
                     onKeyDown={handlePriceKeyDown}
                     className='h-9 ps-8'
                   />
                 </div>
               </div>
             </div>
-            <Button
-              type='button'
-              size='sm'
-              className='w-full'
-              onClick={() => applyPrice(sliderValue[0], sliderValue[1])}
-            >
-              {t('marketplace.applyPrice')}
-            </Button>
           </div>
         </FilterSection>
 

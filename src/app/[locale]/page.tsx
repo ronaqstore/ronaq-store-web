@@ -55,6 +55,8 @@ export default async function HomePage({ params, searchParams }: HomePageProps) 
     { question: t('q3'), answer: t('a3') }
   ]);
 
+  const resultsFreshness = sanitizeMarketplaceText(resolvedSearch.rf, 32);
+
   const suspenseKey = [
     cityId,
     modelKey || q || 'all',
@@ -64,7 +66,8 @@ export default async function HomePage({ params, searchParams }: HomePageProps) 
     filters.inStock === true ? '1' : filters.inStock === false ? '0' : '',
     filters.ptaStatus ?? '',
     filters.authenticity ?? '',
-    filters.sort ?? ''
+    filters.sort ?? '',
+    resultsFreshness
   ].join(':');
 
   return (

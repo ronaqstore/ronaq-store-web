@@ -7,7 +7,8 @@ const DEFAULT_CACHE: PublicFetchCache = { revalidate: PUBLIC_REVALIDATE_SECONDS 
 
 export async function publicApiRequest<T>(
   endpoint: string,
-  cache: PublicFetchCache = DEFAULT_CACHE
+  cache: PublicFetchCache = DEFAULT_CACHE,
+  signal?: AbortSignal
 ): Promise<T | null> {
   if (!API_BASE_URL) return null;
 
@@ -32,6 +33,7 @@ export async function publicApiRequest<T>(
         'Content-Type': 'application/json',
         Accept: 'application/json'
       },
+      signal,
       ...nextOptions
     });
 
@@ -41,7 +43,10 @@ export async function publicApiRequest<T>(
 
     const json: unknown = await response.json();
     return extractApiData<T>(json);
-  } catch {
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      throw error;
+    }
     return null;
   }
 }

@@ -55,7 +55,7 @@ export function MarketplaceSearchBar({
   const [totalGroups, setTotalGroups] = useState(0);
   const debouncedQuery = useDebouncedValue(
     sanitizeMarketplaceText(searchQuery),
-    300
+    450
   );
   const activeModel = Boolean(modelKey);
 
@@ -68,19 +68,32 @@ export function MarketplaceSearchBar({
     }
 
     let cancelled = false;
+    const controller = new AbortController();
     setLoading(true);
-    void searchMarketplaceModels({ q: debouncedQuery, city: cityId, limit: 8 }).then(
-      (result) => {
+    void searchMarketplaceModels({
+      q: debouncedQuery,
+      city: cityId,
+      limit: 8,
+      signal: controller.signal
+    })
+      .then((result) => {
         if (cancelled) return;
         setSuggestions(result.items);
         setTotalGroups(result.total);
         setLoading(false);
         setOpen(true);
-      }
-    );
+      })
+      .catch((error: unknown) => {
+        if (cancelled) return;
+        if (error instanceof DOMException && error.name === 'AbortError') return;
+        setSuggestions([]);
+        setTotalGroups(0);
+        setLoading(false);
+      });
 
     return () => {
       cancelled = true;
+      controller.abort();
     };
   }, [activeModel, cityId, debouncedQuery]);
 

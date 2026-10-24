@@ -213,6 +213,7 @@ export interface MarketplaceModelsSearchQuery {
   q: string;
   city?: string;
   limit?: number;
+  signal?: AbortSignal;
 }
 
 export interface MarketplaceFilterSectionProps {

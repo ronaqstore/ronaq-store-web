@@ -85,10 +85,7 @@ export async function getMarketplaceProducts(
   const qs = params.toString() ? `?${params.toString()}` : '';
   const raw = await publicApiRequest<ApiPaginatedMarketplaceProducts>(
     `marketplace/products${qs}`,
-    {
-      revalidate: PUBLIC_REVALIDATE_SECONDS,
-      tags: ['marketplace-products']
-    }
+    { cache: 'no-store' }
   );
   return mapMarketplaceProductsResponse(raw);
 }
@@ -108,7 +105,8 @@ export async function searchMarketplaceModels(
 
   const raw = await publicApiRequest<ApiMarketplaceModelsResponse>(
     `marketplace/models?${params.toString()}`,
-    { cache: 'no-store' }
+    { cache: 'no-store' },
+    query.signal
   );
 
   const items: MarketplaceModelSuggestion[] = (raw?.items ?? [])

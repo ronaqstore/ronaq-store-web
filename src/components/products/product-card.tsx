@@ -34,9 +34,9 @@ export function ProductCard({
   const colorLabel = formatColorLabel(product.color);
   const conditionLabel =
     product.condition === 'NEW'
-      ? t('catalog.brandNew')
+      ? t('catalog.conditionNew')
       : product.condition === 'USED'
-        ? t('catalog.used')
+        ? t('catalog.conditionUsed')
         : product.condition
           ? formatTitleCase(product.condition)
           : '';

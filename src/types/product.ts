@@ -84,6 +84,7 @@ export interface StoreProductDetail {
   stockCount: number | null;
   inStock: boolean;
   totalQuantity: number;
+  units?: StoreProductUnit[];
 }
 
 export interface ProductListQuery {

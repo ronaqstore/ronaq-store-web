@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -53,6 +53,9 @@ export function MarketplaceShell({
   const [isPending, startTransition] = useTransition();
   const [cityGateOpen, setCityGateOpen] = useState(!hasCityPreference);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [draftFilters, setDraftFilters] = useState<MarketplaceListingFilters>(filters);
+  const appliedFiltersRef = useRef(filters);
+  appliedFiltersRef.current = filters;
   const {
     searchQuery,
     setSearchQuery,
@@ -62,6 +65,7 @@ export function MarketplaceShell({
   } = useDebouncedUrlSearch(urlSearch, 400);
 
   const activeFilterCount = countActiveMarketplaceFilters(filters);
+  const draftFilterCount = countActiveMarketplaceFilters(draftFilters);
 
   useEffect(() => {
     if (!hasCityPreference) setCityGateOpen(true);
@@ -69,6 +73,7 @@ export function MarketplaceShell({
 
   useEffect(() => {
     if (!filtersOpen) return;
+    setDraftFilters(appliedFiltersRef.current);
     const previous = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     return () => {
@@ -151,12 +156,41 @@ export function MarketplaceShell({
     setSearchQuery(value.slice(0, MARKETPLACE_SEARCH_MAX_LEN));
   };
 
-  const handleFiltersChange = (next: MarketplaceListingFilters) => {
-    navigateHome({
-      q: searchQuery.trim() || undefined,
-      modelKey,
-      filters: next
+  const handleOpenFilters = () => {
+    setDraftFilters(filters);
+    setFiltersOpen(true);
+  };
+
+  const handleDraftFiltersChange = (next: MarketplaceListingFilters) => {
+    setDraftFilters(next);
+  };
+
+  const applyFiltersAndClose = (nextFilters: MarketplaceListingFilters) => {
+    const q = searchQuery.trim() || undefined;
+    const query: Record<string, string> = {
+      ...buildHomeQuery({
+        q,
+        modelKey,
+        cityId,
+        filters: nextFilters
+      }),
+      rf: String(Date.now())
+    };
+    markUrlSync(q ?? '');
+    setDraftFilters(nextFilters);
+    setFiltersOpen(false);
+    startTransition(() => {
+      router.replace({ pathname, query }, { scroll: false });
+      router.refresh();
     });
+  };
+
+  const handleClearFilters = () => {
+    applyFiltersAndClose({ sort: filters.sort });
+  };
+
+  const handleShowFilterResults = () => {
+    applyFiltersAndClose(draftFilters);
   };
 
   const heading = modelKey
@@ -216,7 +250,7 @@ export function MarketplaceShell({
               type='button'
               variant={activeFilterCount > 0 ? 'default' : 'outline'}
               className='relative min-h-10 shrink-0'
-              onClick={() => setFiltersOpen(true)}
+              onClick={handleOpenFilters}
             >
               <Icons.filter className='me-2 h-4 w-4' />
               {t('marketplace.filtersHeading')}
@@ -284,20 +318,20 @@ export function MarketplaceShell({
               <div className='flex items-center gap-2 pt-1 sm:pt-0'>
                 <Icons.filter className='h-4 w-4 text-primary' />
                 <p className='text-base font-semibold'>{t('marketplace.filtersHeading')}</p>
-                {activeFilterCount > 0 ? (
+                {draftFilterCount > 0 ? (
                   <span className='rounded-full bg-primary/15 px-2 py-0.5 text-[11px] font-bold text-primary'>
-                    {activeFilterCount}
+                    {draftFilterCount}
                   </span>
                 ) : null}
               </div>
               <div className='flex items-center gap-1'>
-                {activeFilterCount > 0 ? (
+                {draftFilterCount > 0 ? (
                   <Button
                     type='button'
                     variant='ghost'
                     size='sm'
                     className='h-9 px-2 text-xs'
-                    onClick={() => handleFiltersChange({ sort: filters.sort })}
+                    onClick={handleClearFilters}
                   >
                     {t('marketplace.clearFilters')}
                   </Button>
@@ -317,8 +351,8 @@ export function MarketplaceShell({
 
             <div className='min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-2 [scrollbar-width:thin]'>
               <MarketplaceFilterSidebar
-                filters={filters}
-                onChange={handleFiltersChange}
+                filters={draftFilters}
+                onChange={handleDraftFiltersChange}
                 showHeader={false}
                 className='border-0 bg-transparent p-1 shadow-none'
               />
@@ -328,7 +362,7 @@ export function MarketplaceShell({
               <Button
                 type='button'
                 className='min-h-11 w-full'
-                onClick={() => setFiltersOpen(false)}
+                onClick={handleShowFilterResults}
               >
                 {t('marketplace.showResults')}
               </Button>
