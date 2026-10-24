@@ -18,6 +18,15 @@ export interface I18nProviderProps {
 
 export interface HomeSearchParams {
   q?: string;
+  city?: string;
+  model?: string;
+  condition?: string;
+  minPrice?: string;
+  maxPrice?: string;
+  inStock?: string;
+  pta?: string;
+  authenticity?: string;
+  sort?: string;
 }
 
 export interface HomePageProps {
