@@ -64,7 +64,7 @@
   },
   "pwa": {
     "installTitle": "رَونق اسٹور انسٹال کریں",
-    "installBody": "تیز اور ایپ جیسا تجربہ کے لیے ہوم اسکرین پر شامل کریں۔",
+    "installBody": "فون یا کمپیوٹر پر انسٹال کریں تاکہ تیز اور ایپ جیسا شاپنگ تجربہ ملے۔",
     "installCta": "ایپ انسٹال کریں",
     "installIosHint": "Share دبائیں، پھر Add to Home Screen۔",
     "dismiss": "ابھی نہیں"
@@ -216,6 +216,7 @@
   "aria": {
     "toggleNavigation": "نیویگیشن ٹوگل کریں",
     "toggleTheme": "تھیم تبدیل کریں",
+    "installApp": "ایپ ڈاؤن لوڈ کریں",
     "closeModal": "بند کریں",
     "previewImage": "بڑی تصویر دیکھیں",
     "clearSearch": "تلاش صاف کریں",

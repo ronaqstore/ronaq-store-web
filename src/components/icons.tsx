@@ -33,7 +33,8 @@ import {
   IconShieldCheck,
   IconRefresh,
   IconLoader2,
-  IconTag
+  IconTag,
+  IconDownload
 } from '@tabler/icons-react';
 
 export const Icons = {
@@ -71,6 +72,7 @@ export const Icons = {
   sparkles: IconSparkles,
   shieldCheck: IconShieldCheck,
   refresh: IconRefresh,
-  spinner: IconLoader2
+  spinner: IconLoader2,
+  download: IconDownload
 };
 

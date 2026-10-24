@@ -7,6 +7,7 @@ import { Icons } from '@/components/icons';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageSwitcher } from '@/components/language-switcher';
+import { InstallAppButton } from '@/components/pwa/install-app-button';
 import { ADMIN_BASE_URL } from '@/constants/api';
 import { cn } from '@/lib/utils';
 
@@ -53,6 +54,7 @@ export function Navbar() {
 
         <div className='hidden items-center gap-2 md:flex'>
           <LanguageSwitcher />
+          <InstallAppButton />
           <ThemeToggle />
           <a
             href={`${ADMIN_BASE_URL}/login`}
@@ -65,6 +67,7 @@ export function Navbar() {
         </div>
 
         <div className='flex items-center gap-2 md:hidden'>
+          <InstallAppButton />
           <ThemeToggle />
           <Button
             type='button'

@@ -238,6 +238,19 @@ export interface InstallPromptProps {
   className?: string;
 }
 
+export type PwaInstallOutcome = 'accepted' | 'dismissed' | 'unavailable';
+
+export interface UsePwaInstallResult {
+  canPrompt: boolean;
+  isStandalone: boolean;
+  isIos: boolean;
+  promptInstall: () => Promise<PwaInstallOutcome>;
+}
+
+export interface InstallAppButtonProps {
+  className?: string;
+}
+
 export interface CityPreferenceResolution {
   cityId: string;
   hasPreference: boolean;

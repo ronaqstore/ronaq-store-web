@@ -64,7 +64,7 @@
   },
   "pwa": {
     "installTitle": "رَونق سټور نصب کړئ",
-    "installBody": "چټک او اپلیکیشن ته ورته تجربه لپاره یې هوم سکرین ته اضافه کړئ.",
+    "installBody": "په تلیفون یا کمپیوټر کې نصب کړئ ترڅو چټک او اپ ته ورته پیرود تجربه ولرئ.",
     "installCta": "اپ نصب کړئ",
     "installIosHint": "Share کېکاږئ، بیا Add to Home Screen.",
     "dismiss": "اوس مه"
@@ -216,6 +216,7 @@
   "aria": {
     "toggleNavigation": "د مینو بدلول",
     "toggleTheme": "رنګ بدلول",
+    "installApp": "اپ ډاونلوډ کړئ",
     "closeModal": "بندول",
     "previewImage": "لویه انځور وګورئ",
     "clearSearch": "لټون پاکول",

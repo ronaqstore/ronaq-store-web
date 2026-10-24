@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/components/icons';
-import { isIosInstallCandidate, isStandaloneDisplay } from '@/lib/pwa';
+import { usePwaInstall } from '@/hooks/use-pwa-install';
 import { cn } from '@/lib/utils';
-import type { BeforeInstallPromptEvent, InstallPromptProps } from '@/types/marketplace';
+import type { InstallPromptProps } from '@/types/marketplace';
 
 const DISMISS_KEY = 'ronaq-web-pwa-dismissed-at';
 const DISMISS_DAYS = 14;
@@ -33,52 +33,36 @@ function markDismissed(): void {
 
 export function InstallPrompt({ className }: InstallPromptProps) {
   const t = useTranslations('pwa');
+  const { canPrompt, isStandalone, isIos, promptInstall } = usePwaInstall();
   const [visible, setVisible] = useState(false);
-  const [ios, setIos] = useState(false);
-  const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(null);
 
   useEffect(() => {
-    if (isStandaloneDisplay() || readDismissed()) return;
-
-    const onBeforeInstall = (event: Event) => {
-      event.preventDefault();
-      setDeferred(event as BeforeInstallPromptEvent);
-      setVisible(true);
-    };
-
-    window.addEventListener('beforeinstallprompt', onBeforeInstall);
-
-    if (isIosInstallCandidate()) {
-      setIos(true);
+    if (isStandalone || readDismissed()) {
+      setVisible(false);
+      return;
+    }
+    if (canPrompt || isIos) {
       setVisible(true);
     }
+  }, [canPrompt, isIos, isStandalone]);
 
-    return () => {
-      window.removeEventListener('beforeinstallprompt', onBeforeInstall);
-    };
-  }, []);
-
-  if (!visible) return null;
+  if (!visible || isStandalone) return null;
 
   const dismiss = () => {
     markDismissed();
     setVisible(false);
   };
 
-  const install = async () => {
-    if (!deferred) return;
-    await deferred.prompt();
-    const choice = await deferred.userChoice;
-    setDeferred(null);
-    if (choice.outcome === 'accepted') {
-      setVisible(false);
-      return;
-    }
-    dismiss();
-  };
-
   const handleInstallClick = () => {
-    void install();
+    void promptInstall().then((outcome) => {
+      if (outcome === 'accepted') {
+        setVisible(false);
+        return;
+      }
+      if (outcome === 'dismissed') {
+        dismiss();
+      }
+    });
   };
 
   return (
@@ -93,15 +77,15 @@ export function InstallPrompt({ className }: InstallPromptProps) {
     >
       <div className='flex items-start gap-3'>
         <div className='mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary'>
-          <Icons.mobile className='h-5 w-5' />
+          <Icons.download className='h-5 w-5' />
         </div>
         <div className='min-w-0 flex-1'>
           <p className='text-sm font-semibold text-foreground'>{t('installTitle')}</p>
           <p className='mt-0.5 text-xs text-muted-foreground'>
-            {ios ? t('installIosHint') : t('installBody')}
+            {isIos ? t('installIosHint') : t('installBody')}
           </p>
           <div className='mt-2.5 flex flex-wrap gap-2'>
-            {!ios && deferred ? (
+            {!isIos && canPrompt ? (
               <Button type='button' size='sm' className='min-h-9' onClick={handleInstallClick}>
                 {t('installCta')}
               </Button>

@@ -64,7 +64,7 @@
   },
   "pwa": {
     "installTitle": "Install Ronaq Store",
-    "installBody": "Add to your home screen for a fast, app-like shopping experience.",
+    "installBody": "Install on your phone or computer for a fast, app-like shopping experience.",
     "installCta": "Install app",
     "installIosHint": "Tap Share, then Add to Home Screen.",
     "dismiss": "Not now"
@@ -216,6 +216,7 @@
   "aria": {
     "toggleNavigation": "Toggle navigation",
     "toggleTheme": "Toggle theme",
+    "installApp": "Download app",
     "closeModal": "Close modal",
     "previewImage": "View larger image",
     "clearSearch": "Clear search",
