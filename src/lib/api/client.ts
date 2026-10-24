@@ -1,6 +1,7 @@
 import { API_BASE_URL } from '@/constants/api';
 import { PUBLIC_REVALIDATE_SECONDS } from '@/constants/site';
-import type { ApiResponse, PublicFetchCache } from '@/types/common';
+import { extractApiData } from '@/lib/api/envelope';
+import type { PublicFetchCache } from '@/types/common';
 
 const DEFAULT_CACHE: PublicFetchCache = { revalidate: PUBLIC_REVALIDATE_SECONDS };
 
@@ -38,8 +39,8 @@ export async function publicApiRequest<T>(
       return null;
     }
 
-    const json = (await response.json()) as ApiResponse<T>;
-    return json.data ?? null;
+    const json: unknown = await response.json();
+    return extractApiData<T>(json);
   } catch {
     return null;
   }
