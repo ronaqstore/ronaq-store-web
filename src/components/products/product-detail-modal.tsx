@@ -7,6 +7,10 @@ import { Badge } from '@/components/ui/badge';
 import { PreviewableImage } from '@/components/media/previewable-image';
 import { PLACEHOLDER_PRODUCT_IMAGE } from '@/constants/placeholders';
 import { formatPrice, formatEmpty } from '@/lib/formatters';
+import {
+  productConditionMessageKey,
+  resolveProductCondition
+} from '@/lib/product-condition';
 import { StockBadge } from '@/components/products/stock-badge';
 import { cn } from '@/lib/utils';
 import type { ProductDetailModalProps } from '@/types/product';
@@ -20,6 +24,10 @@ export function ProductDetailModal({
   if (!product) return null;
 
   const formattedPrice = formatPrice(product.retailPrice);
+  const condition = resolveProductCondition(product);
+  const conditionLabel = condition
+    ? t(`catalog.${productConditionMessageKey(condition)}`)
+    : null;
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in'>
@@ -78,12 +86,12 @@ export function ProductDetailModal({
             </div>
 
             <div className='grid grid-cols-2 gap-3 pt-3 border-t border-border/50 text-xs'>
-              <div className='rounded-lg bg-muted/40 p-2.5'>
-                <span className='text-muted-foreground'>{t('catalog.condition')}: </span>
-                <span className='font-semibold text-foreground'>
-                  {formatEmpty(product.condition)}
-                </span>
-              </div>
+              {conditionLabel ? (
+                <div className='rounded-lg bg-muted/40 p-2.5'>
+                  <span className='text-muted-foreground'>{t('catalog.condition')}: </span>
+                  <span className='font-semibold text-foreground'>{conditionLabel}</span>
+                </div>
+              ) : null}
               <div className='rounded-lg bg-muted/40 p-2.5'>
                 <span className='text-muted-foreground'>{t('catalog.warranty')}: </span>
                 <span className='font-semibold text-foreground'>

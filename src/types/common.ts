@@ -16,8 +16,21 @@ export interface I18nProviderProps {
   children: ReactNode;
 }
 
+export type NextSearchParam = string | string[] | undefined;
+
 export interface HomeSearchParams {
-  q?: string;
+  q?: NextSearchParam;
+  city?: NextSearchParam;
+  model?: NextSearchParam;
+  condition?: NextSearchParam;
+  minPrice?: NextSearchParam;
+  maxPrice?: NextSearchParam;
+  inStock?: NextSearchParam;
+  pta?: NextSearchParam;
+  authenticity?: NextSearchParam;
+  sort?: NextSearchParam;
+  category?: NextSearchParam;
+  rf?: NextSearchParam;
 }
 
 export interface HomePageProps {

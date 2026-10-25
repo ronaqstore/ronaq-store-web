@@ -166,8 +166,11 @@ export function defaultRootMetadata(): Metadata {
 export function isSearchNoIndex(
   searchParams: CatalogSearchParams | HomeSearchParams
 ): boolean {
-  return Object.values(searchParams).some((value) => {
+  return Object.entries(searchParams).some(([key, value]) => {
+    if (key === 'rf') return false;
     if (value == null) return false;
-    return value.trim().length > 0;
+    const raw = Array.isArray(value) ? value[0] : value;
+    if (typeof raw !== 'string') return false;
+    return raw.trim().length > 0;
   });
 }

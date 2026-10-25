@@ -17,6 +17,12 @@ async function collectStoreEntries(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'daily',
       priority: 1
     });
+    entries.push({
+      url: absoluteLocaleUrl(locale, '/shops'),
+      lastModified: now,
+      changeFrequency: 'daily',
+      priority: 0.9
+    });
   }
 
   const storesResult = await getPublicStores({ limit: 100, page: 1 });

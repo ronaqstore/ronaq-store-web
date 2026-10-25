@@ -83,6 +83,9 @@ export interface StoreCardProps {
 
 export interface StoreDiscoveryShellProps {
   searchQuery: string;
+  cityId: string;
+  selectedCityName: string | null;
+  hasCityPreference: boolean;
   children: ReactNode;
 }
 
@@ -130,6 +133,7 @@ export interface ShopPageViewProps {
 
 export interface StoreDiscoverySectionProps {
   searchQuery: string;
+  cityId: string;
 }
 
 export interface StoreDiscoveryFeedProps {
@@ -138,4 +142,5 @@ export interface StoreDiscoveryFeedProps {
   page: number;
   totalPages: number;
   searchQuery: string;
+  cityId: string;
 }

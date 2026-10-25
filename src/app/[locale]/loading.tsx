@@ -1,36 +1,39 @@
+import { ProductGridSkeleton, QuickFilterChipsSkeleton, ResultsCountSkeleton } from '@/components/products/product-grid-skeleton';
+
 export default function LocaleLoading() {
   return (
-    <div className='animate-pulse'>
-      <div className='relative overflow-hidden pt-12 pb-16 md:pt-20 md:pb-24 border-b border-border/60'>
-        <div className='mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8 space-y-6'>
-          <div className='mx-auto h-10 sm:h-14 w-3/4 max-w-xl rounded-lg bg-muted' />
-          <div className='mx-auto h-4 w-full max-w-md rounded bg-muted' />
-          <div className='mx-auto h-13 w-full max-w-3xl rounded-2xl bg-muted' />
+    <div className='min-w-0 animate-pulse motion-reduce:animate-none' aria-busy='true'>
+      <div className='border-b border-border/60 bg-gradient-to-b from-primary/10 via-primary/5 to-background py-6 sm:py-8 md:py-10 lg:py-12'>
+        <div className='mx-auto w-full max-w-7xl 2xl:max-w-[1440px] px-4 sm:px-6 lg:px-8 space-y-3'>
+          <div className='h-8 sm:h-10 md:h-12 w-3/4 max-w-xl rounded-xl bg-muted/60' />
+          <div className='h-4 w-full max-w-md rounded-lg bg-muted/40 hidden min-[360px]:block' />
         </div>
       </div>
 
-      <div className='mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 py-12 space-y-6'>
-        <div className='space-y-2'>
-          <div className='h-7 w-40 rounded bg-muted' />
-          <div className='h-3 w-24 rounded bg-muted' />
+      <div className='sticky top-14 z-30 border-b border-border/60 bg-background/95 backdrop-blur-xl'>
+        <div className='mx-auto w-full max-w-7xl 2xl:max-w-[1440px] px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 space-y-2.5'>
+          <div className='flex flex-col gap-2 md:flex-row md:items-center md:gap-3'>
+            <div className='h-12 w-full max-w-2xl rounded-xl bg-muted/50' />
+            <div className='flex gap-2 shrink-0'>
+              <div className='h-12 w-32 rounded-xl bg-muted/40' />
+              <div className='h-12 w-28 rounded-xl bg-muted/40' />
+            </div>
+          </div>
+          <QuickFilterChipsSkeleton />
+        </div>
+      </div>
+
+      <div className='mx-auto w-full max-w-7xl 2xl:max-w-[1440px] px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10 space-y-6'>
+        <div className='flex items-end justify-between border-b border-border/40 pb-4'>
+          <div className='space-y-2'>
+            <div className='h-7 w-48 rounded-lg bg-muted/60' />
+            <div className='h-4 w-32 rounded bg-muted/40' />
+          </div>
+          <div className='h-10 w-28 rounded-xl bg-muted/40' />
         </div>
 
-        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5'>
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div
-              key={i}
-              className='overflow-hidden rounded-2xl border border-border/70 bg-card'
-            >
-              <div className='h-36 w-full bg-muted/60' />
-              <div className='p-4 space-y-3'>
-                <div className='h-4 w-2/3 rounded bg-muted' />
-                <div className='h-3 w-full rounded bg-muted' />
-                <div className='h-3 w-4/5 rounded bg-muted' />
-                <div className='h-8 w-full rounded-md bg-muted' />
-              </div>
-            </div>
-          ))}
-        </div>
+        <ResultsCountSkeleton />
+        <ProductGridSkeleton count={8} />
       </div>
     </div>
   );

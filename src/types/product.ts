@@ -29,6 +29,18 @@ export interface StoreProductUnit {
   defectNotes: string | null;
 }
 
+export type ProductConditionDisplay = 'NEW' | 'USED' | 'MIXED';
+
+export type ProductConditionMessageKey =
+  | 'conditionNew'
+  | 'conditionUsed'
+  | 'conditionMixed';
+
+export interface ProductConditionInput {
+  condition?: string | null;
+  units?: StoreProductUnit[] | null;
+}
+
 export interface StoreProductListItem {
   id: string;
   name: string;
@@ -84,6 +96,7 @@ export interface StoreProductDetail {
   stockCount: number | null;
   inStock: boolean;
   totalQuantity: number;
+  units?: StoreProductUnit[];
 }
 
 export interface ProductListQuery {
@@ -120,13 +133,15 @@ export interface StoreModelDetail {
 }
 
 export interface ProductCardProps {
-  product: StoreProductListItem;
+  product: StoreProductListItem | import('./marketplace').MarketplaceProduct;
   storeSlug?: string;
   storeName?: string;
   storePhone?: string;
   onSelectProduct?: (product: StoreProductListItem) => void;
   priority?: boolean;
   linkToModel?: boolean;
+  prefetch?: boolean;
+  className?: string;
 }
 
 export interface ModelVariantsClientProps {
@@ -164,6 +179,10 @@ export interface ProductGridSkeletonProps {
   className?: string;
 }
 
+export interface ProductCardSkeletonProps {
+  className?: string;
+}
+
 export interface ProductFiltersProps {
   categories: StoreCategory[];
   selectedCategoryId: string;
@@ -194,9 +213,58 @@ export interface ProductDetailModalProps {
   onClose: () => void;
 }
 
-export interface ProductImageGalleryProps {
-  images: StoreProductImage[];
+export interface ProductGalleryProps {
+  images?: StoreProductImage[];
   productName: string;
+  badgeLabel?: string | null;
+}
+
+export interface ProductBreadcrumbItem {
+  name: string;
+  path: string;
+}
+
+export interface ProductBreadcrumbProps {
+  crumbs: ProductBreadcrumbItem[];
+}
+
+export interface ProductInfoProps {
+  product: StoreProductDetail;
+  store: import('./store').StoreProfile;
+  slug: string;
+  crumbs: ProductBreadcrumbItem[];
+}
+
+export interface ProductSpecsProps {
+  product: StoreProductDetail;
+  store: import('./store').StoreProfile;
+  slug: string;
+}
+
+export interface ProductSpecRowItem {
+  label: string;
+  value: import('react').ReactNode;
+}
+
+export interface ProductSpecsMobileExpandedState {
+  description: boolean;
+  specs: boolean;
+  shop: boolean;
+}
+
+export interface SellerCardProps {
+  store: import('./store').StoreProfile;
+  slug: string;
+}
+
+export interface RelatedProductsProps {
+  products: import('./marketplace').MarketplaceProduct[];
+  browseHref: string;
+}
+
+export interface StickyMobileCTAProps {
+  product: StoreProductDetail;
+  store: import('./store').StoreProfile;
 }
 
 export interface ProductDetailViewProps {
@@ -204,10 +272,19 @@ export interface ProductDetailViewProps {
   slug: string;
   store: import('./store').StoreProfile;
   product: StoreProductDetail;
-  relatedProducts?: StoreProductListItem[];
+  relatedProducts?: import('./marketplace').MarketplaceProduct[];
+  relatedBrowseHref?: string;
 }
 
 export interface StockBadgeProps {
   availability: StoreAvailability;
   stockCount: number | null;
+}
+
+export interface ResultsCountSkeletonProps {
+  className?: string;
+}
+
+export interface QuickFilterChipsSkeletonProps {
+  className?: string;
 }

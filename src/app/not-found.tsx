@@ -7,9 +7,13 @@ export default function RootNotFound() {
   const router = useRouter();
 
   return (
-    <NotFoundView
-      onBack={() => router.back()}
-      onHome={() => router.push('/')}
-    />
+    <html lang='en'>
+      <body className='min-h-dvh bg-background text-foreground antialiased'>
+        <NotFoundView
+          onBack={() => router.back()}
+          onHome={() => router.push('/')}
+        />
+      </body>
+    </html>
   );
 }

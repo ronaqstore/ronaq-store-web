@@ -6,14 +6,17 @@ import { Icons } from '@/components/icons';
 import { Spinner } from '@/components/ui/spinner';
 import { STORES_PAGE_SIZE } from '@/constants/site';
 import { publicApiRequest } from '@/lib/api/client';
+import { marketplaceCityQueryParam } from '@/lib/city-preference';
 import { mapStoresResponse } from '@/lib/api/mappers';
 import type { ApiPaginatedStores } from '@/types/api';
 import type { StoreDiscoveryFeedProps, StoreListItem } from '@/types/store';
 import { StoreCard } from './store-card';
 
-async function fetchStoresPage(searchQuery: string, page: number) {
+async function fetchStoresPage(searchQuery: string, cityId: string, page: number) {
   const params = new URLSearchParams();
   if (searchQuery) params.set('q', searchQuery);
+  const city = marketplaceCityQueryParam(cityId);
+  if (city) params.set('city', city);
   params.set('page', String(page));
   params.set('limit', String(STORES_PAGE_SIZE));
   const raw = await publicApiRequest<ApiPaginatedStores>(`stores?${params.toString()}`, {
@@ -27,7 +30,8 @@ export function StoreDiscoveryFeed({
   total,
   page: initialPage,
   totalPages,
-  searchQuery
+  searchQuery,
+  cityId
 }: StoreDiscoveryFeedProps) {
   const t = useTranslations();
   const [stores, setStores] = useState<StoreListItem[]>(initialStores);
@@ -44,7 +48,7 @@ export function StoreDiscoveryFeed({
     setHasMore(initialPage < totalPages);
     setLoadError(false);
     loadingRef.current = false;
-  }, [initialStores, initialPage, totalPages, searchQuery]);
+  }, [initialStores, initialPage, totalPages, searchQuery, cityId]);
 
   const loadMore = useCallback(async () => {
     if (loadingRef.current || !hasMore) return;
@@ -53,7 +57,7 @@ export function StoreDiscoveryFeed({
     setLoadError(false);
 
     const nextPage = page + 1;
-    const response = await fetchStoresPage(searchQuery, nextPage);
+    const response = await fetchStoresPage(searchQuery, cityId, nextPage);
 
     if (!response) {
       setLoadError(true);
@@ -71,7 +75,7 @@ export function StoreDiscoveryFeed({
     setHasMore(response.page < response.totalPages);
     setLoading(false);
     loadingRef.current = false;
-  }, [hasMore, page, searchQuery]);
+  }, [cityId, hasMore, page, searchQuery]);
 
   useEffect(() => {
     const node = sentinelRef.current;

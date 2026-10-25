@@ -28,6 +28,7 @@ const ALLOWED_TOP_LEVEL_DIRS = new Set([
   "components",  // Shared UI components (shadcn/ui + layout)
   "config",      // Site config, nav config, env config
   "constants",   // Mock API stores, shared constants
+  "design",      // Design tokens and system (Flutter-ready source of truth)
   "features",    // Feature modules (products, shops, etc.)
   "hooks",       // Custom React hooks
   "i18n",        // next-intl routing and locale helpers

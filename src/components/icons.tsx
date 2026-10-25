@@ -32,12 +32,24 @@ import {
   IconSparkles,
   IconShieldCheck,
   IconRefresh,
-  IconLoader2
+  IconLoader2,
+  IconTag,
+  IconDownload,
+  IconChevronLeft,
+  IconMaximize,
+  IconZoomIn,
+  IconTruck,
+  IconDiscountCheck,
+  IconCircleCheck,
+  IconHome,
+  IconUser,
+  IconWifiOff
 } from '@tabler/icons-react';
 
 export const Icons = {
   store: IconBuildingStore,
   search: IconSearch,
+  tag: IconTag,
   mapPin: IconMapPin,
   phone: IconPhone,
   whatsapp: IconBrandWhatsapp,
@@ -51,6 +63,7 @@ export const Icons = {
   arrowLeft: IconArrowLeft,
   chevronRight: IconChevronRight,
   chevronDown: IconChevronDown,
+  chevronLeft: IconChevronLeft,
   externalLink: IconExternalLink,
   clock: IconClock,
   mobile: IconDeviceMobile,
@@ -59,6 +72,7 @@ export const Icons = {
   filter: IconFilter,
   plus: IconPlus,
   circleX: IconCircleX,
+  circleCheck: IconCircleCheck,
   bag: IconShoppingBag,
   sun: IconSun,
   moon: IconMoon,
@@ -68,7 +82,15 @@ export const Icons = {
   warning: IconAlertTriangle,
   sparkles: IconSparkles,
   shieldCheck: IconShieldCheck,
+  badgeCheck: IconDiscountCheck,
+  truck: IconTruck,
+  zoomIn: IconZoomIn,
+  maximize: IconMaximize,
   refresh: IconRefresh,
-  spinner: IconLoader2
+  spinner: IconLoader2,
+  download: IconDownload,
+  home: IconHome,
+  user: IconUser,
+  wifiOff: IconWifiOff
 };
 

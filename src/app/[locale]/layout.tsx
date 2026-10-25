@@ -12,6 +12,9 @@ import { I18nProvider } from '@/components/i18n-provider';
 import { LiveDataRefresh } from '@/components/live-data-refresh';
 import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
+import { InstallPrompt } from '@/components/pwa/install-prompt';
+import { BottomNav } from '@/components/pwa/bottom-nav';
+import { OfflineBanner } from '@/components/common/offline-banner';
 import type { LocaleLayoutProps } from '@/types/common';
 import {
   APP_NAME,
@@ -110,19 +113,22 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
           locale === 'ur' && 'font-urdu',
           locale === 'ps' && 'font-pashto',
           locale === 'en' && 'font-sans',
-          'min-h-dvh bg-background antialiased text-foreground selection:bg-primary/20 selection:text-primary flex flex-col justify-between overscroll-none'
+          'flex min-h-dvh flex-col bg-background antialiased text-foreground selection:bg-primary/20 selection:text-primary overscroll-none'
         )}
         suppressHydrationWarning
       >
         <NextTopLoader color='var(--primary)' showSpinner={false} />
         <ThemeProvider>
           <I18nProvider locale={locale} messages={messages}>
+            <OfflineBanner />
             <LiveDataRefresh />
             <Navbar />
-            <main id='main-content' className='flex-1 min-w-0'>
+            <main id='main-content' className='flex-1 min-w-0 pb-[calc(4.5rem+env(safe-area-inset-bottom))] md:pb-0'>
               {children}
             </main>
             <Footer />
+            <InstallPrompt />
+            <BottomNav />
           </I18nProvider>
         </ThemeProvider>
         <Analytics />
