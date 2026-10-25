@@ -60,38 +60,39 @@ export function MarketplaceSearchBar({
   const listId = useId();
   const rootRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const focusedRef = useRef(false);
+  const lastCommittedRef = useRef(committedQuery);
   const [draft, setDraft] = useState(committedQuery);
   const [composing, setComposing] = useState(false);
+  const [composeFreeze, setComposeFreeze] = useState(committedQuery);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<MarketplaceModelSuggestion[]>([]);
   const [totalGroups, setTotalGroups] = useState(0);
-  const [lastCommitted, setLastCommitted] = useState(committedQuery);
+  const modelsRequestIdRef = useRef(0);
 
   useEffect(() => {
+    if (focusedRef.current) return;
+    if (committedQuery === lastCommittedRef.current) return;
+    lastCommittedRef.current = committedQuery;
     setDraft(committedQuery);
-    setLastCommitted(committedQuery);
   }, [committedQuery]);
 
-  const draftForDebounce = composing
-    ? lastCommitted
-    : sanitizeMarketplaceText(draft);
-  const debouncedDraft = useDebouncedValue(draftForDebounce, 350);
+  const draftForDebounce = composing ? composeFreeze : draft;
+  const debouncedDraft = useDebouncedValue(draftForDebounce, 400);
   const activeModel = Boolean(modelKey);
 
   useEffect(() => {
     if (composing) return;
     const next = commitMarketplaceSearchQuery(debouncedDraft);
     if (next == null) return;
-    if (next === lastCommitted) return;
-    setLastCommitted(next);
+    if (next === lastCommittedRef.current) return;
+    lastCommittedRef.current = next;
     onCommitSearch(next);
-  }, [composing, debouncedDraft, lastCommitted, onCommitSearch]);
-
-  const modelsRequestIdRef = useRef(0);
+  }, [composing, debouncedDraft, onCommitSearch]);
 
   useEffect(() => {
-    if (!open || activeModel || debouncedDraft.length < MARKETPLACE_SEARCH_MIN_LEN) {
+    if (!open || activeModel || debouncedDraft.trim().length < MARKETPLACE_SEARCH_MIN_LEN) {
       modelsRequestIdRef.current += 1;
       setSuggestions([]);
       setTotalGroups(0);
@@ -105,8 +106,9 @@ export function MarketplaceSearchBar({
     setTotalGroups(0);
     setLoading(true);
 
+    const q = sanitizeMarketplaceText(debouncedDraft);
     void searchMarketplaceModels({
-      q: debouncedDraft,
+      q,
       city: cityId,
       limit: 8
     })
@@ -141,16 +143,17 @@ export function MarketplaceSearchBar({
       inputRef.current?.blur();
       return;
     }
+    lastCommittedRef.current = next;
     setDraft(next);
-    setLastCommitted(next);
     onCommitSearch(next);
     setOpen(false);
     inputRef.current?.blur();
   };
 
   const clearSearch = () => {
+    focusedRef.current = false;
+    lastCommittedRef.current = '';
     setDraft('');
-    setLastCommitted('');
     onClearSearch();
     setSuggestions([]);
     setOpen(false);
@@ -165,6 +168,10 @@ export function MarketplaceSearchBar({
   };
 
   const handleSelect = (item: MarketplaceModelSuggestion) => {
+    const title = sanitizeMarketplaceText(item.title);
+    focusedRef.current = false;
+    lastCommittedRef.current = title;
+    setDraft(title);
     onSelectModel(item);
     setOpen(false);
     inputRef.current?.blur();
@@ -190,17 +197,39 @@ export function MarketplaceSearchBar({
   };
 
   const handleCompositionStart = () => {
+    setComposeFreeze(draft);
     setComposing(true);
   };
 
   const handleCompositionEnd = (event: CompositionEvent<HTMLInputElement>) => {
     setComposing(false);
-    setDraft(event.currentTarget.value.slice(0, MARKETPLACE_SEARCH_MAX_LEN));
+    setDraft(
+      Array.from(event.currentTarget.value)
+        .slice(0, MARKETPLACE_SEARCH_MAX_LEN)
+        .join('')
+    );
   };
 
   const handleFormSubmit = (event: FormEvent) => {
     event.preventDefault();
     handleSearchAll();
+  };
+
+  const handleFocus = () => {
+    focusedRef.current = true;
+    if (
+      sanitizeMarketplaceText(draft).length >= MARKETPLACE_SEARCH_MIN_LEN &&
+      !activeModel
+    ) {
+      setOpen(true);
+    }
+  };
+
+  const handleBlur = () => {
+    window.setTimeout(() => {
+      if (rootRef.current?.contains(document.activeElement)) return;
+      focusedRef.current = false;
+    }, 0);
   };
 
   const showDropdown =
@@ -225,14 +254,8 @@ export function MarketplaceSearchBar({
           onChange={handleSearchChange}
           onCompositionStart={handleCompositionStart}
           onCompositionEnd={handleCompositionEnd}
-          onFocus={() => {
-            if (
-              sanitizeMarketplaceText(draft).length >= MARKETPLACE_SEARCH_MIN_LEN &&
-              !activeModel
-            ) {
-              setOpen(true);
-            }
-          }}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           onKeyDown={handleKeyDown}
           placeholder={t('marketplace.searchPlaceholder')}
           role='combobox'
