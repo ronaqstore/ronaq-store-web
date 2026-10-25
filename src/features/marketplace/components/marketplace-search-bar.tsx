@@ -31,6 +31,8 @@ import type {
   MarketplaceSearchBarProps
 } from '@/types/marketplace';
 
+const MODELS_DEBOUNCE_MS = 250;
+
 function ModelSuggestionsSkeleton() {
   return (
     <>
@@ -78,21 +80,21 @@ export function MarketplaceSearchBar({
     setDraft(committedQuery);
   }, [committedQuery]);
 
-  const draftForDebounce = composing ? composeFreeze : draft;
-  const debouncedDraft = useDebouncedValue(draftForDebounce, 400);
+  const draftForSuggest = composing ? composeFreeze : draft;
+  const debouncedSuggest = useDebouncedValue(draftForSuggest, MODELS_DEBOUNCE_MS);
   const activeModel = Boolean(modelKey);
 
   useEffect(() => {
-    if (composing) return;
-    const next = commitMarketplaceSearchQuery(debouncedDraft);
-    if (next == null) return;
-    if (next === lastCommittedRef.current) return;
-    lastCommittedRef.current = next;
-    onCommitSearch(next);
-  }, [composing, debouncedDraft, onCommitSearch]);
+    if (!open || activeModel || composing) {
+      modelsRequestIdRef.current += 1;
+      setSuggestions([]);
+      setTotalGroups(0);
+      setLoading(false);
+      return;
+    }
 
-  useEffect(() => {
-    if (!open || activeModel || debouncedDraft.trim().length < MARKETPLACE_SEARCH_MIN_LEN) {
+    const q = sanitizeMarketplaceText(debouncedSuggest);
+    if (q.length < MARKETPLACE_SEARCH_MIN_LEN) {
       modelsRequestIdRef.current += 1;
       setSuggestions([]);
       setTotalGroups(0);
@@ -106,7 +108,6 @@ export function MarketplaceSearchBar({
     setTotalGroups(0);
     setLoading(true);
 
-    const q = sanitizeMarketplaceText(debouncedDraft);
     void searchMarketplaceModels({
       q,
       city: cityId,
@@ -124,7 +125,7 @@ export function MarketplaceSearchBar({
         setTotalGroups(0);
         setLoading(false);
       });
-  }, [activeModel, cityId, debouncedDraft, open]);
+  }, [activeModel, cityId, composing, debouncedSuggest, open]);
 
   useEffect(() => {
     const onPointerDown = (event: MouseEvent) => {
@@ -143,6 +144,7 @@ export function MarketplaceSearchBar({
       inputRef.current?.blur();
       return;
     }
+    focusedRef.current = false;
     lastCommittedRef.current = next;
     setDraft(next);
     onCommitSearch(next);

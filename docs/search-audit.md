@@ -106,6 +106,17 @@
 
 Out of scope for this pass (needs TanStack Query or full client listing rewrite): true `placeholderData` across hard remounts, cursor-based pagination API, approximate count endpoint, recent-searches / autocomplete cache.
 
+## Phase 4 — Daraz-style search commit (applied)
+
+| Action | Network |
+| --- | --- |
+| Typing in search | **Models autocomplete only** (250ms debounce) — product grid URL does **not** update |
+| Enter / Search all | Commits `q` → product listing fetch |
+| Suggestion click | Commits model + title → product listing fetch |
+| Clear (x) / Escape | Clears URL search → listing reload |
+
+This stops the 6–20s full-grid refetch on every keystroke.
+
 ## Phase 3 — Negative testing (hostile / wrong user behavior)
 
 | Abuse / mistake | Before | After |
