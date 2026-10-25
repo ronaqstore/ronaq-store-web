@@ -45,12 +45,17 @@ export function PriceRangeSlider({
     [highPct, lowPct]
   );
 
-  const commit = useCallback(() => {
-    onValueCommit?.(value);
-  }, [onValueCommit, value]);
+  const commitPair = useCallback(
+    (pair: [number, number]) => {
+      onValueCommit?.(pair);
+    },
+    [onValueCommit]
+  );
 
   const thumbClassName =
     'pointer-events-none absolute inset-0 z-20 m-0 h-6 w-full appearance-none bg-transparent [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:size-6 [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-primary [&::-moz-range-thumb]:bg-background [&::-moz-range-thumb]:shadow-md [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:z-30 [&::-webkit-slider-thumb]:size-6 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-primary [&::-webkit-slider-thumb]:bg-background [&::-webkit-slider-thumb]:shadow-md';
+
+  const isLowTop = low >= high - step;
 
   return (
     <div className={cn('relative h-6 w-full touch-none select-none', className)}>
@@ -68,13 +73,13 @@ export function PriceRangeSlider({
         aria-label='Minimum price'
         onChange={(event) => {
           const nextLow = Number(event.target.value);
-          onChange(clampPair(nextLow, Math.max(nextLow, high)));
+          const next = clampPair(nextLow, Math.max(nextLow, high));
+          onChange(next);
         }}
-        onPointerUp={commit}
-        onMouseUp={commit}
-        onTouchEnd={commit}
-        onBlur={commit}
-        className={thumbClassName}
+        onPointerUp={() => commitPair(value)}
+        onMouseUp={() => commitPair(value)}
+        onTouchEnd={() => commitPair(value)}
+        className={cn(thumbClassName, isLowTop && 'z-30 [&::-webkit-slider-thumb]:z-40')}
       />
       <input
         type='range'
@@ -85,13 +90,13 @@ export function PriceRangeSlider({
         aria-label='Maximum price'
         onChange={(event) => {
           const nextHigh = Number(event.target.value);
-          onChange(clampPair(Math.min(low, nextHigh), nextHigh));
+          const next = clampPair(Math.min(low, nextHigh), nextHigh);
+          onChange(next);
         }}
-        onPointerUp={commit}
-        onMouseUp={commit}
-        onTouchEnd={commit}
-        onBlur={commit}
-        className={cn(thumbClassName, 'z-30 [&::-webkit-slider-thumb]:z-40')}
+        onPointerUp={() => commitPair(value)}
+        onMouseUp={() => commitPair(value)}
+        onTouchEnd={() => commitPair(value)}
+        className={cn(thumbClassName, !isLowTop && 'z-30 [&::-webkit-slider-thumb]:z-40')}
       />
     </div>
   );

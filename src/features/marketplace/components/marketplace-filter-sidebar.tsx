@@ -1,29 +1,18 @@
 'use client';
 
-import { useEffect, useId, useState, type ChangeEvent, type KeyboardEvent } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { PriceRangeSlider } from '@/components/ui/price-range-slider';
 import { Icons } from '@/components/icons';
-import {
-  countActiveMarketplaceFilters,
-  formatMarketplacePriceRs,
-  MARKETPLACE_PRICE_RS_MAX
-} from '@/lib/marketplace-filters';
+import { FilterOptionRow, FilterSection } from './filter-section';
+import { PriceFilterSection } from './price-filter-section';
+import { countActiveMarketplaceFilters } from '@/lib/marketplace-filters';
 import { cn } from '@/lib/utils';
 import type {
-  MarketplaceFilterOptionRowProps,
-  MarketplaceFilterSectionProps,
+  MarketplaceFilterSectionKey,
   MarketplaceFiltersBarProps,
   MarketplaceListingFilters
 } from '@/types/marketplace';
-
-export const MARKETPLACE_PRICE_BOUNDS = {
-  min: 0,
-  max: Math.min(300_000, MARKETPLACE_PRICE_RS_MAX),
-  step: 1_000
-} as const;
 
 const PTA_OPTIONS = [
   'PTA_APPROVED',
@@ -33,75 +22,32 @@ const PTA_OPTIONS = [
   'MDM_BYPASS'
 ] as const;
 
-function FilterSection({
-  title,
-  defaultOpen = true,
-  children
-}: MarketplaceFilterSectionProps) {
-  const [open, setOpen] = useState(defaultOpen);
-  const panelId = useId();
+const SECTION_KEYS: MarketplaceFilterSectionKey[] = [
+  'condition',
+  'price',
+  'availability',
+  'pta',
+  'authenticity'
+];
 
-  const handleToggle = () => {
-    setOpen((value) => !value);
-  };
+const ALL_SECTIONS_OPEN: Record<MarketplaceFilterSectionKey, boolean> = {
+  condition: true,
+  price: true,
+  availability: true,
+  pta: true,
+  authenticity: true
+};
 
-  return (
-    <div className='border-b border-border/70 last:border-b-0'>
-      <button
-        type='button'
-        aria-expanded={open}
-        aria-controls={panelId}
-        onClick={handleToggle}
-        className='flex min-h-[48px] w-full items-center justify-between gap-2 px-1 py-3 text-start rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary'
-      >
-        <span className='text-sm font-semibold tracking-tight text-foreground'>{title}</span>
-        <Icons.chevronDown
-          className={cn(
-            'h-4 w-4 shrink-0 text-muted-foreground transition-transform',
-            open && 'rotate-180'
-          )}
-        />
-      </button>
-      {open ? (
-        <div id={panelId} className='space-y-1.5 pb-3'>
-          {children}
-        </div>
-      ) : null}
-    </div>
-  );
-}
+const ALL_SECTIONS_CLOSED: Record<MarketplaceFilterSectionKey, boolean> = {
+  condition: false,
+  price: false,
+  availability: false,
+  pta: false,
+  authenticity: false
+};
 
-function OptionRow({
-  active,
-  label,
-  onClick,
-  shape = 'radio'
-}: MarketplaceFilterOptionRowProps) {
-  return (
-    <button
-      type='button'
-      onClick={onClick}
-      className={cn(
-        'flex min-h-[48px] w-full items-center gap-3 rounded-xl px-3 py-2.5 text-start text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
-        active
-          ? 'bg-primary/10 font-semibold text-foreground'
-          : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground'
-      )}
-    >
-      <span
-        className={cn(
-          'flex h-5 w-5 shrink-0 items-center justify-center border',
-          shape === 'radio' ? 'rounded-full' : 'rounded-md',
-          active
-            ? 'border-primary bg-primary text-primary-foreground'
-            : 'border-border/80 bg-background'
-        )}
-      >
-        {active ? <Icons.check className='h-3 w-3' /> : null}
-      </span>
-      <span className='truncate'>{label}</span>
-    </button>
-  );
+function hasAnyActiveFilters(filters: MarketplaceListingFilters): boolean {
+  return countActiveMarketplaceFilters(filters) > 0;
 }
 
 export function MarketplaceFilterSidebar({
@@ -112,20 +58,15 @@ export function MarketplaceFilterSidebar({
 }: MarketplaceFiltersBarProps) {
   const t = useTranslations();
   const activeCount = countActiveMarketplaceFilters(filters);
-  const [draftMin, setDraftMin] = useState(String(filters.minPriceRs ?? MARKETPLACE_PRICE_BOUNDS.min));
-  const [draftMax, setDraftMax] = useState(String(filters.maxPriceRs ?? MARKETPLACE_PRICE_BOUNDS.max));
-  const [sliderValue, setSliderValue] = useState<[number, number]>([
-    filters.minPriceRs ?? MARKETPLACE_PRICE_BOUNDS.min,
-    filters.maxPriceRs ?? MARKETPLACE_PRICE_BOUNDS.max
-  ]);
+  const [openSections, setOpenSections] = useState<
+    Record<MarketplaceFilterSectionKey, boolean>
+  >(ALL_SECTIONS_OPEN);
 
   useEffect(() => {
-    const min = filters.minPriceRs ?? MARKETPLACE_PRICE_BOUNDS.min;
-    const max = filters.maxPriceRs ?? MARKETPLACE_PRICE_BOUNDS.max;
-    setDraftMin(String(min));
-    setDraftMax(String(max));
-    setSliderValue([min, max]);
-  }, [filters.minPriceRs, filters.maxPriceRs]);
+    if (!hasAnyActiveFilters(filters)) {
+      setOpenSections(ALL_SECTIONS_OPEN);
+    }
+  }, [filters]);
 
   const patch = (partial: Partial<MarketplaceListingFilters>) => {
     const next: MarketplaceListingFilters = { ...filters, ...partial };
@@ -137,66 +78,24 @@ export function MarketplaceFilterSidebar({
     onChange(next);
   };
 
-  const commitPriceDraft = (minRs: number, maxRs: number) => {
-    const low = Math.max(MARKETPLACE_PRICE_BOUNDS.min, Math.min(minRs, maxRs));
-    const high = Math.min(MARKETPLACE_PRICE_BOUNDS.max, Math.max(minRs, maxRs));
-    const nextMin = low <= MARKETPLACE_PRICE_BOUNDS.min ? undefined : low;
-    const nextMax = high >= MARKETPLACE_PRICE_BOUNDS.max ? undefined : high;
-    patch({ minPriceRs: nextMin, maxPriceRs: nextMax });
+  const toggleSection = (key: MarketplaceFilterSectionKey) => {
+    setOpenSections((current) => {
+      const openCount = SECTION_KEYS.filter((section) => current[section]).length;
+      if (openCount > 1) {
+        return { ...ALL_SECTIONS_CLOSED, [key]: true };
+      }
+      if (current[key]) {
+        return ALL_SECTIONS_OPEN;
+      }
+      return { ...ALL_SECTIONS_CLOSED, [key]: true };
+    });
   };
 
-  const restorePriceDraftFromFilters = () => {
-    const min = filters.minPriceRs ?? MARKETPLACE_PRICE_BOUNDS.min;
-    const max = filters.maxPriceRs ?? MARKETPLACE_PRICE_BOUNDS.max;
-    setDraftMin(String(min));
-    setDraftMax(String(max));
-    setSliderValue([min, max]);
-  };
-
-  const commitPriceFromInputs = () => {
-    const minRaw = draftMin.trim();
-    const maxRaw = draftMax.trim();
-    if (!minRaw || !maxRaw || !/^\d+$/.test(minRaw) || !/^\d+$/.test(maxRaw)) {
-      restorePriceDraftFromFilters();
-      return;
-    }
-    const flooredMin = Number(minRaw);
-    const flooredMax = Number(maxRaw);
-    if (!Number.isFinite(flooredMin) || !Number.isFinite(flooredMax)) {
-      restorePriceDraftFromFilters();
-      return;
-    }
-    setSliderValue([
-      Math.max(MARKETPLACE_PRICE_BOUNDS.min, Math.min(flooredMin, flooredMax)),
-      Math.min(MARKETPLACE_PRICE_BOUNDS.max, Math.max(flooredMin, flooredMax))
-    ]);
-    commitPriceDraft(flooredMin, flooredMax);
-  };
-
-  const handleSliderChange = (next: [number, number]) => {
-    setSliderValue(next);
-    setDraftMin(String(next[0]));
-    setDraftMax(String(next[1]));
-  };
-
-  const handleSliderCommit = (next: [number, number]) => {
-    setSliderValue(next);
-    setDraftMin(String(next[0]));
-    setDraftMax(String(next[1]));
-    commitPriceDraft(next[0], next[1]);
-  };
-
-  const handleDraftMinChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setDraftMin(event.target.value);
-  };
-
-  const handleDraftMaxChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setDraftMax(event.target.value);
-  };
-
-  const handlePriceKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') commitPriceFromInputs();
-  };
+  const handleToggleCondition = () => toggleSection('condition');
+  const handleTogglePrice = () => toggleSection('price');
+  const handleToggleAvailability = () => toggleSection('availability');
+  const handleTogglePta = () => toggleSection('pta');
+  const handleToggleAuthenticity = () => toggleSection('authenticity');
 
   const ptaLabel = (status: (typeof PTA_OPTIONS)[number]) => {
     switch (status) {
@@ -252,20 +151,24 @@ export function MarketplaceFilterSidebar({
       ) : null}
 
       <div>
-        <FilterSection title={t('catalog.condition')}>
-          <OptionRow
+        <FilterSection
+          title={t('catalog.condition')}
+          open={openSections.condition}
+          onToggle={handleToggleCondition}
+        >
+          <FilterOptionRow
             active={!filters.condition}
             label={t('marketplace.filterConditionAll')}
             onClick={() => patch({ condition: undefined })}
           />
-          <OptionRow
+          <FilterOptionRow
             active={filters.condition === 'NEW'}
             label={t('catalog.conditionNew')}
             onClick={() =>
               patch({ condition: filters.condition === 'NEW' ? undefined : 'NEW' })
             }
           />
-          <OptionRow
+          <FilterOptionRow
             active={filters.condition === 'USED'}
             label={t('catalog.conditionUsed')}
             onClick={() =>
@@ -274,82 +177,32 @@ export function MarketplaceFilterSidebar({
           />
         </FilterSection>
 
-        <FilterSection title={t('marketplace.priceRange')}>
-          <div className='space-y-3 px-1'>
-            <div className='flex items-center justify-between gap-2 text-sm font-semibold text-foreground'>
-              <span>{formatMarketplacePriceRs(sliderValue[0])}</span>
-              <span className='text-xs font-normal text-muted-foreground'>—</span>
-              <span>{formatMarketplacePriceRs(sliderValue[1])}</span>
-            </div>
-            <PriceRangeSlider
-              min={MARKETPLACE_PRICE_BOUNDS.min}
-              max={MARKETPLACE_PRICE_BOUNDS.max}
-              step={MARKETPLACE_PRICE_BOUNDS.step}
-              value={sliderValue}
-              onChange={handleSliderChange}
-              onValueCommit={handleSliderCommit}
-            />
-            <div className='grid grid-cols-2 gap-2'>
-              <div className='space-y-1'>
-                <label className='text-[11px] font-medium text-muted-foreground'>
-                  {t('marketplace.priceMin')}
-                </label>
-                <div className='relative'>
-                  <span className='pointer-events-none absolute inset-y-0 inset-s-2.5 flex items-center text-xs text-muted-foreground'>
-                    {t('marketplace.priceCurrencyPrefix')}
-                  </span>
-                  <Input
-                    type='number'
-                    inputMode='numeric'
-                    min={MARKETPLACE_PRICE_BOUNDS.min}
-                    max={MARKETPLACE_PRICE_BOUNDS.max}
-                    value={draftMin}
-                    onChange={handleDraftMinChange}
-                    onBlur={commitPriceFromInputs}
-                    onKeyDown={handlePriceKeyDown}
-                    className='h-11 ps-8 text-base rounded-xl'
-                  />
-                </div>
-              </div>
-              <div className='space-y-1'>
-                <label className='text-[11px] font-medium text-muted-foreground'>
-                  {t('marketplace.priceMax')}
-                </label>
-                <div className='relative'>
-                  <span className='pointer-events-none absolute inset-y-0 inset-s-2.5 flex items-center text-xs text-muted-foreground'>
-                    {t('marketplace.priceCurrencyPrefix')}
-                  </span>
-                  <Input
-                    type='number'
-                    inputMode='numeric'
-                    min={MARKETPLACE_PRICE_BOUNDS.min}
-                    max={MARKETPLACE_PRICE_BOUNDS.max}
-                    value={draftMax}
-                    onChange={handleDraftMaxChange}
-                    onBlur={commitPriceFromInputs}
-                    onKeyDown={handlePriceKeyDown}
-                    className='h-11 ps-8 text-base rounded-xl'
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </FilterSection>
+        <PriceFilterSection
+          minPriceRs={filters.minPriceRs}
+          maxPriceRs={filters.maxPriceRs}
+          onChange={patch}
+          open={openSections.price}
+          onToggle={handleTogglePrice}
+        />
 
-        <FilterSection title={t('marketplace.availability')}>
-          <OptionRow
+        <FilterSection
+          title={t('marketplace.availability')}
+          open={openSections.availability}
+          onToggle={handleToggleAvailability}
+        >
+          <FilterOptionRow
             active={filters.inStock === undefined}
             label={t('marketplace.filterStockAll')}
             onClick={() => patch({ inStock: undefined })}
           />
-          <OptionRow
+          <FilterOptionRow
             active={filters.inStock === true}
             label={t('catalog.inStock')}
             onClick={() =>
               patch({ inStock: filters.inStock === true ? undefined : true })
             }
           />
-          <OptionRow
+          <FilterOptionRow
             active={filters.inStock === false}
             label={t('catalog.outOfStock')}
             onClick={() =>
@@ -358,14 +211,18 @@ export function MarketplaceFilterSidebar({
           />
         </FilterSection>
 
-        <FilterSection title={t('catalog.ptaStatusLabel')} defaultOpen={false}>
-          <OptionRow
+        <FilterSection
+          title={t('catalog.ptaStatusLabel')}
+          open={openSections.pta}
+          onToggle={handleTogglePta}
+        >
+          <FilterOptionRow
             active={!filters.ptaStatus}
             label={t('marketplace.filterPtaAll')}
             onClick={() => patch({ ptaStatus: undefined })}
           />
           {PTA_OPTIONS.map((status) => (
-            <OptionRow
+            <FilterOptionRow
               key={status}
               active={filters.ptaStatus === status}
               label={ptaLabel(status)}
@@ -378,13 +235,17 @@ export function MarketplaceFilterSidebar({
           ))}
         </FilterSection>
 
-        <FilterSection title={t('marketplace.authenticityHeading')} defaultOpen={false}>
-          <OptionRow
+        <FilterSection
+          title={t('marketplace.authenticityHeading')}
+          open={openSections.authenticity}
+          onToggle={handleToggleAuthenticity}
+        >
+          <FilterOptionRow
             active={!filters.authenticity}
             label={t('marketplace.filterAuthAll')}
             onClick={() => patch({ authenticity: undefined })}
           />
-          <OptionRow
+          <FilterOptionRow
             active={filters.authenticity === 'ORIGINAL'}
             label={t('catalog.authenticityOriginal')}
             onClick={() =>
@@ -394,7 +255,7 @@ export function MarketplaceFilterSidebar({
               })
             }
           />
-          <OptionRow
+          <FilterOptionRow
             active={filters.authenticity === 'COPY'}
             label={t('catalog.authenticityCopy')}
             onClick={() =>

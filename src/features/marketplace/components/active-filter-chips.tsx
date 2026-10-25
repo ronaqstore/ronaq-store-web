@@ -100,9 +100,13 @@ export function ActiveFilterChips({
     });
   }
 
-  if (filters.minPriceRs != null || filters.maxPriceRs != null) {
-    const minStr = filters.minPriceRs != null ? formatMarketplacePriceRs(filters.minPriceRs) : 'Rs 0';
-    const maxStr = filters.maxPriceRs != null ? formatMarketplacePriceRs(filters.maxPriceRs) : '...';
+  const minPriceRs = filters.minPriceRs;
+  const maxPriceRs = filters.maxPriceRs;
+  const hasMinPrice = typeof minPriceRs === 'number' && minPriceRs > 0;
+  const hasMaxPrice = typeof maxPriceRs === 'number' && maxPriceRs > 0;
+  if (hasMinPrice || hasMaxPrice) {
+    const minStr = hasMinPrice ? formatMarketplacePriceRs(minPriceRs) : 'Rs 0';
+    const maxStr = hasMaxPrice ? formatMarketplacePriceRs(maxPriceRs) : '...';
     items.push({
       id: 'price',
       label: `${minStr} - ${maxStr}`,

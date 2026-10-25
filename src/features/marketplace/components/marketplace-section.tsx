@@ -16,9 +16,13 @@ export async function MarketplaceSection({
     city: cityId,
     condition: filters.condition,
     minPrice:
-      filters.minPriceRs != null ? toPaisaFromRs(filters.minPriceRs) : undefined,
+      filters.minPriceRs != null && filters.minPriceRs > 0
+        ? toPaisaFromRs(filters.minPriceRs)
+        : undefined,
     maxPrice:
-      filters.maxPriceRs != null ? toPaisaFromRs(filters.maxPriceRs) : undefined,
+      filters.maxPriceRs != null && filters.maxPriceRs > 0
+        ? toPaisaFromRs(filters.maxPriceRs)
+        : undefined,
     inStock: filters.inStock,
     ptaStatus: filters.ptaStatus,
     authenticity: filters.authenticity,

@@ -73,6 +73,19 @@ describe('marketplace filters', () => {
     assert.equal(parsePositiveInt('999999999'), 5_000_000);
   });
 
+  it('treats zero minPrice and maxPrice as unconstrained all products', () => {
+    const filters = parseMarketplaceListingFilters({
+      minPrice: '0',
+      maxPrice: '0'
+    });
+    assert.equal(filters.minPriceRs, undefined);
+    assert.equal(filters.maxPriceRs, undefined);
+    assert.equal(countActiveMarketplaceFilters(filters), 0);
+    const query = marketplaceFiltersToQuery(filters);
+    assert.equal(query.minPrice, undefined);
+    assert.equal(query.maxPrice, undefined);
+  });
+
   it('rejects hex / scientific / decimal price junk', () => {
     assert.equal(parsePositiveInt('0x10'), undefined);
     assert.equal(parsePositiveInt('1e5'), undefined);

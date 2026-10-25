@@ -60,6 +60,9 @@ export function FilterSheet({
   };
 
   const handleApply = () => {
+    if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
     onApplyFilters(draftFilters);
     onOpenChange(false);
   };
@@ -105,32 +108,24 @@ export function FilterSheet({
             ) : null}
           </div>
 
-          <div className='flex items-center gap-2'>
-            {draftFilterCount > 0 ? (
-              <Button
-                type='button'
-                variant='ghost'
-                size='sm'
-                className='h-8 px-2 text-xs font-semibold text-muted-foreground hover:text-foreground'
-                onClick={handleClear}
-              >
-                {t('clearFilters')}
-              </Button>
-            ) : null}
-            <Button
-              type='button'
-              variant='ghost'
-              size='sm'
-              className='h-9 w-9 rounded-full p-0 text-muted-foreground hover:text-foreground'
-              aria-label={tCommon('close')}
-              onClick={handleClose}
-            >
-              <Icons.close className='h-4 w-4' />
-            </Button>
-          </div>
+          <Button
+            type='button'
+            variant='ghost'
+            size='sm'
+            className='h-9 w-9 rounded-full p-0 text-muted-foreground hover:text-foreground'
+            aria-label={tCommon('close')}
+            onClick={handleClose}
+          >
+            <Icons.close className='h-4 w-4' />
+          </Button>
         </div>
 
-        <div className='min-h-0 flex-1 overflow-y-auto px-4 py-3 sm:px-5 overscroll-contain'>
+        <div
+          className={cn(
+            'min-h-0 flex-1 overflow-y-auto px-4 py-3 sm:px-5 overscroll-contain',
+            '[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden'
+          )}
+        >
           <MarketplaceFilterSidebar
             filters={draftFilters}
             onChange={setDraftFilters}

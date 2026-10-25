@@ -107,6 +107,8 @@ export function parseMarketplaceListingFilters(
     conditionRaw === 'NEW' || conditionRaw === 'USED' ? conditionRaw : undefined;
   let minPriceRs = parsePositiveInt(input.minPrice);
   let maxPriceRs = parsePositiveInt(input.maxPrice);
+  if (minPriceRs === 0) minPriceRs = undefined;
+  if (maxPriceRs === 0) maxPriceRs = undefined;
   if (minPriceRs != null && maxPriceRs != null && maxPriceRs < minPriceRs) {
     const swap = minPriceRs;
     minPriceRs = maxPriceRs;
@@ -150,8 +152,12 @@ export function marketplaceFiltersToQuery(
 ): Record<string, string> {
   const query: Record<string, string> = {};
   if (filters.condition) query.condition = filters.condition;
-  if (filters.minPriceRs != null) query.minPrice = String(filters.minPriceRs);
-  if (filters.maxPriceRs != null) query.maxPrice = String(filters.maxPriceRs);
+  if (filters.minPriceRs != null && filters.minPriceRs > 0) {
+    query.minPrice = String(filters.minPriceRs);
+  }
+  if (filters.maxPriceRs != null && filters.maxPriceRs > 0) {
+    query.maxPrice = String(filters.maxPriceRs);
+  }
   if (filters.inStock === true) query.inStock = '1';
   if (filters.inStock === false) query.inStock = '0';
   if (filters.ptaStatus) query.pta = filters.ptaStatus;
@@ -184,7 +190,12 @@ export function listingQueryRecordsEqual(
 export function countActiveMarketplaceFilters(filters: MarketplaceListingFilters): number {
   let count = 0;
   if (filters.condition) count += 1;
-  if (filters.minPriceRs != null || filters.maxPriceRs != null) count += 1;
+  if (
+    (filters.minPriceRs != null && filters.minPriceRs > 0) ||
+    (filters.maxPriceRs != null && filters.maxPriceRs > 0)
+  ) {
+    count += 1;
+  }
   if (filters.inStock !== undefined) count += 1;
   if (filters.ptaStatus) count += 1;
   if (filters.authenticity) count += 1;

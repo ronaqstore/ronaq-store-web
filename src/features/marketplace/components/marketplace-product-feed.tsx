@@ -37,10 +37,10 @@ async function fetchMarketplacePage(
   const city = marketplaceCityQueryParam(cityId);
   if (city) params.set('city', city);
   if (filters.condition) params.set('condition', filters.condition);
-  if (filters.minPriceRs != null) {
+  if (filters.minPriceRs != null && filters.minPriceRs > 0) {
     params.set('minPrice', String(toPaisaFromRs(filters.minPriceRs)));
   }
-  if (filters.maxPriceRs != null) {
+  if (filters.maxPriceRs != null && filters.maxPriceRs > 0) {
     params.set('maxPrice', String(toPaisaFromRs(filters.maxPriceRs)));
   }
   if (filters.inStock === true) params.set('inStock', 'true');

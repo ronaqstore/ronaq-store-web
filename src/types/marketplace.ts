@@ -220,10 +220,27 @@ export interface MarketplaceModelsSearchQuery {
   signal?: AbortSignal;
 }
 
+export type MarketplaceFilterSectionKey =
+  | 'condition'
+  | 'price'
+  | 'availability'
+  | 'pta'
+  | 'authenticity';
+
 export interface MarketplaceFilterSectionProps {
   title: string;
+  open?: boolean;
+  onToggle?: () => void;
   defaultOpen?: boolean;
   children: ReactNode;
+}
+
+export interface MarketplacePriceFilterSectionProps {
+  minPriceRs?: number;
+  maxPriceRs?: number;
+  onChange: (patch: { minPriceRs?: number; maxPriceRs?: number }) => void;
+  open: boolean;
+  onToggle: () => void;
 }
 
 export interface MarketplaceFilterOptionRowProps {
