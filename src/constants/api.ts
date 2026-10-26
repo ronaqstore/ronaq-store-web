@@ -18,6 +18,38 @@ export const WHATSAPP_BASE_URL = 'https://wa.me';
 export const GOOGLE_MAPS_EMBED_BASE = 'https://maps.google.com/maps';
 export const GOOGLE_MAPS_SEARCH_BASE = 'https://www.google.com/maps/search/';
 
+export function normalizePakistaniMobile(rawPhone?: string | null): string | null {
+  if (!rawPhone || typeof rawPhone !== 'string') return null;
+  let digits = rawPhone.replace(/\D/g, '');
+  if (!digits) return null;
+
+  if (digits.startsWith('0092')) digits = digits.slice(2);
+  if (digits.startsWith('92') && digits.length >= 12) {
+    return digits.slice(0, 12);
+  }
+  if (digits.startsWith('0') && digits.length === 11) {
+    return `92${digits.slice(1)}`;
+  }
+  if (digits.length === 10 && digits.startsWith('3')) {
+    return `92${digits}`;
+  }
+  if (digits.startsWith('92')) return digits;
+  return digits;
+}
+
+export function buildWhatsAppUrl(phone?: string | null, message = ''): string {
+  const normalized = normalizePakistaniMobile(phone);
+  if (!normalized) return '#';
+  const text = message ? `?text=${encodeURIComponent(message)}` : '';
+  return `${WHATSAPP_BASE_URL}/${normalized}${text}`;
+}
+
+export function buildTelUrl(phone?: string | null): string {
+  const normalized = normalizePakistaniMobile(phone);
+  if (!normalized) return '#';
+  return `tel:+${normalized}`;
+}
+
 export function googleMapsEmbedUrl(lat: number, lng: number): string {
   const q = encodeURIComponent(`${lat},${lng}`);
   return `${GOOGLE_MAPS_EMBED_BASE}?q=${q}&hl=en&z=16&output=embed`;

@@ -13,7 +13,8 @@ import {
   formatPhone,
   resolveStoreWhatsAppNumber
 } from '@/lib/formatters';
-import { formatOpeningHoursDisplay } from '@/lib/opening-hours';
+import { buildTelUrl, normalizePakistaniMobile } from '@/lib/contact-links';
+import { formatHours } from '@/lib/shop-hours';
 import { hasStoreCoords } from '@/lib/geo';
 import { cn } from '@/lib/utils';
 import type { StoreCardProps } from '@/types/store';
@@ -25,6 +26,10 @@ export function StoreCard({ store, priority = false }: StoreCardProps) {
   const name = store.displayName || store.name || t('common.appName');
   const phone = resolveStoreWhatsAppNumber(store);
   const displayPhone = store.phoneNumber || store.phone || null;
+  const callHref =
+    displayPhone && normalizePakistaniMobile(displayPhone)
+      ? buildTelUrl(displayPhone)
+      : '#';
   const whatsappHref = phone
     ? buildWhatsAppLink(phone, t('whatsapp.foundShop', { storeName: name }))
     : undefined;
@@ -32,7 +37,7 @@ export function StoreCard({ store, priority = false }: StoreCardProps) {
   const productCount = store.productCount ?? store.totalProducts ?? 0;
   const blurb = store.description || store.about;
   const banner = store.heroBannerUrl || store.bannerUrl;
-  const hours = formatOpeningHoursDisplay(store.openingHours);
+  const hours = formatHours(store.openingHours);
   const shopHref = `/shop/${store.slug}`;
 
   return (
@@ -106,12 +111,16 @@ export function StoreCard({ store, priority = false }: StoreCardProps) {
           ) : null}
 
           {displayPhone ? (
-            <p className='flex items-center gap-1.5'>
+            <a
+              href={callHref}
+              className='pointer-events-auto relative z-20 flex items-center gap-1.5 hover:text-foreground'
+              aria-label={t('stores.call')}
+            >
               <Icons.phone className='h-3.5 w-3.5 shrink-0' />
               <span className='truncate' dir='ltr'>
                 {formatPhone(displayPhone)}
               </span>
-            </p>
+            </a>
           ) : null}
         </div>
 

@@ -1,5 +1,18 @@
 import type { ReactNode } from 'react';
 
+export type OpenStatusKind = 'open' | 'closed' | 'unknown';
+
+export interface OpenStatus {
+  status: OpenStatusKind;
+  closesAt: string | null;
+  opensAt: string | null;
+}
+
+export interface MinutesRange {
+  open: number;
+  close: number;
+}
+
 export interface StoreWhatsAppContact {
   whatsappNumber?: string | null;
 }

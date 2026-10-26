@@ -1,5 +1,5 @@
 import { fromPaisa } from '@/lib/money';
-import { WHATSAPP_BASE_URL } from '@/constants/api';
+import { buildWhatsAppUrl } from '@/lib/contact-links';
 import type { StoreWhatsAppContact } from '@/types/store';
 
 export const EMPTY_DISPLAY = '—';
@@ -76,15 +76,7 @@ export function formatPhone(phone?: string | null): string {
 }
 
 export function buildWhatsAppLink(rawPhone?: string | null, message = ''): string {
-  if (!rawPhone || typeof rawPhone !== 'string') return '#';
-  let clean = rawPhone.replace(/\D/g, '');
-  if (!clean) return '#';
-  if (clean.startsWith('03')) {
-    clean = `92${clean.slice(1)}`;
-  } else if (!clean.startsWith('92') && clean.length === 10) {
-    clean = `92${clean}`;
-  }
-  return `${WHATSAPP_BASE_URL}/${clean}?text=${encodeURIComponent(message)}`;
+  return buildWhatsAppUrl(rawPhone, message);
 }
 
 export function resolveStoreWhatsAppNumber(store: StoreWhatsAppContact): string {
