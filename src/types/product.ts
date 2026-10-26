@@ -107,6 +107,11 @@ export interface ProductListQuery {
   limit?: number;
 }
 
+export interface ProductListQueryDefaults {
+  page?: number;
+  limit?: number;
+}
+
 export interface PaginatedProductsResponse {
   items: StoreProductListItem[];
   total: number;
@@ -184,11 +189,14 @@ export interface ProductCardSkeletonProps {
 }
 
 export interface ProductFiltersProps {
+  storeSlug: string;
   categories: StoreCategory[];
   selectedCategoryId: string;
-  searchQuery: string;
+  committedQuery: string;
   onCategorySelect: (categoryId: string) => void;
-  onSearchChange: (search: string) => void;
+  onCommitSearch: (search: string) => void;
+  onSelectProduct: (product: StoreProductListItem) => void;
+  onClearSearch: () => void;
 }
 
 export interface FacetedFilterOption {

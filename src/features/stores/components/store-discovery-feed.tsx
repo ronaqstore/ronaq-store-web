@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { formatNumber } from '@/lib/formatters';
 import { Icons } from '@/components/icons';
 import { Spinner } from '@/components/ui/spinner';
+import { useInfiniteScroll } from '@/hooks/use-infinite-scroll';
 import { STORES_PAGE_SIZE } from '@/constants/site';
 import { publicApiRequest } from '@/lib/api/client';
 import { marketplaceCityQueryParam } from '@/lib/city-preference';
@@ -41,7 +42,6 @@ export function StoreDiscoveryFeed({
   const [hasMore, setHasMore] = useState(initialPage < totalPages);
   const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState(false);
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
   const loadingRef = useRef(false);
 
   useEffect(() => {
@@ -79,22 +79,9 @@ export function StoreDiscoveryFeed({
     loadingRef.current = false;
   }, [cityId, hasMore, page, searchQuery]);
 
-  useEffect(() => {
-    const node = sentinelRef.current;
-    if (!node || !hasMore) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) {
-          void loadMore();
-        }
-      },
-      { rootMargin: '320px 0px' }
-    );
-
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [hasMore, loadMore]);
+  const sentinelRef = useInfiniteScroll(hasMore, () => {
+    void loadMore();
+  });
 
   const handleRetryLoadMore = () => {
     loadingRef.current = false;

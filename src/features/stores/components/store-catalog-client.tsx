@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useTransition } from 'react';
+import { useCallback, useTransition } from 'react';
 import { ProductFilters } from '@/components/products/product-filters';
 import { usePathname, useRouter } from '@/i18n/navigation';
-import { useDebouncedUrlSearch } from '@/hooks/use-debounced-url-search';
+import { productPath } from '@/lib/seo/slug';
 import type { StoreCatalogShellProps, StoreCatalogFilters } from '@/types/store';
+import type { StoreProductListItem } from '@/types/product';
 
 function buildQuery(filters: StoreCatalogFilters): Record<string, string> {
   const query: Record<string, string> = {};
@@ -14,6 +15,7 @@ function buildQuery(filters: StoreCatalogFilters): Record<string, string> {
 }
 
 export function StoreCatalogShell({
+  storeSlug,
   categories,
   filters,
   children
@@ -21,52 +23,71 @@ export function StoreCatalogShell({
   const router = useRouter();
   const pathname = usePathname();
   const [, startTransition] = useTransition();
-  const {
-    searchQuery,
-    setSearchQuery,
-    debouncedQuery,
-    shouldSyncUrl,
-    markUrlSync
-  } = useDebouncedUrlSearch(filters.q, 400);
 
-  const replaceFilters = (next: StoreCatalogFilters) => {
-    const query = buildQuery(next);
-    startTransition(() => {
-      if (Object.keys(query).length > 0) {
-        router.replace({ pathname, query }, { scroll: false });
-      } else {
-        router.replace(pathname, { scroll: false });
-      }
-    });
-  };
+  const replaceFilters = useCallback(
+    (next: StoreCatalogFilters) => {
+      const query = buildQuery(next);
+      startTransition(() => {
+        if (Object.keys(query).length > 0) {
+          router.replace({ pathname, query }, { scroll: false });
+        } else {
+          router.replace(pathname, { scroll: false });
+        }
+      });
+    },
+    [pathname, router]
+  );
 
-  useEffect(() => {
-    if (!shouldSyncUrl) return;
-    markUrlSync(debouncedQuery);
+  const handleCommitSearch = useCallback(
+    (q: string) => {
+      replaceFilters({
+        q,
+        category: filters.category,
+        inStock: filters.inStock
+      });
+    },
+    [filters.category, filters.inStock, replaceFilters]
+  );
+
+  const handleClearSearch = useCallback(() => {
     replaceFilters({
-      q: debouncedQuery,
+      q: '',
       category: filters.category,
       inStock: filters.inStock
     });
-  }, [debouncedQuery, shouldSyncUrl, filters.category, filters.inStock]);
+  }, [filters.category, filters.inStock, replaceFilters]);
 
-  const handleCategorySelect = (category: string) => {
-    markUrlSync(searchQuery.trim());
-    replaceFilters({
-      q: searchQuery.trim(),
-      category,
-      inStock: filters.inStock
-    });
-  };
+  const handleCategorySelect = useCallback(
+    (category: string) => {
+      replaceFilters({
+        q: filters.q,
+        category,
+        inStock: filters.inStock
+      });
+    },
+    [filters.inStock, filters.q, replaceFilters]
+  );
+
+  const handleSelectProduct = useCallback(
+    (product: StoreProductListItem) => {
+      startTransition(() => {
+        router.push(productPath(storeSlug, product.name, product.id));
+      });
+    },
+    [router, storeSlug]
+  );
 
   return (
     <div className='mx-auto max-w-[1600px] space-y-5 px-4 pb-10 pt-4 sm:space-y-6 sm:px-6 sm:pb-12 sm:pt-5 lg:px-8'>
       <ProductFilters
+        storeSlug={storeSlug}
         categories={categories}
         selectedCategoryId={filters.category}
-        searchQuery={searchQuery}
+        committedQuery={filters.q}
         onCategorySelect={handleCategorySelect}
-        onSearchChange={setSearchQuery}
+        onCommitSearch={handleCommitSearch}
+        onSelectProduct={handleSelectProduct}
+        onClearSearch={handleClearSearch}
       />
 
       {children}

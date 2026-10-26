@@ -13,6 +13,7 @@ import { extractProductId } from '@/lib/seo/slug';
 import type {
   StoreCategory,
   ProductListQuery,
+  ProductListQueryDefaults,
   PaginatedProductsResponse,
   StoreProductDetail,
   StoreModelDetail,
@@ -42,21 +43,39 @@ export const getStoreCategories = cache(async (slug: string): Promise<StoreCateg
   return mapCategoriesResponse(raw);
 });
 
-export async function getStoreProducts(
-  slug: string,
-  query: ProductListQuery = {}
-): Promise<PaginatedProductsResponse | null> {
+function buildStoreProductsParams(query: ProductListQuery, defaults?: ProductListQueryDefaults) {
   const params = new URLSearchParams();
   if (query.q) params.set('q', query.q);
   if (query.category) params.set('category', query.category);
   if (typeof query.inStock === 'boolean') params.set('inStock', String(query.inStock));
-  if (query.page) params.set('page', String(query.page));
-  if (query.limit) params.set('limit', String(query.limit));
+  const page = query.page ?? defaults?.page;
+  const limit = query.limit ?? defaults?.limit;
+  if (page != null) params.set('page', String(page));
+  if (limit != null) params.set('limit', String(limit));
+  return params;
+}
 
+export async function getStoreProducts(
+  slug: string,
+  query: ProductListQuery = {}
+): Promise<PaginatedProductsResponse | null> {
+  const params = buildStoreProductsParams(query);
   const qs = params.toString() ? `?${params.toString()}` : '';
   const raw = await publicApiRequest<ApiPaginatedProducts>(
     `stores/${slug}/products${qs}`,
     storefrontCache(slug)
+  );
+  return mapProductsResponse(raw);
+}
+
+export async function searchStoreProducts(
+  slug: string,
+  query: ProductListQuery = {}
+): Promise<PaginatedProductsResponse | null> {
+  const params = buildStoreProductsParams(query, { page: 1, limit: 8 });
+  const raw = await publicApiRequest<ApiPaginatedProducts>(
+    `stores/${slug}/products?${params.toString()}`,
+    { cache: 'no-store' }
   );
   return mapProductsResponse(raw);
 }

@@ -59,7 +59,7 @@ export default async function ShopsPage({ params, searchParams }: HomePageProps)
         selectedCityName={selectedCityName}
         hasCityPreference={hasPreference}
       >
-        <Suspense key={`${cityId}:${q || 'all'}`} fallback={<StoreDiscoverySkeleton />}>
+        <Suspense key={cityId} fallback={<StoreDiscoverySkeleton />}>
           <StoreDiscoverySection searchQuery={q} cityId={cityId} />
         </Suspense>
       </StoreDiscoveryShell>
