@@ -295,8 +295,6 @@ export interface MarketplaceProductCardProps {
 export interface QuickFilterChipsProps {
   filters: MarketplaceListingFilters;
   onChange: (next: MarketplaceListingFilters) => void;
-  onOpenFilters: () => void;
-  activeFilterCount: number;
   className?: string;
 }
 

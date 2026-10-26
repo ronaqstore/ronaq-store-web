@@ -3,10 +3,9 @@
 import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import { useTopLoader } from 'nextjs-toploader';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Icons } from '@/components/icons';
-import { Link, usePathname, useRouter } from '@/i18n/navigation';
+import { usePathname, useRouter } from '@/i18n/navigation';
 import { CITY_PREFERENCE_ALL } from '@/constants/city-preference';
 import {
   commitMarketplaceSearchQuery,
@@ -341,37 +340,17 @@ export function MarketplaceShell({
             </div>
           </div>
 
-          <QuickFilterChips
-            filters={filters}
-            onChange={handleQuickFilterChange}
-            onOpenFilters={handleOpenFilters}
-            activeFilterCount={activeFilterCount}
-          />
+          <QuickFilterChips filters={filters} onChange={handleQuickFilterChange} />
         </div>
       </div>
 
       <section className='mx-auto w-full max-w-7xl 2xl:max-w-[1440px] px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10'>
-        <div className='mb-4 sm:mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between border-b border-border/40 pb-4'>
+        <div className='mb-4 sm:mb-6 border-b border-border/40 pb-4'>
           <div className='min-w-0'>
             <h2 className='text-lg font-bold tracking-tight text-foreground sm:text-xl md:text-2xl 2xl:text-3xl'>
               {heading}
             </h2>
             <p className='mt-0.5 text-xs sm:text-sm text-muted-foreground'>{subtitle}</p>
-          </div>
-          <div className='inline-flex items-center shrink-0' aria-busy={isPending}>
-            {isPending ? (
-              <Skeleton className='h-10 w-28 rounded-xl' />
-            ) : (
-              <Link
-                href='/shops'
-                className={cn(
-                  buttonVariants({ variant: 'outline' }),
-                  'min-h-[44px] rounded-xl px-4 text-sm font-semibold border-border/80 shadow-xs'
-                )}
-              >
-                {t('nav.stores')}
-              </Link>
-            )}
           </div>
         </div>
 
