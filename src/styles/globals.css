@@ -54,6 +54,7 @@
   --input: oklch(0.9 0.01 240);
   --ring: oklch(0.55 0.18 152);
   --radius: 0.75rem;
+  --app-bar-h: 3.5rem;
 }
 
 .dark {

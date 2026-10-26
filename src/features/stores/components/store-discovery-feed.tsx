@@ -1,7 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import { formatNumber } from '@/lib/formatters';
 import { Icons } from '@/components/icons';
 import { Spinner } from '@/components/ui/spinner';
 import { STORES_PAGE_SIZE } from '@/constants/site';
@@ -34,6 +35,7 @@ export function StoreDiscoveryFeed({
   cityId
 }: StoreDiscoveryFeedProps) {
   const t = useTranslations();
+  const locale = useLocale();
   const [stores, setStores] = useState<StoreListItem[]>(initialStores);
   const [page, setPage] = useState(initialPage);
   const [hasMore, setHasMore] = useState(initialPage < totalPages);
@@ -105,16 +107,20 @@ export function StoreDiscoveryFeed({
         <div className='flex h-12 w-12 items-center justify-center rounded-2xl bg-muted text-muted-foreground'>
           <Icons.store className='h-6 w-6' />
         </div>
-        <h3 className='text-base font-semibold text-foreground'>{t('stores.noShopsFound')}</h3>
-        <p className='text-xs text-muted-foreground'>{t('stores.shopsFound', { count: 0 })}</p>
+        <h3 className='text-base font-semibold text-foreground'>{t('stores.noShopsInCity')}</h3>
+        <p className='text-xs text-muted-foreground'>
+          {t('stores.shopsFound', { count: formatNumber(0, locale) })}
+        </p>
       </div>
     );
   }
 
   return (
     <div className='space-y-3'>
-      <p className='text-xs text-muted-foreground'>{t('stores.shopsFound', { count: total })}</p>
-      <div className='grid grid-cols-1 gap-4 min-[480px]:grid-cols-2 sm:gap-5 md:grid-cols-3 xl:grid-cols-4'>
+      <p className='text-xs text-muted-foreground md:text-sm'>
+        {t('stores.shopsFound', { count: formatNumber(total, locale) })}
+      </p>
+      <div className='grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-6 2xl:grid-cols-4'>
         {stores.map((store, index) => (
           <StoreCard
             key={store.slug || store.id || `store-${index}`}

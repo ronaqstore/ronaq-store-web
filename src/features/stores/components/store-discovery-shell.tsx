@@ -3,7 +3,6 @@
 import { useEffect, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Icons } from '@/components/icons';
 import { CityPreferenceGate } from '@/components/city/city-preference-gate';
 import { usePathname, useRouter } from '@/i18n/navigation';
@@ -43,6 +42,12 @@ export function StoreDiscoveryShell({
   }, [hasCityPreference]);
 
   useEffect(() => {
+    const onOpenCity = () => setCityGateOpen(true);
+    window.addEventListener('open-city-picker', onOpenCity);
+    return () => window.removeEventListener('open-city-picker', onOpenCity);
+  }, []);
+
+  useEffect(() => {
     if (!shouldSyncUrl) return;
     markUrlSync(debouncedQuery);
     startTransition(() => {
@@ -69,44 +74,39 @@ export function StoreDiscoveryShell({
 
       <StoreHero />
 
-      <div className='sticky top-14 z-30 border-b border-border/60 bg-background/90 backdrop-blur-xl min-[390px]:top-16'>
-        <div className='mx-auto flex max-w-[1600px] flex-col gap-2.5 px-4 py-3 sm:flex-row sm:items-center sm:gap-3 sm:px-6 sm:py-3.5 lg:px-8'>
+      <div className='sticky top-[var(--app-bar-h)] z-30 border-b border-border/60 bg-background/95 backdrop-blur-xl'>
+        <div className='mx-auto flex w-full max-w-7xl 2xl:max-w-[1440px] flex-col gap-2.5 px-4 py-3 sm:flex-row sm:items-center sm:gap-3 sm:px-6 lg:px-8'>
           <div className='min-w-0 flex-1'>
             <StoreSearchBar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
           </div>
           <Button
             type='button'
             variant='outline'
-            className='min-h-10 w-full justify-start sm:max-w-52 sm:w-auto'
+            className='h-12 min-h-12 w-full justify-start rounded-xl border-border/80 px-3.5 sm:max-w-52 sm:w-auto'
             onClick={handleChangeCity}
           >
-            <Icons.mapPin className='me-2 h-4 w-4 shrink-0' />
-            <span className='truncate'>{selectedHubName}</span>
+            <Icons.mapPin className='me-2 h-4 w-4 shrink-0 text-primary' />
+            <span className='truncate text-sm font-semibold'>{selectedHubName}</span>
           </Button>
         </div>
+        {isPending ? (
+          <div className='h-0.5 w-full overflow-hidden bg-muted'>
+            <div className='h-full w-1/3 animate-pulse bg-primary' />
+          </div>
+        ) : null}
       </div>
 
       <section
         id='shops'
-        className='mx-auto max-w-[1600px] scroll-mt-36 px-4 py-10 sm:px-6 sm:py-14 lg:px-8'
+        className='mx-auto w-full max-w-7xl 2xl:max-w-[1440px] scroll-mt-36 px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-14'
       >
-        <div className='mb-6 flex flex-col gap-2 sm:mb-8 sm:flex-row sm:items-end sm:justify-between'>
-          <div>
-            <h2 className='text-xl font-bold tracking-tight text-foreground sm:text-2xl md:text-3xl'>
-              {t('stores.allShops')}
-            </h2>
-            <p className='mt-1 max-w-xl text-sm text-muted-foreground'>
-              {t('stores.sectionSubtitle')}
-            </p>
-          </div>
-          <div className='inline-flex min-h-5 items-center gap-2' aria-busy={isPending}>
-            {isPending ? (
-              <>
-                <Skeleton className='h-3 w-16' />
-                <Skeleton className='h-3 w-10' />
-              </>
-            ) : null}
-          </div>
+        <div className='mb-4 border-b border-border/40 pb-4 sm:mb-6'>
+          <h2 className='text-lg font-bold tracking-tight text-foreground sm:text-xl md:text-2xl 2xl:text-3xl'>
+            {t('stores.allShops')}
+          </h2>
+          <p className='mt-0.5 max-w-xl text-xs text-muted-foreground sm:text-sm'>
+            {t('stores.sectionSubtitle')}
+          </p>
         </div>
         {children}
       </section>

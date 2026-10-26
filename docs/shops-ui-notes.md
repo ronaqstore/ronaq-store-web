@@ -124,3 +124,14 @@ Shops search uses existing backend `GET stores` query (Postgres). Not Meilisearc
 - Unify ModelCard into ProductCard “from price / N variants” mode rather than two visual systems.
 - Copy authenticity badge: muted/neutral, never danger red.
 - Timezone for open status: `Asia/Karachi`.
+
+## 9. Phase progress
+
+| Phase | Status | Notes |
+|-------|--------|--------|
+| 0 Audit | Done | This doc |
+| 1 Utils + card shell | Done | `shop-hours`, `contact-links`/`constants/api` WA+tel, authenticity on image, ModelCard shell match, gates green |
+| 2 Explore Shops | Done (core) | Hero CTA removed; card redesign; nav focus/active; formatted counts; `--app-bar-h`; Open now/Verified/sort deferred (no API) |
+| 3 Shop detail | Pending | CSP `frame-src` fix, breadcrumb, map, sticky |
+| 4 Shop products | Pending | |
+| 5 Verify | Pending | |
