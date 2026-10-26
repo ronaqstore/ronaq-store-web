@@ -104,6 +104,33 @@ export const designTokens = {
       md: 'text-lg',
       lg: 'text-lg',
       '2xl': 'text-xl'
+    },
+    shopCardName: {
+      mobile: 'text-base',
+      sm: 'text-base',
+      md: 'text-lg',
+      lg: 'text-lg',
+      '2xl': 'text-lg'
+    },
+    meta: {
+      mobile: 'text-xs',
+      sm: 'text-xs',
+      md: 'text-sm',
+      lg: 'text-sm',
+      '2xl': 'text-sm'
+    },
+    brandLabel: {
+      mobile: 'text-[11px]',
+      sm: 'text-[11px]',
+      md: 'text-xs',
+      lg: 'text-xs',
+      '2xl': 'text-xs'
     }
+  },
+  layout: {
+    pageMax: 'max-w-7xl 2xl:max-w-[1440px]',
+    pagePad: 'px-4 sm:px-6 lg:px-8',
+    appBarCssVar: '--app-bar-h',
+    touchMinPx: 48
   }
 } as const;

@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start -p 3007",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test src/lib/money/index.test.ts src/lib/api/envelope.test.ts src/lib/product-condition.test.ts",
+    "test": "node --experimental-strip-types --test src/lib/money/index.test.ts src/lib/api/envelope.test.ts src/lib/product-condition.test.ts src/lib/shop-hours.test.ts src/lib/contact-links.test.ts",
     "check": "node scripts/run-checks.mjs",
     "knip": "node scripts/run-knip.mjs",
     "check:unused": "node scripts/code/check-unused.cjs",

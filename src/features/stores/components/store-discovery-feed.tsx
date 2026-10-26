@@ -1,9 +1,11 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import { formatNumber } from '@/lib/formatters';
 import { Icons } from '@/components/icons';
 import { Spinner } from '@/components/ui/spinner';
+import { useInfiniteScroll } from '@/hooks/use-infinite-scroll';
 import { STORES_PAGE_SIZE } from '@/constants/site';
 import { publicApiRequest } from '@/lib/api/client';
 import { marketplaceCityQueryParam } from '@/lib/city-preference';
@@ -34,12 +36,12 @@ export function StoreDiscoveryFeed({
   cityId
 }: StoreDiscoveryFeedProps) {
   const t = useTranslations();
+  const locale = useLocale();
   const [stores, setStores] = useState<StoreListItem[]>(initialStores);
   const [page, setPage] = useState(initialPage);
   const [hasMore, setHasMore] = useState(initialPage < totalPages);
   const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState(false);
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
   const loadingRef = useRef(false);
 
   useEffect(() => {
@@ -77,22 +79,9 @@ export function StoreDiscoveryFeed({
     loadingRef.current = false;
   }, [cityId, hasMore, page, searchQuery]);
 
-  useEffect(() => {
-    const node = sentinelRef.current;
-    if (!node || !hasMore) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) {
-          void loadMore();
-        }
-      },
-      { rootMargin: '320px 0px' }
-    );
-
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [hasMore, loadMore]);
+  const sentinelRef = useInfiniteScroll(hasMore, () => {
+    void loadMore();
+  });
 
   const handleRetryLoadMore = () => {
     loadingRef.current = false;
@@ -105,16 +94,20 @@ export function StoreDiscoveryFeed({
         <div className='flex h-12 w-12 items-center justify-center rounded-2xl bg-muted text-muted-foreground'>
           <Icons.store className='h-6 w-6' />
         </div>
-        <h3 className='text-base font-semibold text-foreground'>{t('stores.noShopsFound')}</h3>
-        <p className='text-xs text-muted-foreground'>{t('stores.shopsFound', { count: 0 })}</p>
+        <h3 className='text-base font-semibold text-foreground'>{t('stores.noShopsInCity')}</h3>
+        <p className='text-xs text-muted-foreground'>
+          {t('stores.shopsFound', { count: formatNumber(0, locale) })}
+        </p>
       </div>
     );
   }
 
   return (
     <div className='space-y-3'>
-      <p className='text-xs text-muted-foreground'>{t('stores.shopsFound', { count: total })}</p>
-      <div className='grid grid-cols-1 gap-4 min-[480px]:grid-cols-2 sm:gap-5 md:grid-cols-3 xl:grid-cols-4'>
+      <p className='text-xs text-muted-foreground md:text-sm'>
+        {t('stores.shopsFound', { count: formatNumber(total, locale) })}
+      </p>
+      <div className='grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-6 2xl:grid-cols-4'>
         {stores.map((store, index) => (
           <StoreCard
             key={store.slug || store.id || `store-${index}`}

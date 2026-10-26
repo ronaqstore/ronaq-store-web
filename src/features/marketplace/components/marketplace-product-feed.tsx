@@ -7,6 +7,7 @@ import { ProductGridSkeleton } from '@/components/products/product-grid-skeleton
 import { Spinner } from '@/components/ui/spinner';
 import { EmptyState } from '@/components/common/empty-state';
 import { ErrorState } from '@/components/common/error-state';
+import { useInfiniteScroll } from '@/hooks/use-infinite-scroll';
 import { PRODUCTS_PAGE_SIZE } from '@/constants/site';
 import { publicApiRequest } from '@/lib/api/client';
 import { marketplaceCityQueryParam } from '@/lib/city-preference';
@@ -85,7 +86,6 @@ export function MarketplaceProductFeed({
   const [hasMore, setHasMore] = useState(initialPage < totalPages);
   const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState(false);
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
   const loadingRef = useRef(false);
   const abortRef = useRef<AbortController | null>(null);
 
@@ -152,22 +152,13 @@ export function MarketplaceProductFeed({
     }
   }, [cityId, filters, hasMore, modelKey, page, searchQuery]);
 
-  useEffect(() => {
-    const node = sentinelRef.current;
-    if (!node || !hasMore) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) {
-          void loadMore();
-        }
-      },
-      { rootMargin: '600px 0px' }
-    );
-
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [hasMore, loadMore]);
+  const sentinelRef = useInfiniteScroll(
+    hasMore,
+    () => {
+      void loadMore();
+    },
+    '600px 0px'
+  );
 
   const handleRetryLoadMore = () => {
     loadingRef.current = false;

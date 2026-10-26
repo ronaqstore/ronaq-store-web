@@ -1,45 +1,63 @@
 'use client';
 
-import type { ChangeEvent } from 'react';
+import { useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { Icons } from '@/components/icons';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { TypeaheadSearchBar } from '@/components/search/typeahead-search-bar';
+import { searchPublicStores } from '@/features/stores/api/service';
+import { PLACEHOLDER_SHOP_LOGO } from '@/constants/placeholders';
+import { marketplaceCityQueryParam } from '@/lib/city-preference';
 import type { StoreSearchBarProps } from '@/types/store';
+import type { ShopTypeaheadItem } from '@/types/typeahead-search';
 
-export function StoreSearchBar({ searchQuery, onSearchChange }: StoreSearchBarProps) {
+export function StoreSearchBar({
+  committedQuery,
+  cityId,
+  onCommitSearch,
+  onSelectStore,
+  onClearSearch
+}: StoreSearchBarProps) {
   const t = useTranslations();
 
-  const clearSearch = () => {
-    onSearchChange('');
-  };
-
-  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    onSearchChange(e.target.value);
-  };
+  const fetchSuggestions = useCallback(
+    async (q: string) => {
+      const result = await searchPublicStores({
+        q,
+        city: marketplaceCityQueryParam(cityId),
+        page: 1,
+        limit: 8
+      });
+      const items: ShopTypeaheadItem[] = (result?.items ?? []).map((store) => {
+        const name = store.displayName || store.name || store.slug;
+        const productCount = store.productCount ?? store.totalProducts ?? 0;
+        return {
+          id: store.id || store.slug,
+          title: name,
+          subtitle: [store.city, productCount > 0 ? t('stores.productsAvailable', { count: productCount }) : null]
+            .filter(Boolean)
+            .join(' · '),
+          imageUrl: store.logoUrl || PLACEHOLDER_SHOP_LOGO,
+          imageFit: 'cover',
+          store
+        };
+      });
+      return { items, total: result?.total ?? items.length };
+    },
+    [cityId, t]
+  );
 
   return (
-    <div className='relative mx-auto flex w-full max-w-xl items-center overflow-hidden rounded-xl border border-border bg-card shadow-sm'>
-      <Icons.search className='pointer-events-none absolute inset-s-3.5 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-muted-foreground sm:inset-s-4 sm:h-5 sm:w-5' />
-      <Input
-        type='search'
-        value={searchQuery}
-        onChange={handleSearchChange}
-        placeholder={t('common.search')}
-        className='h-11 w-full rounded-none border-0 bg-transparent ps-10 pe-11 text-sm shadow-none outline-none ring-0 ring-offset-0 appearance-none focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 sm:h-12 sm:ps-12 sm:text-base [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden'
-      />
-      {searchQuery ? (
-        <Button
-          type='button'
-          variant='ghost'
-          size='sm'
-          onClick={clearSearch}
-          className='absolute inset-e-2 top-1/2 z-10 h-8 w-8 -translate-y-1/2 rounded-full p-0'
-          aria-label={t('aria.clearSearch')}
-        >
-          <Icons.close className='h-4 w-4' />
-        </Button>
-      ) : null}
-    </div>
+    <TypeaheadSearchBar<ShopTypeaheadItem>
+      committedQuery={committedQuery}
+      placeholder={t('stores.search')}
+      heading={t('stores.searchShopsHeading')}
+      emptyLabel={t('stores.noShopsFound')}
+      searchAllLabel={t('stores.searchAll')}
+      headingIcon={<Icons.store className='h-4 w-4 text-primary' />}
+      onCommitSearch={onCommitSearch}
+      onClearSearch={onClearSearch}
+      onSelectItem={(item) => onSelectStore(item.store)}
+      fetchSuggestions={fetchSuggestions}
+    />
   );
 }

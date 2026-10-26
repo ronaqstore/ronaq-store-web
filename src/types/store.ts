@@ -1,5 +1,18 @@
 import type { ReactNode } from 'react';
 
+export type OpenStatusKind = 'open' | 'closed' | 'unknown';
+
+export interface OpenStatus {
+  status: OpenStatusKind;
+  closesAt: string | null;
+  opensAt: string | null;
+}
+
+export interface MinutesRange {
+  open: number;
+  close: number;
+}
+
 export interface StoreWhatsAppContact {
   whatsappNumber?: string | null;
 }
@@ -90,8 +103,11 @@ export interface StoreDiscoveryShellProps {
 }
 
 export interface StoreSearchBarProps {
-  searchQuery: string;
-  onSearchChange: (search: string) => void;
+  committedQuery: string;
+  cityId: string;
+  onCommitSearch: (search: string) => void;
+  onSelectStore: (store: StoreListItem) => void;
+  onClearSearch: () => void;
 }
 
 export interface StoreHeaderProps {
@@ -105,6 +121,7 @@ export interface StoreCatalogFilters {
 }
 
 export interface StoreCatalogShellProps {
+  storeSlug: string;
   categories: import('./product').StoreCategory[];
   filters: StoreCatalogFilters;
   children: ReactNode;

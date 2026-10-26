@@ -65,8 +65,16 @@ Source of truth: `src/design/tokens.ts`
 
 | Web (React/Tailwind) Component | Flutter Equivalent Widget | Composition Notes |
 |---|---|---|
-| `ProductCard` | `ProductCard` (custom stateless) | `Card` -> `Column` -> `AspectRatio(1.0)` -> `SmartImage` + `Padding` (Brand, Title, Shop, Price/Stock) |
+| `ProductCard` | `ProductCard` (custom stateless) | `Card` -> `Column` -> `AspectRatio(1.0)` -> `SmartImage` + authenticity badge top-end + `Padding` (Brand, Title, Shop, Price/Stock). Model/from-price mode shares the same shell. |
 | `ProductCardSkeleton` | `ProductCardSkeleton` | `Shimmer.fromColors` wrapping placeholder boxes mirroring `ProductCard` layout |
+| `ShopCard` | `Card` | Cover `AspectRatio(16/7)` + overlapping avatar + body + action row; stretched-link pattern = `InkWell` on card with separate `IconButton`s for WA/Call/Map |
+| `ShopHeader` | `SliverAppBar` + `FlexibleSpaceBar` | Collapsing cover; pinned title when scrolled |
+| `CategoryChips` | `SliverPersistentHeader` | Horizontal chips pinned under app bar |
+| `ShopProductsToolbar` | Pinned header + search | `top: appBarHeight`; solid / blur background |
+| `StickyShopActions` | Bottom bar | WhatsApp + Call; `SafeArea` bottom |
+| `ShopMap` | `WebView` / Maps plugin | Lazy load; fallback address card + open Maps URL |
+| Segmented Products \| About | `TabBar` | Below `lg` only |
+| `FilterSheet` / city | `showModalBottomSheet` | Same as marketplace |
 | `FilterSheet` | `showModalBottomSheet` | `ModalBottomSheet` on phone (`isScrollControlled: true`), `NavigationDrawer` or `Dialog` on tablet |
 | `CityPicker` | `showModalBottomSheet` | `DraggableScrollableSheet` with sticky search header and scrollable `ListView.builder` |
 | `BottomNav` | `NavigationBar` | `NavigationBar` with 4 `NavigationDestination` items (Home, Shops, Search, Account) |
@@ -77,6 +85,14 @@ Source of truth: `src/design/tokens.ts`
 | `OfflineBanner` | `MaterialBanner` | Connectivity listener banner displaying offline cache status |
 | `EmptyState` | `CustomScrollView` / `Center` | Icon + Title + Description + `FilledButton` ("Clear all filters") |
 | `ErrorState` | `Center` | Error icon + Message + `OutlinedButton` ("Try again") |
+
+### Shop hours / contact utils
+
+| Web | Flutter |
+|---|---|
+| `getOpenStatus(hours, now, tz)` | Pure Dart helper; `tz = Asia/Karachi` |
+| `formatHours(hours, locale)` | Same parsing; locale digits via `NumberFormat` |
+| `buildWhatsAppUrl` / `buildTelUrl` | `url_launcher` with normalized `+92…` |
 
 ---
 

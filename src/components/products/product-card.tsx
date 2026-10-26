@@ -111,23 +111,21 @@ export function ProductCard({
           {t('catalog.ptaMdmBypass')}
         </Badge>
       ) : null}
-      {product.authenticity === 'ORIGINAL' ? (
-        <Badge variant='success' className='px-1.5 py-0.5 text-[10px] font-semibold'>
-          {t('catalog.authenticityOriginal')}
-        </Badge>
-      ) : null}
-      {product.authenticity === 'COPY' ? (
-        <Badge variant='secondary' className='px-1.5 py-0.5 text-[10px] font-semibold'>
-          {t('catalog.authenticityCopy')}
-        </Badge>
-      ) : null}
     </>
   );
 
-  const hasStatusBadges =
-    Boolean(product.ptaStatus) ||
-    product.authenticity === 'ORIGINAL' ||
-    product.authenticity === 'COPY';
+  const hasStatusBadges = Boolean(product.ptaStatus);
+
+  const authenticityBadge =
+    product.authenticity === 'ORIGINAL' ? (
+      <span className='absolute inset-e-2 top-2 z-10 inline-flex items-center rounded-full border border-border/60 bg-background/90 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 shadow-xs backdrop-blur-xs dark:text-emerald-400'>
+        {t('catalog.authenticityOriginal')}
+      </span>
+    ) : product.authenticity === 'COPY' ? (
+      <span className='absolute inset-e-2 top-2 z-10 inline-flex items-center rounded-full border border-border/60 bg-muted/90 px-2 py-0.5 text-[11px] font-medium text-muted-foreground shadow-xs backdrop-blur-xs'>
+        {t('catalog.authenticityCopy')}
+      </span>
+    ) : null;
 
   const specParts = [storageLabel, colorLabel, conditionLabel].filter(Boolean);
 
@@ -154,11 +152,12 @@ export function ProductCard({
         />
 
         {isOutOfStock ? (
-          <span className='absolute inset-s-2 top-2 z-10 inline-flex items-center gap-1 rounded-full bg-background/90 px-2 py-0.5 text-[11px] font-semibold text-rose-600 dark:text-rose-400 border border-border/60 shadow-xs backdrop-blur-xs'>
+          <span className='absolute inset-s-2 top-2 z-10 inline-flex items-center gap-1 rounded-full border border-border/60 bg-background/90 px-2 py-0.5 text-[11px] font-semibold text-rose-600 shadow-xs backdrop-blur-xs dark:text-rose-400'>
             <span className='h-1.5 w-1.5 rounded-full bg-rose-500' />
             <span>{t('catalog.outOfStock')}</span>
           </span>
         ) : null}
+        {authenticityBadge}
       </div>
 
       <div className='flex flex-1 flex-col p-3 sm:p-4'>
