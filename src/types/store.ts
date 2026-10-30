@@ -160,4 +160,5 @@ export interface StoreDiscoveryFeedProps {
   totalPages: number;
   searchQuery: string;
   cityId: string;
+  initialFetchFailed?: boolean;
 }

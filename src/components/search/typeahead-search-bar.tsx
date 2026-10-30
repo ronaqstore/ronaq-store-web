@@ -194,11 +194,16 @@ export function TypeaheadSearchBar<T extends TypeaheadItem>({
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Escape') {
-      if (draft) {
-        clearSearch();
-      }
+      event.preventDefault();
+      event.stopPropagation();
+      const keep = draft;
       setOpen(false);
-      inputRef.current?.blur();
+      window.setTimeout(() => {
+        setDraft(keep);
+        if (inputRef.current && inputRef.current.value !== keep) {
+          inputRef.current.value = keep;
+        }
+      }, 0);
       return;
     }
     if (event.key === 'Enter') {
@@ -264,7 +269,7 @@ export function TypeaheadSearchBar<T extends TypeaheadItem>({
         />
         <Input
           ref={inputRef}
-          type='search'
+          type='text'
           inputMode='search'
           enterKeyHint='search'
           autoCapitalize='off'
@@ -283,7 +288,7 @@ export function TypeaheadSearchBar<T extends TypeaheadItem>({
           maxLength={MARKETPLACE_SEARCH_MAX_LEN}
           spellCheck={false}
           className={cn(
-            'h-12 w-full rounded-none border-0 bg-transparent ps-10 pe-11 text-base shadow-none outline-none ring-0 ring-offset-0 appearance-none focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden',
+            'h-12 w-full rounded-none border-0 bg-transparent ps-10 pe-11 text-base shadow-none outline-none ring-0 ring-offset-0 appearance-none focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0',
             inputClassName
           )}
         />

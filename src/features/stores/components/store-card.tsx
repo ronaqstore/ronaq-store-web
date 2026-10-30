@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { Icons } from '@/components/icons';
@@ -16,7 +17,7 @@ import { buildTelUrl, normalizePakistaniMobile } from '@/lib/contact-links';
 import { formatHours, getOpenStatus } from '@/lib/shop-hours';
 import { buildGoogleMapsUrl, hasStoreCoords } from '@/lib/geo';
 import { cn } from '@/lib/utils';
-import type { StoreCardProps } from '@/types/store';
+import type { OpenStatus, StoreCardProps } from '@/types/store';
 
 function locationLine(address: string | null | undefined, city: string): string {
   const cityLabel = city.trim();
@@ -57,15 +58,19 @@ export function StoreCard({ store, priority = false }: StoreCardProps) {
     rawBlurb && rawBlurb.toLowerCase() !== name.trim().toLowerCase() ? rawBlurb : null;
   const banner = store.heroBannerUrl || store.bannerUrl;
   const hoursLabel = formatHours(store.openingHours, locale);
-  const openStatus = getOpenStatus(store.openingHours);
+  const [openStatus, setOpenStatus] = useState<OpenStatus | null>(null);
   const place = locationLine(store.address, store.city);
   const shopHref = `/shop/${store.slug}`;
   const initials = shopInitials(name);
 
+  useEffect(() => {
+    setOpenStatus(getOpenStatus(store.openingHours));
+  }, [store.openingHours]);
+
   const statusLabel =
-    openStatus.status === 'open' && openStatus.closesAt
+    openStatus?.status === 'open' && openStatus.closesAt
       ? t('stores.openClosesAt', { time: openStatus.closesAt })
-      : openStatus.status === 'closed' && openStatus.opensAt
+      : openStatus?.status === 'closed' && openStatus.opensAt
         ? t('stores.closedOpensAt', { time: openStatus.opensAt })
         : null;
 
@@ -130,7 +135,7 @@ export function StoreCard({ store, priority = false }: StoreCardProps) {
           <span className='truncate'>{formatEmpty(place)}</span>
         </p>
 
-        {statusLabel ? (
+        {statusLabel && openStatus ? (
           <p
             className={cn(
               'mt-2 w-fit rounded-full px-2.5 py-0.5 text-[11px] font-semibold md:text-xs',

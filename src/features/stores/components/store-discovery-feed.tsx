@@ -2,9 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/navigation';
 import { formatNumber } from '@/lib/formatters';
 import { Icons } from '@/components/icons';
 import { Spinner } from '@/components/ui/spinner';
+import { ErrorState } from '@/components/common/error-state';
 import { useInfiniteScroll } from '@/hooks/use-infinite-scroll';
 import { STORES_PAGE_SIZE } from '@/constants/site';
 import { publicApiRequest } from '@/lib/api/client';
@@ -33,10 +35,12 @@ export function StoreDiscoveryFeed({
   page: initialPage,
   totalPages,
   searchQuery,
-  cityId
+  cityId,
+  initialFetchFailed = false
 }: StoreDiscoveryFeedProps) {
   const t = useTranslations();
   const locale = useLocale();
+  const router = useRouter();
   const [stores, setStores] = useState<StoreListItem[]>(initialStores);
   const [page, setPage] = useState(initialPage);
   const [hasMore, setHasMore] = useState(initialPage < totalPages);
@@ -50,7 +54,7 @@ export function StoreDiscoveryFeed({
     setHasMore(initialPage < totalPages);
     setLoadError(false);
     loadingRef.current = false;
-  }, [initialStores, initialPage, totalPages, searchQuery, cityId]);
+  }, [initialStores, initialPage, totalPages, searchQuery, cityId, initialFetchFailed]);
 
   const loadMore = useCallback(async () => {
     if (loadingRef.current || !hasMore) return;
@@ -87,6 +91,10 @@ export function StoreDiscoveryFeed({
     loadingRef.current = false;
     void loadMore();
   };
+
+  if (initialFetchFailed) {
+    return <ErrorState onRetry={() => router.refresh()} />;
+  }
 
   if (stores.length === 0) {
     return (

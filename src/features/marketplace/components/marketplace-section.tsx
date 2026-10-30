@@ -32,6 +32,7 @@ export async function MarketplaceSection({
     limit: PRODUCTS_PAGE_SIZE
   });
 
+  const fetchFailed = response == null;
   const products = response?.items ?? [];
   const total = response?.total ?? 0;
   const page = response?.page ?? 1;
@@ -47,6 +48,7 @@ export async function MarketplaceSection({
       modelKey={modelKey}
       cityId={cityId}
       filters={filters}
+      initialFetchFailed={fetchFailed}
     />
   );
 }

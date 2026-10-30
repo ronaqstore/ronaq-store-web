@@ -130,16 +130,18 @@ export function MarketplaceShell({
         filters: next.filters ?? filters
       });
       const key = stableListingQueryKey(query);
-      if (key === lastNavigatedKeyRef.current) return;
+      const currentKey =
+        typeof window !== 'undefined'
+          ? stableListingQueryKey(
+              Object.fromEntries(new URLSearchParams(window.location.search).entries())
+            )
+          : lastNavigatedKeyRef.current;
+      if (key === currentKey) return;
       lastNavigatedKeyRef.current = key;
 
       startTransition(() => {
-        const navigate = mode === 'push' ? router.push : router.replace;
-        if (Object.keys(query).length > 0) {
-          navigate({ pathname, query }, { scroll: false });
-        } else {
-          navigate(pathname, { scroll: false });
-        }
+        const nav = mode === 'push' ? router.push.bind(router) : router.replace.bind(router);
+        nav({ pathname, query }, { scroll: false });
       });
     },
     [cityId, filters, pathname, router]

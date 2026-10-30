@@ -178,6 +178,7 @@ export interface MarketplaceFeedProps {
   modelKey: string | null;
   cityId: string;
   filters: MarketplaceListingFilters;
+  initialFetchFailed?: boolean;
 }
 
 export interface MarketplaceFiltersBarProps {

@@ -22,7 +22,9 @@ export function QuickFilterChips({
     !optimistic.category &&
     optimistic.inStock === undefined &&
     !optimistic.ptaStatus &&
-    !optimistic.condition;
+    !optimistic.condition &&
+    optimistic.minPriceRs == null &&
+    optimistic.maxPriceRs == null;
 
   const commit = (next: MarketplaceListingFilters) => {
     setOptimistic(next);
@@ -39,7 +41,9 @@ export function QuickFilterChips({
         category: undefined,
         inStock: undefined,
         ptaStatus: undefined,
-        condition: undefined
+        condition: undefined,
+        minPriceRs: undefined,
+        maxPriceRs: undefined
       })
     );
   };

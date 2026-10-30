@@ -39,3 +39,15 @@ export function resolveCityPreferenceFromCookie(
   }
   return { cityId: parsed, hasPreference: true };
 }
+
+export function resolveCityPreference(
+  urlCity: string | string[] | undefined | null,
+  cookieRaw: string | undefined | null
+): CityPreferenceResolution {
+  const rawUrl = Array.isArray(urlCity) ? urlCity[0] : urlCity;
+  const fromUrl = parseCityPreference(rawUrl);
+  if (fromUrl) {
+    return { cityId: fromUrl, hasPreference: true };
+  }
+  return resolveCityPreferenceFromCookie(cookieRaw);
+}

@@ -69,5 +69,5 @@ export const SOCIAL_URLS = {
 
 export const SUPPORT_PHONE = '+92 3029825213';
 
-export const SUPPORT_PHONE_TEL = 'tel:+923001234567';
+export const SUPPORT_PHONE_TEL = 'tel:+923029825213';
 

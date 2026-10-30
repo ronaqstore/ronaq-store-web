@@ -10,7 +10,15 @@ export function LanguageSwitcher() {
   const pathname = usePathname();
 
   const handleSwitch = (newLocale: 'en' | 'ur' | 'ps') => {
-    router.replace(pathname, { locale: newLocale });
+    const query: Record<string, string> = {};
+    new URLSearchParams(window.location.search).forEach((value, key) => {
+      query[key] = value;
+    });
+    if (Object.keys(query).length > 0) {
+      router.replace({ pathname, query }, { locale: newLocale });
+    } else {
+      router.replace(pathname, { locale: newLocale });
+    }
   };
 
   return (

@@ -10,7 +10,7 @@ import { JsonLd } from '@/components/seo/json-ld';
 import { faqPageJsonLd, homeGraphJsonLd } from '@/lib/seo/json-ld';
 import { buildPageMetadata, isSearchNoIndex } from '@/lib/seo/metadata';
 import { CITY_PREFERENCE_COOKIE } from '@/constants/city-preference';
-import { resolveCityPreferenceFromCookie } from '@/lib/city-preference';
+import { resolveCityPreference } from '@/lib/city-preference';
 import {
   commitMarketplaceSearchQuery,
   parseMarketplaceListingFilters,
@@ -45,7 +45,8 @@ export default async function HomePage({ params, searchParams }: HomePageProps) 
   const modelKey = sanitizeMarketplaceText(resolvedSearch.model, 160) || null;
   const filters = parseMarketplaceListingFilters(resolvedSearch);
   const cookieStore = await cookies();
-  const { cityId, hasPreference } = resolveCityPreferenceFromCookie(
+  const { cityId, hasPreference } = resolveCityPreference(
+    resolvedSearch.city,
     cookieStore.get(CITY_PREFERENCE_COOKIE)?.value
   );
   const selectedCityName = await getMarketplaceHubLabel(cityId);
