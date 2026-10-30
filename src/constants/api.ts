@@ -59,15 +59,16 @@ export function googleMapsSearchUrl(lat: number, lng: number): string {
   return `${GOOGLE_MAPS_SEARCH_BASE}?api=1&query=${lat},${lng}`;
 }
 
+export const SUPPORT_PHONE = '+92 3029825213';
+
+export const SUPPORT_PHONE_TEL = 'tel:+923029825213';
+
 export const SOCIAL_URLS = {
-  whatsappSupport: 'https://wa.me/923001234567?text=Assalam-o-Alaikum%20Ronaq%20Store%20Support',
+  whatsappSupport:
+    'https://wa.me/923029825213?text=Assalam-o-Alaikum%20Ronaq%20Store%20Support',
   youtube: 'https://www.youtube.com/@ronaqstores',
   instagram: 'https://www.instagram.com/ronaqstores',
   tiktok: 'https://www.tiktok.com/@ronaqstores',
   facebook: 'https://web.facebook.com/ronaqstores'
 } as const;
-
-export const SUPPORT_PHONE = '+92 3029825213';
-
-export const SUPPORT_PHONE_TEL = 'tel:+923029825213';
 

@@ -167,7 +167,7 @@ export function isSearchNoIndex(
   searchParams: CatalogSearchParams | HomeSearchParams
 ): boolean {
   return Object.entries(searchParams).some(([key, value]) => {
-    if (key === 'rf') return false;
+    if (key === 'rf' || key === 'city') return false;
     if (value == null) return false;
     const raw = Array.isArray(value) ? value[0] : value;
     if (typeof raw !== 'string') return false;
