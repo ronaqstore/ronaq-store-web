@@ -10,7 +10,7 @@ import { JsonLd } from '@/components/seo/json-ld';
 import { breadcrumbJsonLd } from '@/lib/seo/json-ld';
 import { buildPageMetadata, isSearchNoIndex } from '@/lib/seo/metadata';
 import { CITY_PREFERENCE_COOKIE } from '@/constants/city-preference';
-import { resolveCityPreferenceFromCookie } from '@/lib/city-preference';
+import { resolveCityPreference } from '@/lib/city-preference';
 import { sanitizeMarketplaceText } from '@/lib/marketplace-filters';
 import type { HomePageProps } from '@/types/common';
 
@@ -38,7 +38,8 @@ export default async function ShopsPage({ params, searchParams }: HomePageProps)
   const resolvedSearch = await searchParams;
   const q = sanitizeMarketplaceText(resolvedSearch.q);
   const cookieStore = await cookies();
-  const { cityId, hasPreference } = resolveCityPreferenceFromCookie(
+  const { cityId, hasPreference } = resolveCityPreference(
+    resolvedSearch.city,
     cookieStore.get(CITY_PREFERENCE_COOKIE)?.value
   );
   const selectedCityName = await getMarketplaceHubLabel(cityId);
@@ -59,7 +60,7 @@ export default async function ShopsPage({ params, searchParams }: HomePageProps)
         selectedCityName={selectedCityName}
         hasCityPreference={hasPreference}
       >
-        <Suspense key={`${cityId}:${q || 'all'}`} fallback={<StoreDiscoverySkeleton />}>
+        <Suspense key={cityId} fallback={<StoreDiscoverySkeleton />}>
           <StoreDiscoverySection searchQuery={q} cityId={cityId} />
         </Suspense>
       </StoreDiscoveryShell>

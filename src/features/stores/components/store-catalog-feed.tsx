@@ -7,6 +7,7 @@ import { ProductGrid } from '@/components/products/product-grid';
 import { ModelCard } from '@/components/products/model-card';
 import { Icons } from '@/components/icons';
 import { Spinner } from '@/components/ui/spinner';
+import { useInfiniteScroll } from '@/hooks/use-infinite-scroll';
 import { PRODUCTS_PAGE_SIZE } from '@/constants/site';
 import { publicApiRequest } from '@/lib/api/client';
 import { mapProductsResponse } from '@/lib/api/mappers';
@@ -57,7 +58,6 @@ export function StoreCatalogFeed({
   const [hasMore, setHasMore] = useState(initialPage < productsTotalPages);
   const [loadingMore, setLoadingMore] = useState(false);
   const [loadError, setLoadError] = useState(false);
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
   const loadingRef = useRef(false);
 
   useEffect(() => {
@@ -97,27 +97,14 @@ export function StoreCatalogFeed({
     loadingRef.current = false;
   }, [filters, hasMore, page, store.slug]);
 
+  const sentinelRef = useInfiniteScroll(hasMore, () => {
+    void loadMore();
+  });
+
   const handleRetryLoadMore = () => {
     loadingRef.current = false;
     void loadMore();
   };
-
-  useEffect(() => {
-    const node = sentinelRef.current;
-    if (!node || !hasMore) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) {
-          void loadMore();
-        }
-      },
-      { rootMargin: '320px 0px' }
-    );
-
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [hasMore, loadMore]);
 
   const visibleModels = useMemo(
     () => filterModelsForCatalog(allModels, products, filters),

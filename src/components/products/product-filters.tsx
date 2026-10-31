@@ -1,28 +1,65 @@
+'use client';
+
+import { useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { Icons } from '@/components/icons';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { TypeaheadSearchBar } from '@/components/search/typeahead-search-bar';
+import { searchStoreProducts } from '@/features/products/api/service';
 import type { ProductFiltersProps } from '@/types/product';
+import type { ProductTypeaheadItem } from '@/types/typeahead-search';
 
 export function ProductFilters({
+  storeSlug,
   categories,
   selectedCategoryId,
-  searchQuery,
+  committedQuery,
   onCategorySelect,
-  onSearchChange
+  onCommitSearch,
+  onSelectProduct,
+  onClearSearch
 }: ProductFiltersProps) {
   const t = useTranslations();
 
+  const fetchSuggestions = useCallback(
+    async (q: string) => {
+      const result = await searchStoreProducts(storeSlug, {
+        q,
+        category: selectedCategoryId || undefined,
+        page: 1,
+        limit: 8
+      });
+      const items: ProductTypeaheadItem[] = (result?.items ?? []).map((product) => ({
+        id: product.id,
+        title: product.name,
+        subtitle: [product.brandName, product.categoryName].filter(Boolean).join(' · '),
+        imageUrl: product.primaryImageUrl,
+        imageFit: 'contain',
+        product
+      }));
+      return { items, total: result?.total ?? items.length };
+    },
+    [selectedCategoryId, storeSlug]
+  );
+
   return (
-    <div className='sticky top-14 z-20 -mx-4 space-y-3 border-b border-border/60 bg-background/90 px-4 py-3 backdrop-blur-md min-[390px]:top-16 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8'>
-      <div className='relative w-full max-w-md'>
-        <Icons.search className='absolute inset-s-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
-        <Input
-          type='text'
-          value={searchQuery}
-          onChange={(e) => onSearchChange(e.target.value)}
-          placeholder={t('common.search')}
-          className='h-9 bg-card ps-9 text-sm'
+    <div className='sticky top-[var(--app-bar-h)] z-20 -mx-4 space-y-3 border-b border-border/60 bg-background/90 px-4 py-3 backdrop-blur-md sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8'>
+      <div className='flex w-full justify-start'>
+        <TypeaheadSearchBar<ProductTypeaheadItem>
+          committedQuery={committedQuery}
+          placeholder={t('catalog.searchInShop')}
+          heading={t('catalog.searchProductsHeading')}
+          emptyLabel={t('marketplace.noProductsFound')}
+          searchAllLabel={t('catalog.searchAll')}
+          headingIcon={<Icons.tag className='h-4 w-4 text-primary' />}
+          rootClassName='max-w-md'
+          inputClassName='h-9 ps-9 pe-10 text-sm'
+          clearButtonClassName='inset-e-1.5 h-7 w-7'
+          searchIconClassName='inset-s-3'
+          onCommitSearch={onCommitSearch}
+          onClearSearch={onClearSearch}
+          onSelectItem={(item) => onSelectProduct(item.product)}
+          fetchSuggestions={fetchSuggestions}
         />
       </div>
 

@@ -26,6 +26,7 @@ const baseConfig: NextConfig = {
     ]
   },
 
+  allowedDevOrigins: ['127.0.0.1'],
   experimental: {
     optimizePackageImports: ['@tabler/icons-react']
   },
@@ -55,7 +56,7 @@ const baseConfig: NextConfig = {
               "img-src 'self' data: blob: https:",
               "font-src 'self' data:",
               "connect-src 'self' https: http://localhost:* http://127.0.0.1:* ws: wss:",
-              "frame-src 'self' https://www.google.com",
+              "frame-src 'self' https://www.google.com https://maps.google.com",
               "frame-ancestors 'self'",
               "base-uri 'self'",
               "form-action 'self'",

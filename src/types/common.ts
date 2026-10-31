@@ -104,3 +104,10 @@ export interface TruncateTextProps {
   title?: string;
   lines?: 1 | 2 | 3;
 }
+
+export interface SupportContact {
+  phone: string;
+  display: string;
+  whatsappUrl: string;
+  telUrl: string;
+}

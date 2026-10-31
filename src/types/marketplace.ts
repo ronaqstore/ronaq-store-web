@@ -178,6 +178,7 @@ export interface MarketplaceFeedProps {
   modelKey: string | null;
   cityId: string;
   filters: MarketplaceListingFilters;
+  initialFetchFailed?: boolean;
 }
 
 export interface MarketplaceFiltersBarProps {
@@ -295,8 +296,6 @@ export interface MarketplaceProductCardProps {
 export interface QuickFilterChipsProps {
   filters: MarketplaceListingFilters;
   onChange: (next: MarketplaceListingFilters) => void;
-  onOpenFilters: () => void;
-  activeFilterCount: number;
   className?: string;
 }
 

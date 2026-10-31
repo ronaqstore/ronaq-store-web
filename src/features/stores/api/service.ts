@@ -16,17 +16,30 @@ const STORES_LIST_CACHE: PublicFetchCache = {
   tags: [STORES_CACHE_TAG]
 };
 
-export async function getPublicStores(
-  query: StoreListQuery = {}
-): Promise<PaginatedStoresResponse | null> {
+function buildStoresParams(query: StoreListQuery, defaultLimit: number) {
   const params = new URLSearchParams();
   if (query.q) params.set('q', query.q);
   if (query.city) params.set('city', query.city);
   params.set('page', String(query.page ?? 1));
-  params.set('limit', String(query.limit ?? STORES_PAGE_SIZE));
+  params.set('limit', String(query.limit ?? defaultLimit));
+  return params;
+}
 
-  const qs = `?${params.toString()}`;
+export async function getPublicStores(
+  query: StoreListQuery = {}
+): Promise<PaginatedStoresResponse | null> {
+  const qs = `?${buildStoresParams(query, STORES_PAGE_SIZE).toString()}`;
   const raw = await publicApiRequest<ApiPaginatedStores>(`stores${qs}`, STORES_LIST_CACHE);
+  return mapStoresResponse(raw);
+}
+
+export async function searchPublicStores(
+  query: StoreListQuery = {}
+): Promise<PaginatedStoresResponse | null> {
+  const raw = await publicApiRequest<ApiPaginatedStores>(
+    `stores?${buildStoresParams(query, 8).toString()}`,
+    { cache: 'no-store' }
+  );
   return mapStoresResponse(raw);
 }
 

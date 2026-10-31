@@ -4,8 +4,7 @@ import { Icons } from '@/components/icons';
 import {
   ADMIN_BASE_URL,
   SOCIAL_URLS,
-  SUPPORT_PHONE,
-  SUPPORT_PHONE_TEL
+  SUPPORT_CONTACTS
 } from '@/constants/api';
 
 const SOCIAL_LINKS = [
@@ -100,28 +99,20 @@ export function Footer() {
               {t('footer.helpTitle')}
             </h3>
             <ul className='space-y-2.5 text-sm'>
-              <li>
-                <a
-                  href={SOCIAL_URLS.whatsappSupport}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  aria-label={t('aria.whatsapp')}
-                  className='text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-2'
-                >
-                  <Icons.whatsapp className='h-4 w-4 text-emerald-500 shrink-0' />
-                  {t('footer.whatsappSupport')}
-                </a>
-              </li>
-              <li>
-                <a
-                  href={SUPPORT_PHONE_TEL}
-                  aria-label={t('aria.call')}
-                  className='text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-2'
-                >
-                  <Icons.phone className='h-4 w-4 text-primary shrink-0' />
-                  <span>{SUPPORT_PHONE}</span>
-                </a>
-              </li>
+              {SUPPORT_CONTACTS.map((item) => (
+                <li key={item.phone}>
+                  <a
+                    href={item.whatsappUrl}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    aria-label={`${t('aria.whatsapp')} (${item.display})`}
+                    className='text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-2'
+                  >
+                    <Icons.whatsapp className='h-4 w-4 text-emerald-500 shrink-0' />
+                    <span>{item.display}</span>
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
         </div>

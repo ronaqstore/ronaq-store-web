@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/navigation';
+import { Link, usePathname } from '@/i18n/navigation';
 import { Icons } from '@/components/icons';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -12,10 +12,16 @@ import { ADMIN_BASE_URL } from '@/constants/api';
 import { CITY_PREFERENCE_COOKIE } from '@/constants/city-preference';
 import { cn } from '@/lib/utils';
 
+const navLinkClass =
+  'rounded-lg px-2 py-1 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2';
+
 export function Navbar() {
   const t = useTranslations();
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [currentCity, setCurrentCity] = useState<string | null>(null);
+  const shopsActive = pathname === '/shops' || pathname.startsWith('/shops/');
+  const homeActive = pathname === '/' || pathname === '';
 
   useEffect(() => {
     const updateCity = () => {
@@ -60,16 +66,24 @@ export function Navbar() {
             </span>
           </Link>
 
-          <nav className='hidden items-center gap-6 text-sm font-medium md:flex [@media(display-mode:standalone)]:hidden'>
+          <nav className='hidden items-center gap-4 text-sm font-medium md:flex [@media(display-mode:standalone)]:hidden'>
             <Link
               href='/'
-              className='text-muted-foreground transition-colors hover:text-foreground'
+              aria-current={homeActive ? 'page' : undefined}
+              className={cn(
+                navLinkClass,
+                homeActive && 'bg-primary/10 font-semibold text-primary'
+              )}
             >
               {t('nav.home')}
             </Link>
             <Link
               href='/shops'
-              className='text-muted-foreground transition-colors hover:text-foreground'
+              aria-current={shopsActive ? 'page' : undefined}
+              className={cn(
+                navLinkClass,
+                shopsActive && 'bg-primary/10 font-semibold text-primary'
+              )}
             >
               {t('nav.stores')}
             </Link>
@@ -122,10 +136,26 @@ export function Navbar() {
       {mobileOpen ? (
         <div className='animate-in slide-in-from-top-2 space-y-4 border-b border-border bg-background px-4 py-4 md:hidden'>
           <div className='flex flex-col space-y-3 text-sm font-medium'>
-            <Link href='/' onClick={closeMobile} className='py-1 text-foreground'>
+            <Link
+              href='/'
+              onClick={closeMobile}
+              aria-current={homeActive ? 'page' : undefined}
+              className={cn(
+                'rounded-lg px-2 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600',
+                homeActive ? 'bg-primary/10 font-semibold text-primary' : 'text-foreground'
+              )}
+            >
               {t('nav.home')}
             </Link>
-            <Link href='/shops' onClick={closeMobile} className='py-1 text-foreground'>
+            <Link
+              href='/shops'
+              onClick={closeMobile}
+              aria-current={shopsActive ? 'page' : undefined}
+              className={cn(
+                'rounded-lg px-2 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600',
+                shopsActive ? 'bg-primary/10 font-semibold text-primary' : 'text-foreground'
+              )}
+            >
               {t('nav.stores')}
             </Link>
           </div>

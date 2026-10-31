@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Icons } from '@/components/icons';
 import { mergeMarketplaceFilters } from '@/lib/marketplace-filters';
 import { cn } from '@/lib/utils';
 import type { QuickFilterChipsProps, MarketplaceListingFilters } from '@/types/marketplace';
@@ -10,8 +9,6 @@ import type { QuickFilterChipsProps, MarketplaceListingFilters } from '@/types/m
 export function QuickFilterChips({
   filters,
   onChange,
-  onOpenFilters,
-  activeFilterCount,
   className
 }: QuickFilterChipsProps) {
   const t = useTranslations('marketplace');
@@ -25,7 +22,9 @@ export function QuickFilterChips({
     !optimistic.category &&
     optimistic.inStock === undefined &&
     !optimistic.ptaStatus &&
-    !optimistic.condition;
+    !optimistic.condition &&
+    optimistic.minPriceRs == null &&
+    optimistic.maxPriceRs == null;
 
   const commit = (next: MarketplaceListingFilters) => {
     setOptimistic(next);
@@ -42,7 +41,9 @@ export function QuickFilterChips({
         category: undefined,
         inStock: undefined,
         ptaStatus: undefined,
-        condition: undefined
+        condition: undefined,
+        minPriceRs: undefined,
+        maxPriceRs: undefined
       })
     );
   };
@@ -57,28 +58,7 @@ export function QuickFilterChips({
       aria-label={t('filtersHeading')}
     >
       <button
-        type='button'
-        onClick={onOpenFilters}
-        className={cn(
-          'snap-start inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-2 text-sm font-medium transition-colors select-none active:scale-[0.98]',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
-          activeFilterCount > 0
-            ? 'border-primary bg-primary/10 text-primary font-semibold'
-            : 'border-border/80 bg-card text-foreground hover:bg-muted/60'
-        )}
-      >
-        <Icons.filter className='h-3.5 w-3.5' />
-        <span>{t('filtersHeading')}</span>
-        {activeFilterCount > 0 ? (
-          <span className='ms-1 rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-bold text-primary-foreground leading-none'>
-            {activeFilterCount}
-          </span>
-        ) : null}
-      </button>
-
-      <div className='h-4 w-px bg-border/60 shrink-0' aria-hidden />
-
-      <button
+        suppressHydrationWarning
         type='button'
         onClick={handleSelectAll}
         className={cn(
@@ -93,6 +73,7 @@ export function QuickFilterChips({
       </button>
 
       <button
+        suppressHydrationWarning
         type='button'
         onClick={() =>
           handleToggle({
@@ -111,6 +92,7 @@ export function QuickFilterChips({
       </button>
 
       <button
+        suppressHydrationWarning
         type='button'
         onClick={() =>
           handleToggle({
@@ -129,6 +111,7 @@ export function QuickFilterChips({
       </button>
 
       <button
+        suppressHydrationWarning
         type='button'
         onClick={() =>
           handleToggle({
@@ -147,6 +130,7 @@ export function QuickFilterChips({
       </button>
 
       <button
+        suppressHydrationWarning
         type='button'
         onClick={() =>
           handleToggle({
@@ -165,6 +149,7 @@ export function QuickFilterChips({
       </button>
 
       <button
+        suppressHydrationWarning
         type='button'
         onClick={() =>
           handleToggle({
@@ -183,6 +168,7 @@ export function QuickFilterChips({
       </button>
 
       <button
+        suppressHydrationWarning
         type='button'
         onClick={() =>
           handleToggle({

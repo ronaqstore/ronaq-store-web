@@ -1,12 +1,13 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
-import { useRouter, usePathname } from '@/i18n/navigation';
+import { usePathname, useRouter } from '@/i18n/navigation';
 import { ProductGridSkeleton } from '@/components/products/product-grid-skeleton';
 import { Spinner } from '@/components/ui/spinner';
 import { EmptyState } from '@/components/common/empty-state';
 import { ErrorState } from '@/components/common/error-state';
+import { useInfiniteScroll } from '@/hooks/use-infinite-scroll';
 import { PRODUCTS_PAGE_SIZE } from '@/constants/site';
 import { publicApiRequest } from '@/lib/api/client';
 import { marketplaceCityQueryParam } from '@/lib/city-preference';
@@ -74,7 +75,8 @@ export function MarketplaceProductFeed({
   searchQuery,
   modelKey,
   cityId,
-  filters
+  filters,
+  initialFetchFailed = false
 }: MarketplaceFeedProps) {
   const t = useTranslations();
   const locale = useLocale();
@@ -85,7 +87,6 @@ export function MarketplaceProductFeed({
   const [hasMore, setHasMore] = useState(initialPage < totalPages);
   const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState(false);
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
   const loadingRef = useRef(false);
   const abortRef = useRef<AbortController | null>(null);
 
@@ -98,7 +99,7 @@ export function MarketplaceProductFeed({
     setLoadError(false);
     setLoading(false);
     loadingRef.current = false;
-  }, [initialProducts, initialPage, totalPages, searchQuery, modelKey, cityId, filters]);
+  }, [initialProducts, initialPage, totalPages, searchQuery, modelKey, cityId, filters, initialFetchFailed]);
 
   const loadMore = useCallback(async () => {
     if (loadingRef.current || !hasMore) return;
@@ -152,41 +153,28 @@ export function MarketplaceProductFeed({
     }
   }, [cityId, filters, hasMore, modelKey, page, searchQuery]);
 
-  useEffect(() => {
-    const node = sentinelRef.current;
-    if (!node || !hasMore) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) {
-          void loadMore();
-        }
-      },
-      { rootMargin: '600px 0px' }
-    );
-
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [hasMore, loadMore]);
+  const sentinelRef = useInfiniteScroll(
+    hasMore,
+    () => {
+      void loadMore();
+    },
+    '600px 0px'
+  );
 
   const handleRetryLoadMore = () => {
     loadingRef.current = false;
     void loadMore();
   };
 
-  const sortedProducts = useMemo(() => {
-    return [...products].sort((a, b) => {
-      const aIn = a.availability === 'IN_STOCK' ? 0 : 1;
-      const bIn = b.availability === 'IN_STOCK' ? 0 : 1;
-      return aIn - bIn;
-    });
-  }, [products]);
+  if (initialFetchFailed) {
+    return <ErrorState onRetry={() => router.refresh()} />;
+  }
 
   if (products.length === 0) {
     return (
       <EmptyState
         onAction={() => {
-          router.replace(pathname, { scroll: false });
+          router.replace({ pathname, query: {} }, { scroll: false });
         }}
       />
     );
@@ -199,7 +187,7 @@ export function MarketplaceProductFeed({
       </p>
 
       <div className='grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 lg:gap-6'>
-        {sortedProducts.map((product, index) => (
+        {products.map((product, index) => (
           <MarketplaceProductCard
             key={product.id}
             product={product}

@@ -1,153 +1,211 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useEffect, useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { Icons } from '@/components/icons';
 import { buttonVariants } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { SmartImage } from '@/components/media/smart-image';
 import { PLACEHOLDER_SHOP_LOGO } from '@/constants/placeholders';
 import {
   buildWhatsAppLink,
   formatEmpty,
-  formatPhone,
+  formatNumber,
   resolveStoreWhatsAppNumber
 } from '@/lib/formatters';
-import { formatOpeningHoursDisplay } from '@/lib/opening-hours';
-import { hasStoreCoords } from '@/lib/geo';
+import { buildTelUrl, normalizePakistaniMobile } from '@/lib/contact-links';
+import { formatHours, getOpenStatus } from '@/lib/shop-hours';
+import { buildGoogleMapsUrl, hasStoreCoords } from '@/lib/geo';
 import { cn } from '@/lib/utils';
-import type { StoreCardProps } from '@/types/store';
-import { StoreMapLink } from './store-map-link';
+import type { OpenStatus, StoreCardProps } from '@/types/store';
+
+function locationLine(address: string | null | undefined, city: string): string {
+  const cityLabel = city.trim();
+  const addr = address?.trim() ?? '';
+  if (!addr) return cityLabel;
+  if (cityLabel && addr.toLowerCase().includes(cityLabel.toLowerCase())) return addr;
+  return cityLabel ? `${addr}, ${cityLabel}` : addr;
+}
+
+function shopInitials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return 'R';
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return `${parts[0][0] ?? ''}${parts[1][0] ?? ''}`.toUpperCase();
+}
 
 export function StoreCard({ store, priority = false }: StoreCardProps) {
   const t = useTranslations();
+  const locale = useLocale();
 
   const name = store.displayName || store.name || t('common.appName');
   const phone = resolveStoreWhatsAppNumber(store);
   const displayPhone = store.phoneNumber || store.phone || null;
+  const callHref =
+    displayPhone && normalizePakistaniMobile(displayPhone)
+      ? buildTelUrl(displayPhone)
+      : null;
   const whatsappHref = phone
     ? buildWhatsAppLink(phone, t('whatsapp.foundShop', { storeName: name }))
-    : undefined;
+    : null;
+  const mapsHref = hasStoreCoords(store)
+    ? buildGoogleMapsUrl(Number(store.latitude), Number(store.longitude))
+    : null;
 
   const productCount = store.productCount ?? store.totalProducts ?? 0;
-  const blurb = store.description || store.about;
+  const rawBlurb = (store.description || store.about || '').trim();
+  const blurb =
+    rawBlurb && rawBlurb.toLowerCase() !== name.trim().toLowerCase() ? rawBlurb : null;
   const banner = store.heroBannerUrl || store.bannerUrl;
-  const hours = formatOpeningHoursDisplay(store.openingHours);
+  const hoursLabel = formatHours(store.openingHours, locale);
+  const [openStatus, setOpenStatus] = useState<OpenStatus | null>(null);
+  const place = locationLine(store.address, store.city);
   const shopHref = `/shop/${store.slug}`;
+  const initials = shopInitials(name);
+
+  useEffect(() => {
+    setOpenStatus(getOpenStatus(store.openingHours));
+  }, [store.openingHours]);
+
+  const statusLabel =
+    openStatus?.status === 'open' && openStatus.closesAt
+      ? t('stores.openClosesAt', { time: openStatus.closesAt })
+      : openStatus?.status === 'closed' && openStatus.opensAt
+        ? t('stores.closedOpensAt', { time: openStatus.opensAt })
+        : null;
 
   return (
     <article
       className={cn(
-        'group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card',
-        'transition-colors duration-200 hover:border-primary/40 hover:shadow-md'
+        'group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/80 bg-card',
+        'transition-all duration-200 motion-reduce:transition-none',
+        '[@media(hover:hover)]:hover:-translate-y-0.5 [@media(hover:hover)]:hover:shadow-md',
+        'motion-reduce:hover:transform-none'
       )}
     >
       <Link
         href={shopHref}
-        className='absolute inset-0 z-10 cursor-pointer rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
+        className='absolute inset-0 z-10 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2'
         aria-label={name}
       />
 
-      <div className='pointer-events-none relative h-32 w-full overflow-hidden sm:h-36'>
+      <div className='pointer-events-none relative aspect-[16/7] w-full overflow-hidden bg-muted'>
         {banner ? (
           <SmartImage
             src={banner}
             alt=''
             fill
             priority={priority}
-            className='object-cover transition-transform duration-500 group-hover:scale-[1.02]'
-            sizes='(max-width: 768px) 100vw, 25vw'
+            className='object-cover transition-transform duration-300 [@media(hover:hover)]:group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:transform-none'
+            sizes='(max-width:639px) 100vw, (max-width:1023px) 50vw, 25vw'
           />
         ) : (
-          <div className='absolute inset-0 bg-gradient-to-br from-primary/20 via-primary/10 to-muted' />
+          <div className='absolute inset-0 bg-gradient-to-br from-emerald-600/30 via-primary/15 to-muted' />
         )}
-        <div className='absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent' />
-
-        <div className='absolute bottom-3 inset-s-3 inset-e-3 flex items-end gap-3'>
-          <div className='relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-border/80 bg-background shadow-sm sm:h-14 sm:w-14 sm:rounded-full'>
-            <SmartImage
-              src={store.logoUrl || PLACEHOLDER_SHOP_LOGO}
-              alt={formatEmpty(name)}
-              fill
-              priority={priority}
-              className='object-cover'
-              sizes='56px'
-              fallbackSrc={PLACEHOLDER_SHOP_LOGO}
-            />
-          </div>
-          <div className='min-w-0 pb-0.5'>
-            <h3 className='truncate text-base font-bold tracking-tight text-foreground sm:text-lg'>
-              {formatEmpty(name)}
-            </h3>
-            <p className='flex items-center gap-1 text-xs text-muted-foreground'>
-              <Icons.mapPin className='h-3 w-3 shrink-0' />
-              <span className='truncate'>{formatEmpty(store.city)}</span>
-            </p>
-          </div>
-        </div>
+        <div className='absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-card/90 to-transparent' />
       </div>
 
-      <div className='pointer-events-none relative flex flex-1 flex-col gap-2.5 p-4'>
-        <div className='space-y-1.5 text-xs text-muted-foreground sm:text-[13px]'>
-          {store.address ? (
-            <p className='flex items-start gap-1.5'>
-              <Icons.mapPin className='mt-0.5 h-3.5 w-3.5 shrink-0' />
-              <span className='line-clamp-2 leading-relaxed'>{store.address}</span>
-            </p>
-          ) : null}
-
-          {hours ? (
-            <p className='flex items-center gap-1.5'>
-              <Icons.clock className='h-3.5 w-3.5 shrink-0' />
-              <span className='truncate'>
-                {t('stores.timing')}: {hours}
-              </span>
-            </p>
-          ) : null}
-
-          {displayPhone ? (
-            <p className='flex items-center gap-1.5'>
-              <Icons.phone className='h-3.5 w-3.5 shrink-0' />
-              <span className='truncate' dir='ltr'>
-                {formatPhone(displayPhone)}
-              </span>
-            </p>
-          ) : null}
+      <div className='pointer-events-none relative z-[1] -mt-6 flex flex-1 flex-col px-3 pb-3 md:px-4 md:pb-4'>
+        <div className='mb-2 flex items-end gap-3'>
+          <div className='relative h-12 w-12 shrink-0 overflow-hidden rounded-full border-2 border-background bg-muted shadow-sm ring-2 ring-background md:h-14 md:w-14'>
+            {store.logoUrl ? (
+              <SmartImage
+                src={store.logoUrl}
+                alt={formatEmpty(name)}
+                fill
+                priority={priority}
+                className='object-cover'
+                sizes='56px'
+                fallbackSrc={PLACEHOLDER_SHOP_LOGO}
+              />
+            ) : (
+              <div className='flex h-full w-full items-center justify-center bg-gradient-to-br from-emerald-600 to-emerald-800 text-sm font-bold text-white'>
+                {initials}
+              </div>
+            )}
+          </div>
         </div>
 
-        {blurb ? (
-          <p className='line-clamp-2 text-sm leading-relaxed text-foreground/85'>{blurb}</p>
+        <h3 className='truncate text-base font-bold tracking-tight text-foreground md:text-lg'>
+          {formatEmpty(name)}
+        </h3>
+
+        <p className='mt-1 flex items-center gap-1 text-xs text-muted-foreground md:text-sm'>
+          <Icons.mapPin className='h-3.5 w-3.5 shrink-0' />
+          <span className='truncate'>{formatEmpty(place)}</span>
+        </p>
+
+        {statusLabel && openStatus ? (
+          <p
+            className={cn(
+              'mt-2 w-fit rounded-full px-2.5 py-0.5 text-[11px] font-semibold md:text-xs',
+              openStatus.status === 'open'
+                ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400'
+                : 'bg-muted text-muted-foreground'
+            )}
+          >
+            {statusLabel}
+          </p>
+        ) : hoursLabel ? (
+          <p className='mt-2 text-xs text-muted-foreground md:text-sm'>
+            {t('stores.timing')}: {hoursLabel}
+          </p>
         ) : null}
 
-        <div className='mt-auto flex flex-wrap items-center justify-between gap-2 pt-1'>
-          <Badge variant='secondary' className='w-fit gap-1 text-[11px] font-medium'>
-            <Icons.mobile className='h-3 w-3' />
-            {t('stores.productsAvailable', { count: productCount })}
-          </Badge>
+        <p className='mt-2 text-xs text-muted-foreground md:text-sm'>
+          {t('stores.productsAvailable', { count: formatNumber(productCount, locale) })}
+        </p>
 
-          <div className='pointer-events-auto relative z-20 flex flex-wrap items-center gap-1.5'>
-            {hasStoreCoords(store) ? (
-              <StoreMapLink
-                store={store}
-                triggerClassName='cursor-pointer border-primary/25 text-primary hover:bg-primary/10'
-              />
-            ) : null}
-            {whatsappHref ? (
-              <a
-                href={whatsappHref}
-                target='_blank'
-                rel='noopener noreferrer'
-                className={cn(
-                  buttonVariants({ variant: 'outline', size: 'sm' }),
-                  'cursor-pointer gap-1.5 border-emerald-500/30 text-xs text-emerald-700 hover:bg-emerald-500/10 dark:text-emerald-400'
-                )}
-                aria-label={t('stores.whatsapp')}
-              >
-                <Icons.whatsapp className='h-3.5 w-3.5' />
-                {t('stores.whatsapp')}
-              </a>
-            ) : null}
-          </div>
+        {blurb ? (
+          <p className='mt-2 hidden text-sm leading-relaxed text-muted-foreground line-clamp-2 min-[640px]:block'>
+            {blurb}
+          </p>
+        ) : null}
+
+        <div className='pointer-events-auto relative z-20 mt-auto flex min-h-11 items-center gap-2 pt-3'>
+          {whatsappHref ? (
+            <a
+              href={whatsappHref}
+              target='_blank'
+              rel='noopener noreferrer'
+              className={cn(
+                buttonVariants({ variant: 'default' }),
+                'h-11 min-h-11 flex-1 gap-2 rounded-xl bg-emerald-600 text-sm font-semibold text-white hover:bg-emerald-700'
+              )}
+              aria-label={t('stores.whatsapp')}
+            >
+              <Icons.whatsapp className='h-4 w-4' />
+              {t('stores.whatsapp')}
+            </a>
+          ) : (
+            <div className='h-11 flex-1' />
+          )}
+          {callHref ? (
+            <a
+              href={callHref}
+              className={cn(
+                buttonVariants({ variant: 'outline', size: 'icon' }),
+                'h-11 w-11 min-h-11 min-w-11 rounded-xl'
+              )}
+              aria-label={t('stores.call')}
+            >
+              <Icons.phone className='h-4 w-4' />
+            </a>
+          ) : null}
+          {mapsHref ? (
+            <a
+              href={mapsHref}
+              target='_blank'
+              rel='noopener noreferrer'
+              className={cn(
+                buttonVariants({ variant: 'outline', size: 'icon' }),
+                'h-11 w-11 min-h-11 min-w-11 rounded-xl'
+              )}
+              aria-label={t('stores.mapAction')}
+            >
+              <Icons.mapPin className='h-4 w-4' />
+            </a>
+          ) : null}
         </div>
       </div>
     </article>

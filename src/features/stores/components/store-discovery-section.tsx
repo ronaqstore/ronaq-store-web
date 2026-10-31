@@ -15,6 +15,7 @@ export async function StoreDiscoverySection({
     limit: STORES_PAGE_SIZE
   });
 
+  const fetchFailed = response == null;
   const stores = response?.items ?? [];
   const total = response?.total ?? 0;
   const page = response?.page ?? 1;
@@ -28,6 +29,7 @@ export async function StoreDiscoverySection({
       totalPages={totalPages}
       searchQuery={searchQuery}
       cityId={cityId}
+      initialFetchFailed={fetchFailed}
     />
   );
 }

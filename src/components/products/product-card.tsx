@@ -63,14 +63,18 @@ export function ProductCard({
           : null;
 
   const isOutOfStock = product.availability === 'OUT_OF_STOCK';
+  const isLowStock = product.availability === 'LOW_STOCK';
 
-  const stockLabel =
-    stockCount != null && stockCount > 0
-      ? product.trackingType === 'SERIALIZED' || unitsCount > 0
-        ? t('catalog.inStockPhones', { count: stockCount })
-        : t('catalog.inStockCount', { count: stockCount })
-      : isOutOfStock
-        ? t('catalog.outOfStock')
+  const stockLabel = isOutOfStock
+    ? t('catalog.outOfStock')
+    : isLowStock
+      ? stockCount != null && stockCount > 0
+        ? t('catalog.lowStockCount', { count: stockCount })
+        : t('catalog.lowStock')
+      : stockCount != null && stockCount > 0
+        ? product.trackingType === 'SERIALIZED' || unitsCount > 0
+          ? t('catalog.inStockPhones', { count: stockCount })
+          : t('catalog.inStockCount', { count: stockCount })
         : null;
 
   const shop = 'shop' in product ? (product as MarketplaceProduct).shop : undefined;
@@ -111,23 +115,21 @@ export function ProductCard({
           {t('catalog.ptaMdmBypass')}
         </Badge>
       ) : null}
-      {product.authenticity === 'ORIGINAL' ? (
-        <Badge variant='success' className='px-1.5 py-0.5 text-[10px] font-semibold'>
-          {t('catalog.authenticityOriginal')}
-        </Badge>
-      ) : null}
-      {product.authenticity === 'COPY' ? (
-        <Badge variant='secondary' className='px-1.5 py-0.5 text-[10px] font-semibold'>
-          {t('catalog.authenticityCopy')}
-        </Badge>
-      ) : null}
     </>
   );
 
-  const hasStatusBadges =
-    Boolean(product.ptaStatus) ||
-    product.authenticity === 'ORIGINAL' ||
-    product.authenticity === 'COPY';
+  const hasStatusBadges = Boolean(product.ptaStatus);
+
+  const authenticityBadge =
+    product.authenticity === 'ORIGINAL' ? (
+      <span className='absolute inset-e-2 top-2 z-10 inline-flex items-center rounded-full border border-border/60 bg-background/90 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 shadow-xs backdrop-blur-xs dark:text-emerald-400'>
+        {t('catalog.authenticityOriginal')}
+      </span>
+    ) : product.authenticity === 'COPY' ? (
+      <span className='absolute inset-e-2 top-2 z-10 inline-flex items-center rounded-full border border-border/60 bg-muted/90 px-2 py-0.5 text-[11px] font-medium text-muted-foreground shadow-xs backdrop-blur-xs'>
+        {t('catalog.authenticityCopy')}
+      </span>
+    ) : null;
 
   const specParts = [storageLabel, colorLabel, conditionLabel].filter(Boolean);
 
@@ -154,11 +156,17 @@ export function ProductCard({
         />
 
         {isOutOfStock ? (
-          <span className='absolute inset-s-2 top-2 z-10 inline-flex items-center gap-1 rounded-full bg-background/90 px-2 py-0.5 text-[11px] font-semibold text-rose-600 dark:text-rose-400 border border-border/60 shadow-xs backdrop-blur-xs'>
+          <span className='absolute inset-s-2 top-2 z-10 inline-flex items-center gap-1 rounded-full border border-border/60 bg-background/90 px-2 py-0.5 text-[11px] font-semibold text-rose-600 shadow-xs backdrop-blur-xs dark:text-rose-400'>
             <span className='h-1.5 w-1.5 rounded-full bg-rose-500' />
             <span>{t('catalog.outOfStock')}</span>
           </span>
+        ) : isLowStock ? (
+          <span className='absolute inset-s-2 top-2 z-10 inline-flex items-center gap-1 rounded-full border border-amber-500/40 bg-background/90 px-2 py-0.5 text-[11px] font-semibold text-amber-700 shadow-xs backdrop-blur-xs dark:text-amber-300'>
+            <span className='h-1.5 w-1.5 rounded-full bg-amber-500' />
+            <span>{t('catalog.lowStock')}</span>
+          </span>
         ) : null}
+        {authenticityBadge}
       </div>
 
       <div className='flex flex-1 flex-col p-3 sm:p-4'>
@@ -205,6 +213,11 @@ export function ProductCard({
             <div className='inline-flex items-center gap-1 text-[11px] font-medium text-muted-foreground'>
               <span className='h-1.5 w-1.5 rounded-full bg-muted-foreground/60' />
               <span className='hidden min-[360px]:inline'>{t('catalog.outOfStock')}</span>
+            </div>
+          ) : isLowStock ? (
+            <div className='inline-flex items-center gap-1 text-[11px] font-medium text-amber-700 dark:text-amber-300'>
+              <span className='h-1.5 w-1.5 rounded-full bg-amber-500' />
+              <span className='hidden min-[360px]:inline'>{stockLabel ?? t('catalog.lowStock')}</span>
             </div>
           ) : (
             <div className='inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400'>
