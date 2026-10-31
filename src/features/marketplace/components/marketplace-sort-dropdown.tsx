@@ -62,6 +62,7 @@ export function MarketplaceSortDropdown({
       className={cn('relative inline-block shrink-0 text-start', className)}
     >
       <button
+        suppressHydrationWarning
         id={buttonId}
         type='button'
         onClick={handleToggle}

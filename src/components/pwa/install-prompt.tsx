@@ -12,6 +12,7 @@ const DISMISS_KEY = 'ronaq-web-pwa-dismissed-at';
 const DISMISS_DAYS = 14;
 
 function readDismissed(): boolean {
+  if (typeof window === 'undefined') return false;
   try {
     const raw = localStorage.getItem(DISMISS_KEY);
     if (!raw) return false;
@@ -24,6 +25,7 @@ function readDismissed(): boolean {
 }
 
 function markDismissed(): void {
+  if (typeof window === 'undefined') return;
   try {
     localStorage.setItem(DISMISS_KEY, String(Date.now()));
   } catch {

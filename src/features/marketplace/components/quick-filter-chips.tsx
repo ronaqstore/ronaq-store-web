@@ -58,6 +58,7 @@ export function QuickFilterChips({
       aria-label={t('filtersHeading')}
     >
       <button
+        suppressHydrationWarning
         type='button'
         onClick={handleSelectAll}
         className={cn(
@@ -72,6 +73,7 @@ export function QuickFilterChips({
       </button>
 
       <button
+        suppressHydrationWarning
         type='button'
         onClick={() =>
           handleToggle({
@@ -90,6 +92,7 @@ export function QuickFilterChips({
       </button>
 
       <button
+        suppressHydrationWarning
         type='button'
         onClick={() =>
           handleToggle({
@@ -108,6 +111,7 @@ export function QuickFilterChips({
       </button>
 
       <button
+        suppressHydrationWarning
         type='button'
         onClick={() =>
           handleToggle({
@@ -126,6 +130,7 @@ export function QuickFilterChips({
       </button>
 
       <button
+        suppressHydrationWarning
         type='button'
         onClick={() =>
           handleToggle({
@@ -144,6 +149,7 @@ export function QuickFilterChips({
       </button>
 
       <button
+        suppressHydrationWarning
         type='button'
         onClick={() =>
           handleToggle({
@@ -162,6 +168,7 @@ export function QuickFilterChips({
       </button>
 
       <button
+        suppressHydrationWarning
         type='button'
         onClick={() =>
           handleToggle({
