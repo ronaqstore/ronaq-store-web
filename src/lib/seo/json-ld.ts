@@ -1,5 +1,6 @@
 import { APP_DESCRIPTION, APP_NAME } from '@/constants/site';
 import { SOCIAL_URLS } from '@/constants/api';
+import { fromPaisa } from '@/lib/money';
 import { absoluteLocaleUrl, absoluteUrl, getSiteUrl } from '@/lib/seo/site-url';
 import type { StoreProductDetail } from '@/types/product';
 import type { StoreProfile } from '@/types/store';
@@ -112,8 +113,8 @@ export function productJsonLd(input: ProductJsonLdInput): Record<string, unknown
 
   if (product.retailPrice) {
     const price = Number(product.retailPrice);
-    if (Number.isFinite(price)) {
-      offer.price = price;
+    if (Number.isFinite(price) && price >= 0) {
+      offer.price = fromPaisa(price);
     }
   }
 

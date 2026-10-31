@@ -9,7 +9,7 @@ export function JsonLd({ data, id }: JsonLdProps) {
     <script
       id={id}
       type='application/ld+json'
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(safe) }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(safe).replace(/</g, '\\u003c') }}
     />
   );
 }

@@ -25,7 +25,7 @@ async function collectStoreEntries(): Promise<MetadataRoute.Sitemap> {
     });
   }
 
-  const storesResult = await getPublicStores({ limit: 100, page: 1 });
+  const storesResult = await getPublicStores({ limit: 50, page: 1 });
   const stores = storesResult?.items ?? [];
   let page = 1;
   let totalPages = storesResult?.totalPages ?? 1;
@@ -33,7 +33,7 @@ async function collectStoreEntries(): Promise<MetadataRoute.Sitemap> {
 
   while (page < totalPages && page < 50) {
     page += 1;
-    const next = await getPublicStores({ limit: 100, page });
+    const next = await getPublicStores({ limit: 50, page });
     if (!next?.items?.length) break;
     allStores.push(...next.items);
     totalPages = next.totalPages;
@@ -51,7 +51,7 @@ async function collectStoreEntries(): Promise<MetadataRoute.Sitemap> {
       });
     }
 
-    const productsResult = await getStoreProducts(store.slug, { limit: 100, page: 1 });
+    const productsResult = await getStoreProducts(store.slug, { limit: 50, page: 1 });
     const products = productsResult?.items ?? [];
     let productPage = 1;
     let productTotalPages = productsResult?.totalPages ?? 1;
@@ -59,7 +59,7 @@ async function collectStoreEntries(): Promise<MetadataRoute.Sitemap> {
 
     while (productPage < productTotalPages && productPage < 20) {
       productPage += 1;
-      const nextProducts = await getStoreProducts(store.slug, { limit: 100, page: productPage });
+      const nextProducts = await getStoreProducts(store.slug, { limit: 50, page: productPage });
       if (!nextProducts?.items?.length) break;
       allProducts.push(...nextProducts.items);
       productTotalPages = nextProducts.totalPages;
