@@ -4,6 +4,7 @@ import { getPublicStoreProfile } from '@/features/stores/api/service';
 import { buildPageMetadata, isSearchNoIndex } from '@/lib/seo/metadata';
 import { absoluteProductImageUrl } from '@/constants/placeholders';
 import type { CatalogSearchParams } from '@/types/common';
+import { formatEmpty } from '@/lib/formatters';
 
 export async function buildShopMetadata(
   locale: string,
@@ -23,10 +24,13 @@ export async function buildShopMetadata(
     });
   }
 
-  const title = t('shopTitle', { store: store.displayName, city: store.city });
+  const storeName = formatEmpty(store.displayName);
+  const cityName = formatEmpty(store.city);
+
+  const title = t('shopTitle', { store: storeName, city: cityName });
   const description =
     store.description?.trim() ||
-    t('shopDescription', { store: store.displayName, city: store.city });
+    t('shopDescription', { store: storeName, city: cityName });
 
   return buildPageMetadata({
     locale,

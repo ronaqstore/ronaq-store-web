@@ -49,9 +49,12 @@ export function buildPageMetadata({
           }
         ];
 
-  const clippedTitle = title.length > 60 ? `${title.slice(0, 57)}...` : title;
+  const safeTitle = title || APP_NAME;
+  const safeDescription = description || APP_DESCRIPTION;
+
+  const clippedTitle = safeTitle.length > 60 ? `${safeTitle.slice(0, 57)}...` : safeTitle;
   const clippedDescription =
-    description.length > 160 ? `${description.slice(0, 157)}...` : description;
+    safeDescription.length > 160 ? `${safeDescription.slice(0, 157)}...` : safeDescription;
 
   const ogLocale = locale === 'ur' ? 'ur_PK' : locale === 'ps' ? 'ps_AF' : 'en_US';
 

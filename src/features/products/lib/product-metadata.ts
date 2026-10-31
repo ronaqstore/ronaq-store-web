@@ -29,10 +29,11 @@ export async function buildProductMetadata(
   }
 
   const productName = formatEmpty(product.name);
-  const title = t('productTitle', { product: productName, store: store.displayName });
+  const storeName = formatEmpty(store.displayName);
+  const title = t('productTitle', { product: productName, store: storeName });
   const description =
     product.description?.trim() ||
-    t('productDescription', { product: productName, store: store.displayName });
+    t('productDescription', { product: productName, store: storeName });
   const path = productPath(slug, product.name, product.id);
   const imageUrl = absoluteProductImageUrl(product.images?.[0]?.url);
 

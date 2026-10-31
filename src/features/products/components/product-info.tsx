@@ -28,13 +28,13 @@ export function ProductInfo({ product, store, slug, crumbs }: ProductInfoProps) 
   const t = useTranslations('catalog');
   const tWhatsapp = useTranslations('whatsapp');
 
-  const storeName = store.displayName || store.name;
+  const storeName = formatEmpty(store.displayName || store.name);
   const whatsappNumber = resolveStoreWhatsAppNumber(store);
   const contactNumber = store.phoneNumber?.trim() || '';
 
   const isOutOfStock = product.availability === 'OUT_OF_STOCK';
   const isLowStock = product.availability === 'LOW_STOCK';
-  const displayTitle = product.name;
+  const displayTitle = formatEmpty(product.name);
   const storageLabel = formatStorageLabel(product.storage);
   const colorLabel = formatColorLabel(product.color);
   const ramLabel = product.ram ? formatStorageLabel(product.ram) : null;
@@ -49,17 +49,17 @@ export function ProductInfo({ product, store, slug, crumbs }: ProductInfoProps) 
   const fullProductName = specDetails
     ? `${displayTitle} (${specDetails})`
     : displayTitle;
-  const whatsappPrice = formattedPrice ?? '';
+  const whatsappPrice = formattedPrice;
 
   const whatsappMessage = isOutOfStock
     ? tWhatsapp('inquireProduct', {
         storeName,
-        productName: fullProductName,
+        productName: fullProductName || t('productDetails'),
         price: whatsappPrice
       })
     : tWhatsapp('buyProduct', {
         storeName,
-        productName: fullProductName,
+        productName: fullProductName || t('productDetails'),
         price: whatsappPrice
       });
 

@@ -18,7 +18,7 @@ import { StoreMapLink } from './store-map-link';
 export async function StoreHeader({ store }: StoreHeaderProps) {
   const t = await getTranslations();
 
-  const name = store.displayName || store.name || t('common.appName');
+  const name = formatEmpty(store.displayName || store.name || t('common.appName'));
   const phoneNumber = store.phoneNumber?.trim() || '';
   const phoneHref = phoneNumber ? `tel:${phoneNumber}` : undefined;
   const whatsappNumber = resolveStoreWhatsAppNumber(store);
@@ -26,9 +26,10 @@ export async function StoreHeader({ store }: StoreHeaderProps) {
     ? buildWhatsAppLink(whatsappNumber, t('whatsapp.contactShop', { storeName: name }))
     : undefined;
 
+  const cityName = formatEmpty(store.city);
   const location = store.address
-    ? `${store.address}${store.city ? `, ${store.city}` : ''}`
-    : formatEmpty(store.city);
+    ? `${store.address}, ${cityName}`
+    : cityName;
   const banner = store.heroBannerUrl || store.bannerUrl;
   const about = store.description || store.about;
   const hours = formatOpeningHoursDisplay(store.openingHours);
