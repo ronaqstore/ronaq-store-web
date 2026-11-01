@@ -6,7 +6,7 @@ import type { NotFoundViewProps } from '@/types/common';
 
 export function NotFoundView({ onBack, onHome }: NotFoundViewProps) {
   return (
-    <div className='flex min-h-screen flex-col items-center justify-center p-6 text-center space-y-4'>
+    <div className='flex min-h-dvh flex-col items-center justify-center p-6 text-center space-y-4'>
       <span className='from-foreground bg-gradient-to-b to-transparent bg-clip-text text-8xl font-black text-transparent'>
         404
       </span>

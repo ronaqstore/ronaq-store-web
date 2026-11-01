@@ -56,12 +56,12 @@ export function Navbar() {
   return (
     <header className='sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 pt-[env(safe-area-inset-top)] backdrop-blur-xl'>
       <div className='mx-auto flex h-14 max-w-7xl 2xl:max-w-[1440px] items-center justify-between px-4 sm:px-6 lg:px-8'>
-        <div className='flex items-center gap-6 lg:gap-8'>
-          <Link href='/' className='group flex items-center gap-2.5'>
-            <div className='flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm transition-transform duration-300 group-hover:scale-105'>
+        <div className='flex min-w-0 items-center gap-6 lg:gap-8'>
+          <Link href='/' className='group flex min-w-0 items-center gap-2.5'>
+            <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm transition-transform duration-300 group-hover:scale-105'>
               <Icons.store className='h-5 w-5' />
             </div>
-            <span className='text-lg font-bold tracking-tight text-foreground'>
+            <span className='truncate text-base font-bold tracking-tight text-foreground sm:text-lg'>
               {t('common.appName')}
             </span>
           </Link>
@@ -70,10 +70,7 @@ export function Navbar() {
             <Link
               href='/'
               aria-current={homeActive ? 'page' : undefined}
-              className={cn(
-                navLinkClass,
-                homeActive && 'bg-primary/10 font-semibold text-primary'
-              )}
+              className={cn(navLinkClass, homeActive && 'bg-primary/10 font-semibold text-primary')}
             >
               {t('nav.home')}
             </Link>
@@ -90,15 +87,17 @@ export function Navbar() {
           </nav>
         </div>
 
-        <div className='flex items-center gap-2 md:hidden'>
+        <div className='flex min-w-0 shrink-0 items-center gap-2 md:hidden'>
           <button
             type='button'
             onClick={handleOpenCity}
-            className='inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-card px-3 py-1.5 text-xs font-semibold text-foreground transition-colors active:scale-95'
+            className='inline-flex min-w-0 items-center gap-1.5 rounded-full border border-border/80 bg-card px-3 py-1.5 text-xs font-semibold text-foreground transition-colors active:scale-95'
           >
             <Icons.mapPin className='h-3.5 w-3.5 text-primary shrink-0' />
             <span className='truncate max-w-[100px]'>
-              {currentCity ? currentCity.replace(/^[a-z]/, (c) => c.toUpperCase()) : t('common.city')}
+              {currentCity
+                ? currentCity.replace(/^[a-z]/, (c) => c.toUpperCase())
+                : t('common.city')}
             </span>
           </button>
 

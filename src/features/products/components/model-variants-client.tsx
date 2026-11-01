@@ -161,7 +161,7 @@ export function ModelVariantsClient({
               value={batteryMin}
               onChange={(e) => setBatteryMin(e.target.value)}
               placeholder='90'
-              className='h-6 w-14 border-0 bg-transparent px-1 text-xs shadow-none focus-visible:ring-0'
+              className='h-6 w-14 border-0 bg-transparent px-1 shadow-none focus-visible:ring-0'
             />
           </div>
         ) : null}

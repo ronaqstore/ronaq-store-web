@@ -66,9 +66,7 @@ export function MarketplaceShell({
   }, [topLoader]);
   const chipDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastNavigatedKeyRef = useRef(
-    stableListingQueryKey(
-      buildHomeQuery({ q: urlSearch || undefined, modelKey, cityId, filters })
-    )
+    stableListingQueryKey(buildHomeQuery({ q: urlSearch || undefined, modelKey, cityId, filters }))
   );
 
   const cancelChipDebounce = useCallback(() => {
@@ -119,10 +117,7 @@ export function MarketplaceShell({
   }, [cancelChipDebounce]);
 
   const navigateHome = useCallback(
-    (
-      next: MarketplaceNavigateHomeInput,
-      mode: 'replace' | 'push' = 'replace'
-    ) => {
+    (next: MarketplaceNavigateHomeInput, mode: 'replace' | 'push' = 'replace') => {
       const query = buildHomeQuery({
         q: next.q,
         modelKey: next.modelKey,
@@ -291,7 +286,7 @@ export function MarketplaceShell({
         </div>
       </section>
 
-      <div className='sticky top-14 z-30 border-b border-border/60 bg-background/95 backdrop-blur-xl'>
+      <div className='sticky top-[var(--app-bar-h)] z-30 border-b border-border/60 bg-background/95 backdrop-blur-xl'>
         <div className='mx-auto w-full max-w-7xl 2xl:max-w-[1440px] px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 space-y-2.5'>
           <div className='flex flex-col gap-2 md:flex-row md:items-center md:gap-3'>
             <div className='min-w-0 flex-1 max-w-2xl'>
@@ -366,9 +361,7 @@ export function MarketplaceShell({
           className='mb-4'
         />
 
-        <div aria-busy={isPending}>
-          {isPending ? <MarketplaceSkeleton /> : children}
-        </div>
+        <div aria-busy={isPending}>{isPending ? <MarketplaceSkeleton /> : children}</div>
       </section>
     </div>
   );

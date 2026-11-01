@@ -1,4 +1,8 @@
-import { ProductGridSkeleton, QuickFilterChipsSkeleton, ResultsCountSkeleton } from '@/components/products/product-grid-skeleton';
+import {
+  ProductGridSkeleton,
+  QuickFilterChipsSkeleton,
+  ResultsCountSkeleton
+} from '@/components/products/product-grid-skeleton';
 
 export default function LocaleLoading() {
   return (
@@ -10,7 +14,7 @@ export default function LocaleLoading() {
         </div>
       </div>
 
-      <div className='sticky top-14 z-30 border-b border-border/60 bg-background/95 backdrop-blur-xl'>
+      <div className='sticky top-[var(--app-bar-h)] z-30 border-b border-border/60 bg-background/95 backdrop-blur-xl'>
         <div className='mx-auto w-full max-w-7xl 2xl:max-w-[1440px] px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 space-y-2.5'>
           <div className='flex flex-col gap-2 md:flex-row md:items-center md:gap-3'>
             <div className='h-12 w-full max-w-2xl rounded-xl bg-muted/50' />

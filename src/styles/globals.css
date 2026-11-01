@@ -54,7 +54,7 @@
   --input: oklch(0.9 0.01 240);
   --ring: oklch(0.55 0.18 152);
   --radius: 0.75rem;
-  --app-bar-h: 3.5rem;
+  --app-bar-h: calc(3.5rem + env(safe-area-inset-top, 0px));
 }
 
 .dark {
@@ -85,13 +85,20 @@
   }
   html {
     overscroll-behavior: none;
+    /* Prevent iOS/Android from inflating font sizes in landscape. */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
   body {
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-poppins), 'Poppins', system-ui, -apple-system, sans-serif;
-    font-feature-settings: 'rlig' 1, 'calt' 1;
+    font-feature-settings:
+      'rlig' 1,
+      'calt' 1;
     overscroll-behavior-y: none;
+    /* vh fallback first for older mobile browsers without dvh support. */
+    min-height: 100vh;
     min-height: 100dvh;
   }
 
@@ -160,7 +167,6 @@ input[type='file']:not(:disabled),
 .cursor-pointer {
   cursor: pointer;
 }
-
 
 .font-urdu {
   font-family: var(--font-urdu) !important;

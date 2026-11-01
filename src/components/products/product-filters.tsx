@@ -53,7 +53,7 @@ export function ProductFilters({
           searchAllLabel={t('catalog.searchAll')}
           headingIcon={<Icons.tag className='h-4 w-4 text-primary' />}
           rootClassName='max-w-md'
-          inputClassName='h-9 ps-9 pe-10 text-sm'
+          inputClassName='h-9 ps-9 pe-10'
           clearButtonClassName='inset-e-1.5 h-7 w-7'
           searchIconClassName='inset-s-3'
           onCommitSearch={onCommitSearch}
@@ -80,9 +80,7 @@ export function ProductFilters({
             variant={selectedCategoryId === category.id ? 'secondary' : 'ghost'}
             size='sm'
             className='h-8 shrink-0 rounded-full px-3.5 text-xs'
-            onClick={() =>
-              onCategorySelect(selectedCategoryId === category.id ? '' : category.id)
-            }
+            onClick={() => onCategorySelect(selectedCategoryId === category.id ? '' : category.id)}
           >
             {category.name}
             {category.productCount > 0 ? (
