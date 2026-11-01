@@ -52,7 +52,7 @@ export async function StoreHeader({ store }: StoreHeaderProps) {
         <div className='pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/10' />
       </div>
 
-      <div className='mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8'>
+      <div className='mx-auto max-w-[1600px] px-3 sm:px-6 lg:px-8'>
         <div className='relative -mt-10 flex flex-col gap-4 pb-5 sm:-mt-12 sm:gap-5 sm:pb-7 md:-mt-14 md:pb-8'>
           <div className='flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between sm:gap-6'>
             <div className='flex min-w-0 items-end gap-3 sm:gap-4'>
@@ -60,14 +60,14 @@ export async function StoreHeader({ store }: StoreHeaderProps) {
                 src={store.logoUrl}
                 alt={formatEmpty(name)}
                 priority
-                className='h-28 w-28 shrink-0 overflow-hidden rounded-full border-4 border-background bg-card shadow-lg sm:h-32 sm:w-32 md:h-36 md:w-36'
+                className='h-20 w-20 shrink-0 overflow-hidden rounded-full border-4 border-background bg-card shadow-lg sm:h-28 sm:w-28 md:h-36 md:w-36'
                 imageClassName='object-cover'
                 sizes='144px'
                 fallbackSrc={PLACEHOLDER_SHOP_LOGO}
               />
 
               <div className='min-w-0 flex-1 space-y-1 pb-1 sm:pb-2'>
-                <h1 className='truncate text-xl font-bold tracking-tight text-foreground sm:text-2xl md:text-3xl'>
+                <h1 className='truncate text-lg font-bold tracking-tight text-foreground sm:text-2xl md:text-3xl'>
                   {formatEmpty(store.displayName || store.name)}
                 </h1>
                 <div className='flex flex-col gap-1 text-xs text-muted-foreground sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-1 sm:text-sm'>

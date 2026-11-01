@@ -217,7 +217,7 @@ export function CityPreferenceGate({
         role='dialog'
         aria-modal='true'
         aria-labelledby='city-gate-title'
-        className='relative flex flex-col w-full max-h-[90dvh] rounded-t-3xl border-t border-border bg-card p-5 shadow-2xl sm:max-h-[85vh] sm:max-w-md sm:rounded-3xl sm:border sm:p-6 pb-[max(1rem,env(safe-area-inset-bottom))]'
+        className='relative flex flex-col w-full max-h-[90dvh] rounded-t-3xl border-t border-border bg-card p-4 shadow-2xl sm:max-h-[85vh] sm:max-w-md sm:rounded-3xl sm:border sm:p-6 pb-[max(1rem,env(safe-area-inset-bottom))]'
       >
         <div className='mx-auto h-1.5 w-12 rounded-full bg-muted-foreground/30 mb-2 sm:hidden' />
 

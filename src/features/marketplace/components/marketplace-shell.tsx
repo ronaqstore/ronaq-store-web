@@ -276,8 +276,8 @@ export function MarketplaceShell({
       />
 
       <section className='border-b border-border/60 bg-gradient-to-b from-primary/10 via-primary/5 to-background py-6 sm:py-8 md:py-10 lg:py-12'>
-        <div className='mx-auto w-full max-w-7xl 2xl:max-w-[1440px] px-4 sm:px-6 lg:px-8'>
-          <h1 className='text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl 2xl:text-5xl mb-2'>
+        <div className='mx-auto w-full max-w-7xl 2xl:max-w-[1440px] px-3 sm:px-6 lg:px-8'>
+          <h1 className='text-xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl 2xl:text-5xl mb-2'>
             {t('marketplace.heroTitle')}
           </h1>
           <p className='text-sm text-muted-foreground sm:text-base lg:text-lg hidden min-[360px]:block max-w-2xl leading-relaxed'>
@@ -287,7 +287,7 @@ export function MarketplaceShell({
       </section>
 
       <div className='sticky top-[var(--app-bar-h)] z-30 border-b border-border/60 bg-background/95 backdrop-blur-xl'>
-        <div className='mx-auto w-full max-w-7xl 2xl:max-w-[1440px] px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 space-y-2.5'>
+        <div className='mx-auto w-full max-w-7xl 2xl:max-w-[1440px] px-3 sm:px-6 lg:px-8 py-2 sm:py-3 space-y-2 sm:space-y-2.5'>
           <div className='flex flex-col gap-2 md:flex-row md:items-center md:gap-3'>
             <div className='min-w-0 flex-1 max-w-2xl'>
               <MarketplaceSearchBar
@@ -304,24 +304,24 @@ export function MarketplaceShell({
               <Button
                 type='button'
                 variant='outline'
-                className='h-12 min-h-[48px] rounded-xl flex-1 justify-start border-border/80 px-3.5 md:flex-none md:max-w-48'
+                className='h-11 min-h-[44px] sm:h-12 sm:min-h-[48px] rounded-xl flex-1 justify-start border-border/80 px-2.5 sm:px-3.5 md:flex-none md:max-w-48 text-xs sm:text-sm'
                 onClick={handleChangeCity}
               >
                 <Icons.mapPin className='me-2 h-4 w-4 shrink-0 text-primary' />
-                <span className='truncate text-sm font-semibold'>{selectedHubName}</span>
+                <span className='truncate text-xs sm:text-sm font-semibold'>{selectedHubName}</span>
               </Button>
 
               <Button
                 type='button'
                 variant={activeFilterCount > 0 ? 'default' : 'outline'}
                 className={cn(
-                  'relative h-12 min-h-[48px] rounded-xl shrink-0 px-4 font-semibold',
+                  'relative h-11 min-h-[44px] sm:h-12 sm:min-h-[48px] rounded-xl shrink-0 px-3 sm:px-4 font-semibold text-xs sm:text-sm',
                   activeFilterCount === 0 && 'border-border/80'
                 )}
                 onClick={handleOpenFilters}
               >
                 <Icons.filter className='me-2 h-4 w-4' />
-                <span className='text-sm'>{t('marketplace.filtersHeading')}</span>
+                <span className='text-xs sm:text-sm'>{t('marketplace.filtersHeading')}</span>
                 {activeFilterCount > 0 ? (
                   <span className='ms-1.5 rounded-full bg-primary-foreground/20 px-1.5 py-0.5 text-[10px] font-bold text-primary-foreground'>
                     {activeFilterCount}
@@ -341,7 +341,7 @@ export function MarketplaceShell({
         </div>
       </div>
 
-      <section className='mx-auto w-full max-w-7xl 2xl:max-w-[1440px] px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10'>
+      <section className='mx-auto w-full max-w-7xl 2xl:max-w-[1440px] px-3 sm:px-6 lg:px-8 py-5 sm:py-8 lg:py-10'>
         <div className='mb-4 sm:mb-6 border-b border-border/40 pb-4'>
           <div className='min-w-0'>
             <h2 className='text-lg font-bold tracking-tight text-foreground sm:text-xl md:text-2xl 2xl:text-3xl'>

@@ -88,7 +88,7 @@ export function StoreDiscoveryShell({
       <StoreHero />
 
       <div className='sticky top-[var(--app-bar-h)] z-30 border-b border-border/60 bg-background/95 backdrop-blur-xl'>
-        <div className='mx-auto flex w-full max-w-7xl 2xl:max-w-[1440px] flex-col gap-2.5 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6 lg:px-8'>
+        <div className='mx-auto flex w-full max-w-7xl 2xl:max-w-[1440px] flex-col gap-2.5 px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-3 lg:px-8'>
           <div className='min-w-0 w-full sm:max-w-md lg:max-w-lg'>
             <StoreSearchBar
               committedQuery={urlSearch}
@@ -101,11 +101,11 @@ export function StoreDiscoveryShell({
           <Button
             type='button'
             variant='outline'
-            className='h-12 min-h-12 w-full shrink-0 justify-start rounded-xl border-border/80 px-3.5 sm:ms-auto sm:w-auto sm:max-w-52'
+            className='h-11 min-h-[44px] w-full shrink-0 justify-start rounded-xl border-border/80 px-2.5 text-xs font-semibold sm:h-12 sm:min-h-12 sm:ms-auto sm:w-auto sm:max-w-52 sm:px-3.5 sm:text-sm'
             onClick={handleChangeCity}
           >
             <Icons.mapPin className='me-2 h-4 w-4 shrink-0 text-primary' />
-            <span className='truncate text-sm font-semibold'>{selectedHubName}</span>
+            <span className='truncate text-xs sm:text-sm font-semibold'>{selectedHubName}</span>
           </Button>
         </div>
         {isPending ? (
@@ -117,7 +117,7 @@ export function StoreDiscoveryShell({
 
       <section
         id='shops'
-        className='mx-auto w-full max-w-7xl 2xl:max-w-[1440px] scroll-mt-36 px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-14'
+        className='mx-auto w-full max-w-7xl 2xl:max-w-[1440px] scroll-mt-36 px-3 py-6 sm:px-6 sm:py-10 lg:px-8 lg:py-14'
       >
         <div className='mb-4 border-b border-border/40 pb-4 sm:mb-6'>
           <h2 className='text-lg font-bold tracking-tight text-foreground sm:text-xl md:text-2xl 2xl:text-3xl'>

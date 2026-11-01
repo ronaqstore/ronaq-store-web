@@ -32,64 +32,64 @@ export function BottomNav({ className }: BottomNavProps) {
         className
       )}
     >
-      <div className='flex h-16 items-center justify-around px-2'>
+      <div className='flex h-14 sm:h-16 items-center justify-around px-1 sm:px-2'>
         <Link
           href='/'
           className={cn(
-            'flex flex-1 flex-col items-center justify-center gap-1 py-1 transition-colors min-h-[48px]',
+            'flex flex-1 flex-col items-center justify-center gap-0.5 sm:gap-1 py-1 transition-colors min-h-[44px] sm:min-h-[48px] select-none outline-none focus:outline-none focus-visible:outline-none',
             isHome ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
           )}
         >
           <div
             className={cn(
-              'flex h-7 w-12 items-center justify-center rounded-full transition-colors',
+              'flex h-6 w-10 sm:h-7 sm:w-12 items-center justify-center rounded-full transition-colors',
               isHome ? 'bg-primary/15 text-primary' : 'text-muted-foreground'
             )}
           >
-            <Icons.home className='h-5 w-5' />
+            <Icons.home className='h-4 w-4 sm:h-5 sm:w-5' />
           </div>
-          <span className='text-xs font-medium leading-none'>{t('home')}</span>
+          <span className='text-[10px] sm:text-xs font-medium leading-none truncate whitespace-nowrap max-w-full px-0.5'>{t('home')}</span>
         </Link>
 
         <Link
           href='/shops'
           className={cn(
-            'flex flex-1 flex-col items-center justify-center gap-1 py-1 transition-colors min-h-[48px]',
+            'flex flex-1 flex-col items-center justify-center gap-0.5 sm:gap-1 py-1 transition-colors min-h-[44px] sm:min-h-[48px] select-none outline-none focus:outline-none focus-visible:outline-none',
             isShops ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
           )}
         >
           <div
             className={cn(
-              'flex h-7 w-12 items-center justify-center rounded-full transition-colors',
+              'flex h-6 w-10 sm:h-7 sm:w-12 items-center justify-center rounded-full transition-colors',
               isShops ? 'bg-primary/15 text-primary' : 'text-muted-foreground'
             )}
           >
-            <Icons.store className='h-5 w-5' />
+            <Icons.store className='h-4 w-4 sm:h-5 sm:w-5' />
           </div>
-          <span className='text-xs font-medium leading-none'>{t('stores')}</span>
+          <span className='text-[10px] sm:text-xs font-medium leading-none truncate whitespace-nowrap max-w-full px-0.5'>{t('stores')}</span>
         </Link>
 
         <button
           type='button'
           onClick={handleSearchClick}
-          className='flex flex-1 flex-col items-center justify-center gap-1 py-1 transition-colors min-h-[48px] text-muted-foreground hover:text-foreground'
+          className='flex flex-1 flex-col items-center justify-center gap-0.5 sm:gap-1 py-1 transition-colors min-h-[44px] sm:min-h-[48px] text-muted-foreground hover:text-foreground select-none outline-none focus:outline-none focus-visible:outline-none'
         >
-          <div className='flex h-7 w-12 items-center justify-center rounded-full transition-colors'>
-            <Icons.search className='h-5 w-5' />
+          <div className='flex h-6 w-10 sm:h-7 sm:w-12 items-center justify-center rounded-full transition-colors'>
+            <Icons.search className='h-4 w-4 sm:h-5 sm:w-5' />
           </div>
-          <span className='text-xs font-medium leading-none'>{t('search')}</span>
+          <span className='text-[10px] sm:text-xs font-medium leading-none truncate whitespace-nowrap max-w-full px-0.5'>{t('search')}</span>
         </button>
 
         <a
           href={`${ADMIN_BASE_URL}/login`}
           target='_blank'
           rel='noopener noreferrer nofollow'
-          className='flex flex-1 flex-col items-center justify-center gap-1 py-1 transition-colors min-h-[48px] text-muted-foreground hover:text-foreground'
+          className='flex flex-1 flex-col items-center justify-center gap-0.5 sm:gap-1 py-1 transition-colors min-h-[44px] sm:min-h-[48px] text-muted-foreground hover:text-foreground select-none outline-none focus:outline-none focus-visible:outline-none'
         >
-          <div className='flex h-7 w-12 items-center justify-center rounded-full transition-colors'>
-            <Icons.user className='h-5 w-5' />
+          <div className='flex h-6 w-10 sm:h-7 sm:w-12 items-center justify-center rounded-full transition-colors'>
+            <Icons.user className='h-4 w-4 sm:h-5 sm:w-5' />
           </div>
-          <span className='text-xs font-medium leading-none'>{t('account')}</span>
+          <span className='text-[10px] sm:text-xs font-medium leading-none truncate whitespace-nowrap max-w-full px-0.5'>{t('account')}</span>
         </a>
       </div>
     </nav>

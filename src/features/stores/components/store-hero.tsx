@@ -8,11 +8,11 @@ export function StoreHero() {
 
   return (
     <section className='border-b border-border/60 bg-gradient-to-b from-primary/10 via-primary/5 to-background py-6 sm:py-8 md:py-10 lg:py-12'>
-      <div className='mx-auto w-full max-w-7xl 2xl:max-w-[1440px] px-4 sm:px-6 lg:px-8'>
+      <div className='mx-auto w-full max-w-7xl 2xl:max-w-[1440px] px-3 sm:px-6 lg:px-8'>
         <p className='mb-2 text-[11px] font-semibold tracking-wide text-primary uppercase'>
           {t('common.appName')}
         </p>
-        <h1 className='text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl 2xl:text-5xl'>
+        <h1 className='text-xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl 2xl:text-5xl'>
           {t('hero.title')}
         </h1>
         <p className='mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-sm md:text-base lg:text-base 2xl:text-lg'>

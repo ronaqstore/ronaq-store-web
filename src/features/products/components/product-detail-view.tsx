@@ -41,7 +41,7 @@ export async function ProductDetailView({
     : null;
 
   return (
-    <article className='mx-auto w-full max-w-7xl 2xl:max-w-[1440px] px-4 sm:px-6 lg:px-8 pt-4 md:pt-6 lg:pt-8 pb-[calc(80px+env(safe-area-inset-bottom))] md:pb-12 space-y-8 md:space-y-10 lg:space-y-14'>
+    <article className='mx-auto w-full max-w-7xl 2xl:max-w-[1440px] px-3 sm:px-6 lg:px-8 pt-4 md:pt-6 lg:pt-8 pb-[calc(80px+env(safe-area-inset-bottom))] md:pb-12 space-y-8 md:space-y-10 lg:space-y-14'>
       <JsonLd
         id='ld-product'
         data={productJsonLd({

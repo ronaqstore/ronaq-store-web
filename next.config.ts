@@ -40,7 +40,7 @@ const baseConfig: NextConfig = {
         source: '/:path*',
         headers: [
           { key: 'X-DNS-Prefetch-Control', value: 'on' },
-          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          ...(process.env.NODE_ENV === 'production' ? [{ key: 'X-Frame-Options', value: 'SAMEORIGIN' }] : []),
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           {
@@ -53,20 +53,19 @@ const baseConfig: NextConfig = {
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com",
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob: https:",
-              "font-src 'self' data:",
-              "connect-src 'self' https: http://localhost:* http://127.0.0.1:* ws: wss:",
+              "img-src 'self' data: blob: https: chrome-extension:",
+              "font-src 'self' data: chrome-extension:",
+              "connect-src 'self' https: http://localhost:* http://127.0.0.1:* ws: wss: chrome-extension:",
               "frame-src 'self' https://www.google.com https://maps.google.com",
-              "frame-ancestors 'self'",
+              process.env.NODE_ENV === 'production'
+                ? "frame-ancestors 'self' chrome-extension:*"
+                : "frame-ancestors 'self' http://localhost:* http://127.0.0.1:* chrome-extension:*",
               "base-uri 'self'",
               "form-action 'self'",
               "object-src 'none'"
             ].join('; ')
           },
-          {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=63072000; includeSubDomains; preload'
-          }
+          ...(process.env.NODE_ENV === 'production' ? [{ key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' }] : [])
         ]
       },
       {
@@ -112,3 +111,4 @@ const baseConfig: NextConfig = {
 };
 
 export default withNextIntl(baseConfig);
+
