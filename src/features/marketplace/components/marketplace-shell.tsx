@@ -16,7 +16,6 @@ import {
   stableListingQueryKey
 } from '@/lib/marketplace-filters';
 import { cn } from '@/lib/utils';
-import { CityPreferenceGate } from '@/components/city/city-preference-gate';
 import { FilterSheet } from './filter-sheet';
 import { MarketplaceSearchBar } from './marketplace-search-bar';
 import { MarketplaceSkeleton } from './marketplace-skeleton';
@@ -58,7 +57,6 @@ export function MarketplaceShell({
   const topLoader = useTopLoader();
   const topLoaderRef = useRef(topLoader);
   const [isPending, startTransition] = useTransition();
-  const [cityGateOpen, setCityGateOpen] = useState(!hasCityPreference);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
@@ -79,9 +77,7 @@ export function MarketplaceShell({
   const activeFilterCount = countActiveMarketplaceFilters(filters);
   const committedSearch = urlSearch;
 
-  useEffect(() => {
-    if (!hasCityPreference) setCityGateOpen(true);
-  }, [hasCityPreference]);
+
 
   useEffect(() => {
     if (isPending) {
@@ -93,14 +89,7 @@ export function MarketplaceShell({
     topLoaderRef.current.done();
   }, [isPending]);
 
-  useEffect(() => {
-    const handleOpenCity = (event: Event) => {
-      event.preventDefault();
-      setCityGateOpen(true);
-    };
-    window.addEventListener('open-city-picker', handleOpenCity);
-    return () => window.removeEventListener('open-city-picker', handleOpenCity);
-  }, []);
+
 
   useEffect(() => {
     const focusSearch = () => {
@@ -176,7 +165,7 @@ export function MarketplaceShell({
     : (selectedCityName ?? t('marketplace.allCities'));
 
   const handleChangeCity = () => {
-    setCityGateOpen(true);
+    window.dispatchEvent(new CustomEvent('open-city-picker'));
   };
 
   const handleSelectModel = useCallback(
@@ -289,13 +278,6 @@ export function MarketplaceShell({
 
   return (
     <div className='min-w-0'>
-      <CityPreferenceGate
-        initialCityId={isAllCities ? null : cityId}
-        hasPreference={hasCityPreference}
-        open={cityGateOpen}
-        onOpenChange={setCityGateOpen}
-      />
-
       <FilterSheet
         open={filtersOpen}
         onOpenChange={setFiltersOpen}

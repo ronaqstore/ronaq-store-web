@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { MarketplaceFilterSidebar } from './marketplace-filter-sidebar';
+import { MarketplaceSortDropdown } from './marketplace-sort-dropdown';
 import { countActiveMarketplaceFilters } from '@/lib/marketplace-filters';
 import { formatNumber } from '@/lib/formatters';
 import { cn } from '@/lib/utils';
@@ -126,6 +127,17 @@ export function FilterSheet({
             '[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden'
           )}
         >
+          <div className='mb-4 pb-4 border-b border-border/70 sm:hidden'>
+            <label className='text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 block'>
+              {t('sortHeading')}
+            </label>
+            <MarketplaceSortDropdown
+              value={draftFilters.sort ?? 'newest'}
+              onChange={(sort) => setDraftFilters((prev) => ({ ...prev, sort }))}
+              className='w-full'
+            />
+          </div>
+
           <MarketplaceFilterSidebar
             filters={draftFilters}
             onChange={setDraftFilters}

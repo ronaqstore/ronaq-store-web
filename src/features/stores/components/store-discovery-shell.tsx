@@ -1,10 +1,9 @@
 'use client';
 
-import { useCallback, useEffect, useState, useTransition } from 'react';
+import { useCallback, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/components/icons';
-import { CityPreferenceGate } from '@/components/city/city-preference-gate';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import { CITY_PREFERENCE_ALL } from '@/constants/city-preference';
 import { StoreHero } from './store-hero';
@@ -22,25 +21,15 @@ export function StoreDiscoveryShell({
   const router = useRouter();
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
-  const [cityGateOpen, setCityGateOpen] = useState(!hasCityPreference);
 
   const isAllCities = cityId === CITY_PREFERENCE_ALL || cityId.startsWith('area:');
   const selectedHubName = isAllCities
     ? t('marketplace.allCities')
     : (selectedCityName ?? t('marketplace.allCities'));
 
-  useEffect(() => {
-    if (!hasCityPreference) setCityGateOpen(true);
-  }, [hasCityPreference]);
 
-  useEffect(() => {
-    const onOpenCity = (event: Event) => {
-      event.preventDefault();
-      setCityGateOpen(true);
-    };
-    window.addEventListener('open-city-picker', onOpenCity);
-    return () => window.removeEventListener('open-city-picker', onOpenCity);
-  }, []);
+
+
 
   const navigateSearch = useCallback(
     (q: string) => {
@@ -76,18 +65,11 @@ export function StoreDiscoveryShell({
   );
 
   const handleChangeCity = () => {
-    setCityGateOpen(true);
+    window.dispatchEvent(new CustomEvent('open-city-picker'));
   };
 
   return (
     <div>
-      <CityPreferenceGate
-        initialCityId={isAllCities ? null : cityId}
-        hasPreference={hasCityPreference}
-        open={cityGateOpen}
-        onOpenChange={setCityGateOpen}
-      />
-
       <StoreHero />
 
       <div className='sticky top-[var(--app-bar-h)] z-30 border-b border-border/60 bg-background md:bg-background/95 md:backdrop-blur-xl'>

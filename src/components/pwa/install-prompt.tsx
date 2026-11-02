@@ -82,11 +82,24 @@ export function InstallPrompt({ className }: InstallPromptProps) {
       setVisible(false);
     };
 
+    const handleDomChange = () => {
+      const hasOpenDialog = Boolean(
+        document.querySelector('[role="dialog"]:not([data-install-prompt="true"])')
+      );
+      if (hasOpenDialog) {
+        setVisible(false);
+      }
+    };
+
+    const observer = new MutationObserver(handleDomChange);
+    observer.observe(document.body, { childList: true, subtree: true });
+
     window.addEventListener('city-changed', onCityChanged);
     window.addEventListener('open-city-picker', onOpenPicker);
 
     return () => {
       window.clearTimeout(timer);
+      observer.disconnect();
       window.removeEventListener('city-changed', onCityChanged);
       window.removeEventListener('open-city-picker', onOpenPicker);
     };

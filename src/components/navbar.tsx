@@ -43,12 +43,38 @@ export function Navbar() {
     return () => window.removeEventListener('city-changed', updateCity);
   }, []);
 
-  const handleOpenCity = () => {
-    const event = new CustomEvent('open-city-picker', { cancelable: true });
-    window.dispatchEvent(event);
-    if (!event.defaultPrevented) {
+  useEffect(() => {
+    const onOpen = () => setCityPickerOpen(true);
+    window.addEventListener('open-city-picker', onOpen);
+    return () => window.removeEventListener('open-city-picker', onOpen);
+  }, []);
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const match = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith(`${CITY_PREFERENCE_COOKIE}=`));
+    if (!match) {
       setCityPickerOpen(true);
     }
+  }, []);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [mobileOpen]);
+
+  const handleOpenCity = () => {
+    setCityPickerOpen(true);
   };
 
   const closeMobile = () => {
@@ -127,6 +153,18 @@ export function Navbar() {
           </div>
 
           <div className='hidden items-center gap-2 md:flex'>
+            <button
+              type='button'
+              onClick={handleOpenCity}
+              className='inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-card px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-muted/60'
+            >
+              <Icons.mapPin className='h-3.5 w-3.5 shrink-0 text-primary' />
+              <span className='truncate max-w-[120px]'>
+                {currentCity
+                  ? currentCity.replace(/^[a-z]/, (c) => c.toUpperCase())
+                  : t('common.city')}
+              </span>
+            </button>
             <LanguageSwitcher />
             <div className='[@media(display-mode:standalone)]:hidden'>
               <InstallAppButton />
@@ -142,17 +180,29 @@ export function Navbar() {
             </a>
           </div>
         </div>
+      </header>
 
-        {mobileOpen ? (
-          <div className='animate-in slide-in-from-top-2 space-y-4 border-b border-border bg-background px-4 py-4 md:hidden'>
-            <div className='flex flex-col space-y-3 text-sm font-medium'>
+      {mobileOpen ? (
+        <>
+          <div
+            className='fixed inset-0 top-[var(--app-bar-h)] z-40 bg-background/80 backdrop-blur-sm md:hidden'
+            onClick={closeMobile}
+            aria-hidden='true'
+          />
+          <div
+            role='dialog'
+            aria-modal='true'
+            aria-label={t('aria.toggleNavigation')}
+            className='fixed inset-x-0 top-[var(--app-bar-h)] z-50 max-h-[calc(100dvh-var(--app-bar-h))] overflow-y-auto border-b border-border bg-background px-4 py-4 shadow-2xl animate-in slide-in-from-top-2 md:hidden pb-[max(2rem,calc(env(safe-area-inset-bottom)+1.5rem))]'
+          >
+            <div className='flex flex-col space-y-2 text-base font-medium'>
               <Link
                 href='/'
                 onClick={closeMobile}
                 aria-current={homeActive ? 'page' : undefined}
                 className={cn(
-                  'rounded-lg px-2 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600',
-                  homeActive ? 'bg-primary/10 font-semibold text-primary' : 'text-foreground'
+                  'rounded-xl px-3 py-2.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600',
+                  homeActive ? 'bg-primary/10 font-bold text-primary' : 'text-foreground hover:bg-muted/60'
                 )}
               >
                 {t('nav.home')}
@@ -162,34 +212,37 @@ export function Navbar() {
                 onClick={closeMobile}
                 aria-current={shopsActive ? 'page' : undefined}
                 className={cn(
-                  'rounded-lg px-2 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600',
-                  shopsActive ? 'bg-primary/10 font-semibold text-primary' : 'text-foreground'
+                  'rounded-xl px-3 py-2.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600',
+                  shopsActive ? 'bg-primary/10 font-bold text-primary' : 'text-foreground hover:bg-muted/60'
                 )}
               >
                 {t('nav.stores')}
               </Link>
             </div>
-            <div className='flex items-center justify-between border-t border-border pt-3'>
+            <div className='mt-4 flex items-center justify-between border-t border-border pt-4'>
               <LanguageSwitcher />
               <div className='[@media(display-mode:standalone)]:hidden'>
                 <InstallAppButton />
               </div>
             </div>
-            <a
-              href={`${ADMIN_BASE_URL}/login`}
-              target='_blank'
-              rel='noopener noreferrer nofollow'
-              className={cn(buttonVariants(), 'w-full rounded-xl')}
-            >
-              {t('nav.login')}
-            </a>
+            <div className='mt-4'>
+              <a
+                href={`${ADMIN_BASE_URL}/login`}
+                target='_blank'
+                rel='noopener noreferrer nofollow'
+                className={cn(buttonVariants(), 'h-11 w-full rounded-xl text-sm font-semibold shadow-sm')}
+              >
+                {t('nav.login')}
+              </a>
+            </div>
           </div>
-        ) : null}
-      </header>
+        </>
+      ) : null}
+
       <div className='h-[var(--app-bar-h)] shrink-0' aria-hidden />
       <CityPreferenceGate
         initialCityId={currentCity}
-        hasPreference={true}
+        hasPreference={Boolean(currentCity)}
         open={cityPickerOpen}
         onOpenChange={setCityPickerOpen}
       />

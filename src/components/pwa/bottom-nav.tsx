@@ -16,6 +16,10 @@ export function BottomNav({ className }: BottomNavProps) {
   const isHome = pathname === '/' || pathname === '';
   const isShops = pathname.startsWith('/shops');
 
+  if (pathname.includes('/product/')) {
+    return null;
+  }
+
   const handleSearchClick = () => {
     const input =
       document.getElementById('marketplace-search-input') ||

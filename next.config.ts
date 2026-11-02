@@ -52,15 +52,15 @@ const baseConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com",
-              "style-src 'self' 'unsafe-inline'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com chrome-extension:",
+              "style-src 'self' 'unsafe-inline' chrome-extension:",
               "img-src 'self' data: blob: https: chrome-extension:",
               "font-src 'self' data: chrome-extension:",
               "connect-src 'self' https: http://localhost:* http://127.0.0.1:* ws: wss: chrome-extension:",
-              "frame-src 'self' https://www.google.com https://maps.google.com",
+              "frame-src 'self' https://www.google.com https://maps.google.com chrome-extension:",
               process.env.NODE_ENV === 'production'
-                ? "frame-ancestors 'self' chrome-extension:*"
-                : "frame-ancestors 'self' http://localhost:* http://127.0.0.1:* chrome-extension:*",
+                ? "frame-ancestors 'self' chrome-extension:"
+                : "frame-ancestors 'self' http://localhost:* http://127.0.0.1:* chrome-extension: chrome-extension://*",
               "base-uri 'self'",
               "form-action 'self'",
               "object-src 'none'"
