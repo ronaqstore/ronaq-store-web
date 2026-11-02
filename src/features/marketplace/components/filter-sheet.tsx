@@ -88,17 +88,17 @@ export function FilterSheet({
         aria-label={t('filtersHeading')}
         className={cn(
           'relative flex flex-col bg-background shadow-2xl transition-transform duration-300 ease-out z-10',
-          'inset-x-0 bottom-0 max-h-[90dvh] w-full rounded-t-3xl border-t border-border mt-auto',
+          'inset-x-0 bottom-0 max-h-[90dvh] w-full rounded-t-2xl border-t border-border mt-auto',
           'pb-[max(0.75rem,env(safe-area-inset-bottom))]',
           'md:inset-y-0 md:inset-s-auto md:inset-e-0 md:h-full md:max-h-none md:w-[380px] md:rounded-none md:border-s md:border-t-0 md:pb-0'
         )}
       >
-        <div className='mx-auto h-1.5 w-12 rounded-full bg-muted-foreground/30 mt-2.5 mb-1 md:hidden' />
+        <div className='mx-auto h-1.5 w-10 sm:w-12 rounded-full bg-muted-foreground/30 mt-2.5 mb-1 md:hidden' />
 
         <div className='flex shrink-0 items-center justify-between border-b border-border/70 px-4 py-3 sm:px-5'>
           <div className='flex items-center gap-2'>
             <Icons.filter className='h-4 w-4 text-primary' />
-            <span className='text-base font-bold text-foreground'>
+            <span className='text-sm sm:text-base font-bold text-foreground'>
               {t('filtersHeading')}
             </span>
             {draftFilterCount > 0 ? (
@@ -112,7 +112,7 @@ export function FilterSheet({
             type='button'
             variant='ghost'
             size='sm'
-            className='h-9 w-9 rounded-full p-0 text-muted-foreground hover:text-foreground'
+            className='h-8 w-8 sm:h-9 sm:w-9 rounded-full p-0 text-muted-foreground hover:text-foreground'
             aria-label={tCommon('close')}
             onClick={handleClose}
           >
@@ -134,11 +134,11 @@ export function FilterSheet({
           />
         </div>
 
-        <div className='shrink-0 border-t border-border/70 p-4 sm:px-5 bg-background/95 backdrop-blur-xs flex items-center gap-3'>
+        <div className='shrink-0 border-t border-border/70 p-3.5 sm:p-4 sm:px-5 bg-background/95 backdrop-blur-xs flex items-center gap-2.5 sm:gap-3'>
           <Button
             type='button'
             variant='outline'
-            className='h-12 min-h-[48px] rounded-xl font-bold flex-1 border-border/80'
+            className='h-11 sm:h-12 min-h-[44px] sm:min-h-[48px] rounded-xl font-bold flex-1 border-border/80 text-xs sm:text-sm'
             onClick={handleClear}
             disabled={draftFilterCount === 0}
           >
@@ -147,7 +147,7 @@ export function FilterSheet({
 
           <Button
             type='button'
-            className='h-12 min-h-[48px] rounded-xl font-bold flex-[1.5] shadow-sm'
+            className='h-11 sm:h-12 min-h-[44px] sm:min-h-[48px] rounded-xl font-bold flex-[1.5] shadow-sm text-xs sm:text-sm'
             onClick={handleApply}
           >
             {t('showResults')}

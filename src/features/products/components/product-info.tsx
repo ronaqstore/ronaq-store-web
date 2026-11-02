@@ -239,14 +239,14 @@ export function ProductInfo({ product, store, slug, crumbs }: ProductInfoProps) 
             rel='noopener noreferrer'
             className={cn(
               buttonVariants({ size: 'lg' }),
-              'w-full gap-2.5 h-11 sm:h-12 min-h-[44px] rounded-xl text-sm sm:text-base font-bold text-white shadow-xs transition-all hover:bg-emerald-700 active:scale-[0.99] [@media(hover:hover)]:hover:shadow-md',
+              'w-full gap-2.5 h-auto min-h-[44px] py-2.5 px-3 rounded-xl text-xs sm:text-base font-bold text-white shadow-xs transition-all hover:bg-emerald-700 active:scale-[0.99] [@media(hover:hover)]:hover:shadow-md text-center',
               isOutOfStock
                 ? 'bg-emerald-700 hover:bg-emerald-800'
                 : 'bg-emerald-600 hover:bg-emerald-700'
             )}
           >
             <Icons.whatsapp className='h-5 w-5 shrink-0' />
-            <span className='truncate'>
+            <span className='leading-snug text-center break-words'>
               {isOutOfStock ? t('askAvailabilityWhatsApp') : t('orderOnWhatsApp')}
             </span>
           </a>
@@ -257,11 +257,13 @@ export function ProductInfo({ product, store, slug, crumbs }: ProductInfoProps) 
             href={contactHref}
             className={cn(
               buttonVariants({ size: 'lg', variant: 'outline' }),
-              'w-full gap-2.5 h-11 sm:h-12 min-h-[44px] rounded-xl text-sm sm:text-base font-bold border-border/80 hover:bg-muted/60 transition-colors'
+              'w-full gap-2.5 h-auto min-h-[44px] py-2.5 px-3 rounded-xl text-xs sm:text-base font-bold border-border/80 hover:bg-muted/60 transition-colors text-center'
             )}
           >
             <Icons.phone className='h-4 w-4 shrink-0 text-muted-foreground' />
-            <span className='truncate'>{t('callShop', { phone: formatPhone(contactNumber) })}</span>
+            <span className='leading-snug text-center break-words'>
+              {t('callShop', { phone: formatPhone(contactNumber) })}
+            </span>
           </a>
         ) : null}
       </div>

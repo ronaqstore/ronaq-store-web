@@ -20,9 +20,9 @@ const SKELETON_ROWS = 6;
 
 function CityListSkeleton() {
   return (
-    <div className='space-y-2' aria-busy='true' aria-live='polite'>
+    <div className='space-y-1.5' aria-busy='true' aria-live='polite'>
       {Array.from({ length: SKELETON_ROWS }, (_, index) => (
-        <Skeleton key={index} className='h-12 w-full rounded-2xl' />
+        <Skeleton key={index} className='h-11 sm:h-12 w-full rounded-xl sm:rounded-2xl' />
       ))}
     </div>
   );
@@ -217,23 +217,23 @@ export function CityPreferenceGate({
         role='dialog'
         aria-modal='true'
         aria-labelledby='city-gate-title'
-        className='relative flex flex-col w-full max-h-[90dvh] rounded-t-3xl border-t border-border bg-card p-4 shadow-2xl sm:max-h-[85vh] sm:max-w-md sm:rounded-3xl sm:border sm:p-6 pb-[max(1rem,env(safe-area-inset-bottom))]'
+        className='relative flex flex-col w-full max-h-[90dvh] rounded-t-2xl border-t border-border bg-card p-3.5 shadow-2xl sm:max-h-[85vh] sm:max-w-md sm:rounded-3xl sm:border sm:p-6 pb-[max(1rem,env(safe-area-inset-bottom))]'
       >
-        <div className='mx-auto h-1.5 w-12 rounded-full bg-muted-foreground/30 mb-2 sm:hidden' />
+        <div className='mx-auto h-1.5 w-10 sm:w-12 rounded-full bg-muted-foreground/30 mb-2 sm:hidden' />
 
         <Button
           type='button'
           variant='ghost'
           size='sm'
           onClick={handleDismiss}
-          className='absolute inset-e-3 top-3 z-10 h-9 w-9 rounded-full p-0 text-muted-foreground hover:text-foreground'
+          className='absolute inset-e-3 top-3 z-10 h-8 w-8 sm:h-9 sm:w-9 rounded-full p-0 text-muted-foreground hover:text-foreground'
           aria-label={t('common.close')}
         >
           <Icons.close className='h-4 w-4' />
         </Button>
 
         <div className='space-y-1 pe-8 shrink-0'>
-          <h2 id='city-gate-title' className='text-lg sm:text-xl font-bold tracking-tight text-foreground'>
+          <h2 id='city-gate-title' className='text-base sm:text-xl font-bold tracking-tight text-foreground'>
             {t('marketplace.cityGateTitle')}
           </h2>
           <p className='text-xs sm:text-sm text-muted-foreground leading-relaxed'>
@@ -241,22 +241,22 @@ export function CityPreferenceGate({
           </p>
         </div>
 
-        <div className='relative mt-3 shrink-0'>
-          <Icons.search className='pointer-events-none absolute inset-s-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
+        <div className='relative mt-2.5 sm:mt-3 shrink-0'>
+          <Icons.search className='pointer-events-none absolute inset-s-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground sm:inset-s-3.5' />
           <input
             type='search'
             value={citySearch}
             onChange={(event) => setCitySearch(event.target.value)}
             placeholder={t('marketplace.searchCity')}
-            className='h-12 w-full rounded-2xl border border-border bg-background pe-4 ps-10 text-base outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary'
+            className='h-11 sm:h-12 w-full rounded-xl sm:rounded-2xl border border-border bg-background pe-3 ps-9 sm:pe-4 sm:ps-10 text-sm sm:text-base outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary'
             autoComplete='off'
           />
         </div>
 
-        <div className='relative mt-3 flex-1 min-h-0'>
+        <div className='relative mt-2.5 sm:mt-3 flex-1 min-h-[120px]'>
           <div
             ref={listRef}
-            className='h-full max-h-64 sm:max-h-72 space-y-1.5 overflow-y-auto pe-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden'
+            className='h-full max-h-[36dvh] sm:max-h-72 space-y-1 sm:space-y-1.5 overflow-y-auto pe-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden'
             onScroll={onListScroll}
           >
             {loading ? <CityListSkeleton /> : null}
@@ -268,7 +268,7 @@ export function CityPreferenceGate({
                     type='button'
                     onClick={handleAllCities}
                     className={cn(
-                      'flex min-h-[48px] w-full items-center justify-between rounded-xl border px-4 py-3 text-start text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+                      'flex min-h-[44px] sm:min-h-[48px] w-full items-center justify-between rounded-xl border px-3 py-2 sm:px-4 sm:py-3 text-start text-xs sm:text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
                       selectedId === CITY_PREFERENCE_ALL
                         ? 'border-primary bg-primary/10 text-foreground'
                         : 'border-border/80 bg-background hover:bg-muted/60'
@@ -286,7 +286,7 @@ export function CityPreferenceGate({
                     type='button'
                     onClick={() => handleSelectHub(hub)}
                     className={cn(
-                      'flex min-h-[48px] w-full items-center justify-between rounded-xl border px-4 py-3 text-start text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+                      'flex min-h-[44px] sm:min-h-[48px] w-full items-center justify-between rounded-xl border px-3 py-2 sm:px-4 sm:py-3 text-start text-xs sm:text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
                       selectedId === hub.id
                         ? 'border-primary bg-primary/10 text-foreground'
                         : 'border-border/80 bg-background hover:bg-muted/60'
@@ -325,24 +325,24 @@ export function CityPreferenceGate({
           <p className='mt-2 text-xs text-destructive shrink-0'>{t('marketplace.locationFailed')}</p>
         ) : null}
 
-        <div className='mt-4 grid gap-2.5 sm:grid-cols-2 shrink-0'>
+        <div className='mt-3 sm:mt-4 grid gap-2 sm:gap-2.5 sm:grid-cols-2 shrink-0'>
           <Button
             type='button'
             variant='outline'
-            className='h-12 min-h-[48px] rounded-xl font-bold w-full border-border/80'
+            className='h-11 sm:h-12 min-h-[44px] sm:min-h-[48px] rounded-xl font-bold w-full border-border/80 text-xs sm:text-sm'
             disabled={locating || loading}
             onClick={handleUseLocation}
           >
             {locating ? (
-              <Icons.spinner className='me-2 h-4 w-4 animate-spin' />
+              <Icons.spinner className='me-1.5 sm:me-2 h-4 w-4 animate-spin' />
             ) : (
-              <Icons.mapPin className='me-2 h-4 w-4' />
+              <Icons.mapPin className='me-1.5 sm:me-2 h-4 w-4' />
             )}
             {t('marketplace.useMyLocation')}
           </Button>
           <Button
             type='button'
-            className='h-12 min-h-[48px] rounded-xl font-bold w-full shadow-sm'
+            className='h-11 sm:h-12 min-h-[44px] sm:min-h-[48px] rounded-xl font-bold w-full shadow-sm text-xs sm:text-sm'
             disabled={loading}
             onClick={handleContinue}
           >
