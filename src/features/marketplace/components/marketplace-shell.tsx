@@ -94,9 +94,37 @@ export function MarketplaceShell({
   }, [isPending]);
 
   useEffect(() => {
-    const handleOpenCity = () => setCityGateOpen(true);
+    const handleOpenCity = (event: Event) => {
+      event.preventDefault();
+      setCityGateOpen(true);
+    };
     window.addEventListener('open-city-picker', handleOpenCity);
     return () => window.removeEventListener('open-city-picker', handleOpenCity);
+  }, []);
+
+  useEffect(() => {
+    const focusSearch = () => {
+      const input = document.getElementById('marketplace-search-input');
+      if (input) {
+        input.focus();
+        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    };
+
+    if (typeof window !== 'undefined') {
+      try {
+        if (sessionStorage.getItem('auto-focus-search')) {
+          sessionStorage.removeItem('auto-focus-search');
+          const timer = window.setTimeout(focusSearch, 150);
+          return () => window.clearTimeout(timer);
+        }
+      } catch {
+        return undefined;
+      }
+    }
+
+    window.addEventListener('focus-search-input', focusSearch);
+    return () => window.removeEventListener('focus-search-input', focusSearch);
   }, []);
 
   useEffect(() => {

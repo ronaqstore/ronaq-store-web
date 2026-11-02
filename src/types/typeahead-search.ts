@@ -41,6 +41,7 @@ export interface TypeaheadSearchBarProps<T extends TypeaheadItem = TypeaheadItem
   inputClassName?: string;
   clearButtonClassName?: string;
   searchIconClassName?: string;
+  inputId?: string;
   onCommitSearch: (q: string) => void;
   onClearSearch: () => void;
   onSelectItem: (item: T) => void;

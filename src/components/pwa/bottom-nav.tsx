@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { Icons } from '@/components/icons';
-import { Link, usePathname } from '@/i18n/navigation';
+import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { ADMIN_BASE_URL } from '@/constants/api';
 import { cn } from '@/lib/utils';
 import type { BottomNavProps } from '@/types/marketplace';
@@ -11,16 +11,32 @@ export function BottomNav({ className }: BottomNavProps) {
   const t = useTranslations('nav');
   const tAria = useTranslations('aria');
   const pathname = usePathname();
+  const router = useRouter();
 
   const isHome = pathname === '/' || pathname === '';
   const isShops = pathname.startsWith('/shops');
 
   const handleSearchClick = () => {
-    const input = document.getElementById('marketplace-search-input');
+    const input =
+      document.getElementById('marketplace-search-input') ||
+      document.getElementById('shop-search-input') ||
+      document.getElementById('store-search-input') ||
+      document.querySelector<HTMLInputElement>('input[inputmode="search"]');
+
     if (input) {
       input.focus();
       input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
     }
+
+    if (typeof window !== 'undefined') {
+      try {
+        sessionStorage.setItem('auto-focus-search', 'true');
+      } catch {
+        return;
+      }
+    }
+    router.push('/');
   };
 
   return (
@@ -72,7 +88,7 @@ export function BottomNav({ className }: BottomNavProps) {
         <button
           type='button'
           onClick={handleSearchClick}
-          className='flex flex-1 flex-col items-center justify-center gap-0.5 sm:gap-1 py-1 transition-colors min-h-[44px] sm:min-h-[48px] text-muted-foreground hover:text-foreground select-none outline-none focus:outline-none focus-visible:outline-none'
+          className='flex flex-1 flex-col items-center justify-center gap-0.5 sm:gap-1 py-1 transition-colors min-h-[44px] sm:min-h-[48px] text-muted-foreground hover:text-foreground select-none outline-none focus:outline-none focus-visible:outline-none cursor-pointer'
         >
           <div className='flex h-6 w-10 sm:h-7 sm:w-12 items-center justify-center rounded-full transition-colors'>
             <Icons.search className='h-4 w-4 sm:h-5 sm:w-5' />

@@ -8,6 +8,7 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { InstallAppButton } from '@/components/pwa/install-app-button';
+import { CityPreferenceGate } from '@/components/city/city-preference-gate';
 import { ADMIN_BASE_URL } from '@/constants/api';
 import { CITY_PREFERENCE_COOKIE } from '@/constants/city-preference';
 import { cn } from '@/lib/utils';
@@ -20,6 +21,7 @@ export function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [currentCity, setCurrentCity] = useState<string | null>(null);
+  const [cityPickerOpen, setCityPickerOpen] = useState(false);
   const shopsActive = pathname === '/shops' || pathname.startsWith('/shops/');
   const homeActive = pathname === '/' || pathname === '';
 
@@ -42,7 +44,11 @@ export function Navbar() {
   }, []);
 
   const handleOpenCity = () => {
-    window.dispatchEvent(new CustomEvent('open-city-picker'));
+    const event = new CustomEvent('open-city-picker', { cancelable: true });
+    window.dispatchEvent(event);
+    if (!event.defaultPrevented) {
+      setCityPickerOpen(true);
+    }
   };
 
   const closeMobile = () => {
@@ -181,6 +187,12 @@ export function Navbar() {
         ) : null}
       </header>
       <div className='h-[var(--app-bar-h)] shrink-0' aria-hidden />
+      <CityPreferenceGate
+        initialCityId={currentCity}
+        hasPreference={true}
+        open={cityPickerOpen}
+        onOpenChange={setCityPickerOpen}
+      />
     </>
   );
 }

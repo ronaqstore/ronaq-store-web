@@ -19,6 +19,9 @@ export function writeCityPreferenceCookie(cityId: string): void {
   const secure =
     typeof window !== 'undefined' && window.location.protocol === 'https:' ? '; Secure' : '';
   document.cookie = `${CITY_PREFERENCE_COOKIE}=${encodeURIComponent(value)}; path=/; max-age=${CITY_PREFERENCE_MAX_AGE_SECONDS}; SameSite=Lax${secure}`;
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('city-changed'));
+  }
 }
 
 export function readCityPreferenceCookie(): string | null {

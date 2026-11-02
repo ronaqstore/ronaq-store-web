@@ -48,6 +48,7 @@ export function StoreSearchBar({
 
   return (
     <TypeaheadSearchBar<ShopTypeaheadItem>
+      inputId='store-search-input'
       committedQuery={committedQuery}
       placeholder={t('stores.search')}
       heading={t('stores.searchShopsHeading')}

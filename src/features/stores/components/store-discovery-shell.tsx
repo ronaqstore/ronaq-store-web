@@ -34,7 +34,10 @@ export function StoreDiscoveryShell({
   }, [hasCityPreference]);
 
   useEffect(() => {
-    const onOpenCity = () => setCityGateOpen(true);
+    const onOpenCity = (event: Event) => {
+      event.preventDefault();
+      setCityGateOpen(true);
+    };
     window.addEventListener('open-city-picker', onOpenCity);
     return () => window.removeEventListener('open-city-picker', onOpenCity);
   }, []);

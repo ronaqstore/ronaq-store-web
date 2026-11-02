@@ -37,6 +37,7 @@ export function MarketplaceSearchBar({
 
   return (
     <TypeaheadSearchBar<ModelTypeaheadItem>
+      inputId='marketplace-search-input'
       committedQuery={committedQuery}
       placeholder={t('marketplace.searchPlaceholder')}
       heading={t('marketplace.searchModelsHeading')}
