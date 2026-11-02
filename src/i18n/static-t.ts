@@ -1,10 +1,11 @@
 import en from '../../messages/en.json';
 import ur from '../../messages/ur.json';
 import ps from '../../messages/ps.json';
+import roman from '../../messages/roman.json';
 
-export type AppLocaleName = 'en' | 'ur' | 'ps';
+export type AppLocaleName = 'en' | 'ur' | 'ps' | 'roman';
 
-const catalogs: Record<AppLocaleName, Record<string, unknown>> = { en, ur, ps };
+const catalogs: Record<AppLocaleName, Record<string, unknown>> = { en, ur, ps, roman };
 const defaultCatalogLocale: AppLocaleName = 'en';
 
 function getMessage(catalog: Record<string, unknown>, key: string): string | undefined {
@@ -25,7 +26,7 @@ export function staticT(key: string): string {
   if (!key) return '';
   let locale: AppLocaleName = defaultCatalogLocale;
   if (typeof window !== 'undefined') {
-    const match = window.location.pathname.match(/^\/(en|ur|ps)(\/|$)/);
+    const match = window.location.pathname.match(/^\/(en|ur|ps|roman)(\/|$)/);
     if (match) {
       locale = match[1] as AppLocaleName;
     }

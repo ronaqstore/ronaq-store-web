@@ -28,7 +28,7 @@ export function BottomNav({ className }: BottomNavProps) {
       aria-label={tAria('bottomNav')}
       className={cn(
         'fixed inset-x-0 bottom-0 z-40 border-t border-border/80 bg-background/95 backdrop-blur-lg md:hidden',
-        'pb-[env(safe-area-inset-bottom)] select-none [-webkit-tap-highlight-color:transparent]',
+        'pb-[max(1rem,env(safe-area-inset-bottom))] select-none [-webkit-tap-highlight-color:transparent]',
         className
       )}
     >
