@@ -145,7 +145,7 @@ export function FacetedFilter({
             }}
             className='flex flex-col overflow-hidden rounded-lg bg-popover p-1.5 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10'
           >
-            <div className='max-h-[18.75rem] space-y-0.5 overflow-x-hidden overflow-y-auto p-0.5'>
+            <div className='max-h-[18.75rem] space-y-0.5 overflow-x-hidden overflow-y-auto no-scrollbar p-0.5'>
               <FilterOptionRow
                 label={allLabel ?? t('filterAll')}
                 selected={!hasValue}

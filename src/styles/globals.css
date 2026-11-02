@@ -82,6 +82,14 @@
 @layer base {
   * {
     border-color: var(--border);
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  *::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
   }
   html {
     overscroll-behavior: none;
@@ -197,4 +205,11 @@ input[type='file']:not(:disabled),
     linear-gradient(to bottom, oklch(0.2 0.02 260 / 0.08) 1px, transparent 1px);
   background-size: 48px 48px;
   mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }

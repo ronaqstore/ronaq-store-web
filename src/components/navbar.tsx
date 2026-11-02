@@ -193,7 +193,7 @@ export function Navbar() {
             role='dialog'
             aria-modal='true'
             aria-label={t('aria.toggleNavigation')}
-            className='fixed inset-x-0 top-[var(--app-bar-h)] z-50 max-h-[calc(100dvh-var(--app-bar-h))] overflow-y-auto border-b border-border bg-background px-4 py-4 shadow-2xl animate-in slide-in-from-top-2 md:hidden pb-[max(2rem,calc(env(safe-area-inset-bottom)+1.5rem))]'
+            className='fixed inset-x-0 top-[var(--app-bar-h)] z-50 max-h-[calc(100dvh-var(--app-bar-h))] overflow-y-auto no-scrollbar border-b border-border bg-background px-4 py-4 shadow-2xl animate-in slide-in-from-top-2 md:hidden pb-[max(2rem,calc(env(safe-area-inset-bottom)+1.5rem))]'
           >
             <div className='flex flex-col space-y-2 text-base font-medium'>
               <Link

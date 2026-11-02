@@ -31,7 +31,7 @@ export function ProductDetailModal({
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in'>
-      <div className='relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-border bg-card shadow-2xl p-6'>
+      <div className='relative w-full max-w-2xl max-h-[90vh] overflow-y-auto no-scrollbar rounded-3xl border border-border bg-card shadow-2xl p-6'>
         <button
           type='button'
           className={cn(

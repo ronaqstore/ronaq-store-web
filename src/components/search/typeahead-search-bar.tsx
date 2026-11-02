@@ -325,7 +325,7 @@ export function TypeaheadSearchBar<T extends TypeaheadItem>({
             </span>
           </div>
 
-          <ul className='max-h-80 overflow-y-auto py-1.5' aria-busy={loading}>
+          <ul className='max-h-80 overflow-y-auto no-scrollbar py-1.5' aria-busy={loading}>
             {loading && suggestions.length === 0 ? <SuggestionsSkeleton /> : null}
             {!loading && suggestions.length === 0 ? (
               <li className='px-4 py-6 text-center text-sm text-muted-foreground'>{emptyLabel}</li>
