@@ -56,10 +56,10 @@ export async function ProductDetailView({
       <div className='flex items-center justify-between gap-4 mb-4'>
         <Link
           href={`/shop/${slug}`}
-          className='inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground'
+          className='inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground min-w-0 max-w-full'
         >
-          <Icons.arrowLeft className='h-4 w-4 rtl:rotate-180' />
-          <span>{t('catalog.backToShop', { store: formatEmpty(storeName) })}</span>
+          <Icons.arrowLeft className='h-4 w-4 shrink-0 rtl:rotate-180' />
+          <span className='truncate'>{t('catalog.backToShop', { store: formatEmpty(storeName) })}</span>
         </Link>
       </div>
 

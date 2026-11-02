@@ -16,7 +16,6 @@ import {
   stableListingQueryKey
 } from '@/lib/marketplace-filters';
 import { cn } from '@/lib/utils';
-import { CityPreferenceGate } from '@/components/city/city-preference-gate';
 import { FilterSheet } from './filter-sheet';
 import { MarketplaceSearchBar } from './marketplace-search-bar';
 import { MarketplaceSkeleton } from './marketplace-skeleton';
@@ -58,7 +57,6 @@ export function MarketplaceShell({
   const topLoader = useTopLoader();
   const topLoaderRef = useRef(topLoader);
   const [isPending, startTransition] = useTransition();
-  const [cityGateOpen, setCityGateOpen] = useState(!hasCityPreference);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
@@ -79,9 +77,7 @@ export function MarketplaceShell({
   const activeFilterCount = countActiveMarketplaceFilters(filters);
   const committedSearch = urlSearch;
 
-  useEffect(() => {
-    if (!hasCityPreference) setCityGateOpen(true);
-  }, [hasCityPreference]);
+
 
   useEffect(() => {
     if (isPending) {
@@ -93,10 +89,31 @@ export function MarketplaceShell({
     topLoaderRef.current.done();
   }, [isPending]);
 
+
+
   useEffect(() => {
-    const handleOpenCity = () => setCityGateOpen(true);
-    window.addEventListener('open-city-picker', handleOpenCity);
-    return () => window.removeEventListener('open-city-picker', handleOpenCity);
+    const focusSearch = () => {
+      const input = document.getElementById('marketplace-search-input');
+      if (input) {
+        input.focus();
+        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    };
+
+    if (typeof window !== 'undefined') {
+      try {
+        if (sessionStorage.getItem('auto-focus-search')) {
+          sessionStorage.removeItem('auto-focus-search');
+          const timer = window.setTimeout(focusSearch, 150);
+          return () => window.clearTimeout(timer);
+        }
+      } catch {
+        return undefined;
+      }
+    }
+
+    window.addEventListener('focus-search-input', focusSearch);
+    return () => window.removeEventListener('focus-search-input', focusSearch);
   }, []);
 
   useEffect(() => {
@@ -148,7 +165,7 @@ export function MarketplaceShell({
     : (selectedCityName ?? t('marketplace.allCities'));
 
   const handleChangeCity = () => {
-    setCityGateOpen(true);
+    window.dispatchEvent(new CustomEvent('open-city-picker'));
   };
 
   const handleSelectModel = useCallback(
@@ -261,13 +278,6 @@ export function MarketplaceShell({
 
   return (
     <div className='min-w-0'>
-      <CityPreferenceGate
-        initialCityId={isAllCities ? null : cityId}
-        hasPreference={hasCityPreference}
-        open={cityGateOpen}
-        onOpenChange={setCityGateOpen}
-      />
-
       <FilterSheet
         open={filtersOpen}
         onOpenChange={setFiltersOpen}
@@ -286,7 +296,7 @@ export function MarketplaceShell({
         </div>
       </section>
 
-      <div className='sticky top-[var(--app-bar-h)] z-30 border-b border-border/60 bg-background/95 backdrop-blur-xl'>
+      <div className='sticky top-[var(--app-bar-h)] z-30 border-b border-border/60 bg-background md:bg-background/95 md:backdrop-blur-xl'>
         <div className='mx-auto w-full max-w-7xl 2xl:max-w-[1440px] px-3 sm:px-6 lg:px-8 py-2 sm:py-3 space-y-2 sm:space-y-2.5'>
           <div className='flex flex-col gap-2 md:flex-row md:items-center md:gap-3'>
             <div className='min-w-0 flex-1 max-w-2xl'>

@@ -43,9 +43,10 @@ export function ProductFilters({
   );
 
   return (
-    <div className='sticky top-[var(--app-bar-h)] z-20 -mx-4 space-y-3 border-b border-border/60 bg-background/90 px-4 py-3 backdrop-blur-md sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8'>
+    <div className='sticky top-[var(--app-bar-h)] z-20 -mx-4 space-y-3 border-b border-border/60 bg-background md:bg-background/90 px-4 py-3 md:backdrop-blur-md sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8'>
       <div className='flex w-full justify-start'>
         <TypeaheadSearchBar<ProductTypeaheadItem>
+          inputId='shop-search-input'
           committedQuery={committedQuery}
           placeholder={t('catalog.searchInShop')}
           heading={t('catalog.searchProductsHeading')}

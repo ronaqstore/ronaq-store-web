@@ -56,7 +56,7 @@ export function buildPageMetadata({
   const clippedDescription =
     safeDescription.length > 160 ? `${safeDescription.slice(0, 157)}...` : safeDescription;
 
-  const ogLocale = locale === 'ur' ? 'ur_PK' : locale === 'ps' ? 'ps_AF' : 'en_US';
+  const ogLocale = locale === 'ur' || locale === 'roman' ? 'ur_PK' : locale === 'ps' ? 'ps_AF' : 'en_US';
 
   return {
     title: clippedTitle,

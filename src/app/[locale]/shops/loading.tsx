@@ -10,7 +10,7 @@ export default function ShopsLoading() {
           <div className='h-4 w-full max-w-xl rounded bg-muted motion-reduce:animate-none animate-pulse' />
         </div>
       </div>
-      <div className='sticky top-[var(--app-bar-h)] z-30 border-b border-border/60 bg-background/95 backdrop-blur-xl'>
+      <div className='sticky top-[var(--app-bar-h)] z-30 border-b border-border/60 bg-background md:bg-background/95 md:backdrop-blur-xl'>
         <div className='mx-auto flex w-full max-w-7xl 2xl:max-w-[1440px] flex-col gap-2.5 px-4 py-3 sm:flex-row sm:px-6 lg:px-8'>
           <div className='h-12 min-h-12 flex-1 rounded-xl bg-muted motion-reduce:animate-none animate-pulse' />
           <div className='h-12 min-h-12 w-full rounded-xl bg-muted motion-reduce:animate-none animate-pulse sm:max-w-52' />

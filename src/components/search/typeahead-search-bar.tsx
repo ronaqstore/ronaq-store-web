@@ -60,6 +60,7 @@ export function TypeaheadSearchBar<T extends TypeaheadItem>({
   inputClassName,
   clearButtonClassName,
   searchIconClassName,
+  inputId,
   onCommitSearch,
   onClearSearch,
   onSelectItem,
@@ -268,6 +269,7 @@ export function TypeaheadSearchBar<T extends TypeaheadItem>({
           )}
         />
         <Input
+          id={inputId}
           ref={inputRef}
           type='text'
           inputMode='search'

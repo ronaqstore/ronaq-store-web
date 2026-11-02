@@ -102,7 +102,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
 
   return (
     <html
-      lang={locale}
+      lang={locale === 'roman' ? 'ur-Latn' : locale}
       dir={isRtl ? 'rtl' : 'ltr'}
       className={cn(poppins.variable, notoNastaliqUrdu.variable, notoNaskhArabic.variable)}
       suppressHydrationWarning
@@ -112,7 +112,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
           scriptFontClass,
           locale === 'ur' && 'font-urdu',
           locale === 'ps' && 'font-pashto',
-          locale === 'en' && 'font-sans',
+          (locale === 'en' || locale === 'roman') && 'font-sans',
           'flex min-h-dvh flex-col bg-background antialiased text-foreground selection:bg-primary/20 selection:text-primary overscroll-none'
         )}
         suppressHydrationWarning

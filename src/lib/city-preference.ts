@@ -19,6 +19,18 @@ export function writeCityPreferenceCookie(cityId: string): void {
   const secure =
     typeof window !== 'undefined' && window.location.protocol === 'https:' ? '; Secure' : '';
   document.cookie = `${CITY_PREFERENCE_COOKIE}=${encodeURIComponent(value)}; path=/; max-age=${CITY_PREFERENCE_MAX_AGE_SECONDS}; SameSite=Lax${secure}`;
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('city-changed'));
+  }
+}
+
+export function readCityPreferenceCookie(): string | null {
+  if (typeof document === 'undefined') return null;
+  const match = document.cookie
+    .split('; ')
+    .find((row) => row.startsWith(`${CITY_PREFERENCE_COOKIE}=`));
+  const val = match?.split('=')[1];
+  return parseCityPreference(val ? decodeURIComponent(val) : null);
 }
 
 export function marketplaceCityQueryParam(cityId: string | null | undefined): string | undefined {

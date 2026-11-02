@@ -2,6 +2,7 @@
 
 import { useLocale } from 'next-intl';
 import { usePathname, useRouter } from '@/i18n/navigation';
+import type { AppLocale } from '@/i18n/request';
 import { Button } from '@/components/ui/button';
 
 export function LanguageSwitcher() {
@@ -9,7 +10,7 @@ export function LanguageSwitcher() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const handleSwitch = (newLocale: 'en' | 'ur' | 'ps') => {
+  const handleSwitch = (newLocale: AppLocale) => {
     const query: Record<string, string> = {};
     new URLSearchParams(window.location.search).forEach((value, key) => {
       query[key] = value;
@@ -49,6 +50,15 @@ export function LanguageSwitcher() {
         onClick={() => handleSwitch('ps')}
       >
         پښتو
+      </Button>
+      <Button
+        type='button'
+        variant={currentLocale === 'roman' ? 'secondary' : 'ghost'}
+        size='sm'
+        className='h-7 px-2 text-xs'
+        onClick={() => handleSwitch('roman')}
+      >
+        ROMAN
       </Button>
     </div>
   );

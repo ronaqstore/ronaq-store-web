@@ -11,7 +11,7 @@ export function proxy(req: NextRequest): NextResponse {
 export const config = {
   matcher: [
     '/',
-    '/(en|ur|ps)/:path*',
+    '/(en|ur|ps|roman)/:path*',
     '/((?!api|_next|_vercel|favicon\\.ico|.*\\..*).*)'
   ]
 };
