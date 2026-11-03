@@ -9,6 +9,7 @@ import type {
   ApiMarketplaceModelsResponse,
   ApiPaginatedMarketplaceHubs,
   ApiPaginatedMarketplaceProducts,
+  LocateCityApiResponse,
   MarketplaceHub,
   MarketplaceHubsPage,
   MarketplaceHubsQuery,
@@ -132,6 +133,22 @@ export async function searchMarketplaceModels(
   return { items, total: raw?.total ?? items.length };
 }
 
+
+export async function resolveHubByIp(): Promise<MarketplaceHub | null> {
+  if (typeof window === 'undefined') return null;
+  try {
+    const res = await fetch('/api/city/locate', {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+      cache: 'no-store'
+    });
+    if (!res.ok) return null;
+    const data = (await res.json()) as LocateCityApiResponse;
+    return data.hub ?? null;
+  } catch {
+    return null;
+  }
+}
 export async function resolveNearestHub(
   latitude: number,
   longitude: number

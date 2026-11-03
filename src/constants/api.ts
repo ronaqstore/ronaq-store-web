@@ -15,6 +15,7 @@ export const ADMIN_BASE_URL = (
   process.env.NEXT_PUBLIC_ADMIN_URL ?? 'http://localhost:3006'
 ).replace(/\/+$/, '');
 
+export const IP_LOOKUP_URL = 'https://ipwho.is/';
 export const WHATSAPP_BASE_URL = 'https://wa.me';
 
 export const GOOGLE_MAPS_EMBED_BASE = 'https://maps.google.com/maps';

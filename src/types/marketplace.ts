@@ -8,6 +8,20 @@ export interface MarketplaceHub {
   longitude: number;
 }
 
+export interface LocateCityApiResponse {
+  hub: MarketplaceHub | null;
+}
+
+export interface GeoCoordinates {
+  latitude: number;
+  longitude: number;
+}
+
+export interface IpWhoIsResponse {
+  latitude?: number;
+  longitude?: number;
+}
+
 export interface MarketplaceHubsQuery {
   page?: number;
   limit?: number;
