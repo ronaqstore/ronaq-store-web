@@ -21,6 +21,7 @@ export function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [currentCity, setCurrentCity] = useState<string | null>(null);
+  const [hasCityPreference, setHasCityPreference] = useState(true);
   const [cityPickerOpen, setCityPickerOpen] = useState(false);
   const shopsActive = pathname === '/shops' || pathname.startsWith('/shops/');
   const homeActive = pathname === '/' || pathname === '';
@@ -31,11 +32,18 @@ export function Navbar() {
       const match = document.cookie
         .split('; ')
         .find((row) => row.startsWith(`${CITY_PREFERENCE_COOKIE}=`));
-      const val = match?.split('=')[1];
-      if (val && val !== 'all' && !val.startsWith('area:')) {
-        setCurrentCity(decodeURIComponent(val));
+      if (match) {
+        setHasCityPreference(true);
+        const val = match.split('=')[1];
+        if (val && val !== 'all' && !val.startsWith('area:')) {
+          setCurrentCity(decodeURIComponent(val));
+        } else {
+          setCurrentCity(null);
+        }
       } else {
+        setHasCityPreference(false);
         setCurrentCity(null);
+        setCityPickerOpen(true);
       }
     };
     updateCity();
@@ -47,16 +55,6 @@ export function Navbar() {
     const onOpen = () => setCityPickerOpen(true);
     window.addEventListener('open-city-picker', onOpen);
     return () => window.removeEventListener('open-city-picker', onOpen);
-  }, []);
-
-  useEffect(() => {
-    if (typeof document === 'undefined') return;
-    const match = document.cookie
-      .split('; ')
-      .find((row) => row.startsWith(`${CITY_PREFERENCE_COOKIE}=`));
-    if (!match) {
-      setCityPickerOpen(true);
-    }
   }, []);
 
   useEffect(() => {
@@ -242,7 +240,7 @@ export function Navbar() {
       <div className='h-[var(--app-bar-h)] shrink-0' aria-hidden />
       <CityPreferenceGate
         initialCityId={currentCity}
-        hasPreference={Boolean(currentCity)}
+        hasPreference={hasCityPreference}
         open={cityPickerOpen}
         onOpenChange={setCityPickerOpen}
       />
