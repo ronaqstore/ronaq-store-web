@@ -73,12 +73,6 @@ export function CityPreferenceGate({
   }, [initialCityId]);
 
   useEffect(() => {
-    if (!hasPreference && !open) {
-      onOpenChange(true);
-    }
-  }, [hasPreference, open, onOpenChange]);
-
-  useEffect(() => {
     const timer = window.setTimeout(() => setDebouncedSearch(citySearch.trim()), 300);
     return () => window.clearTimeout(timer);
   }, [citySearch]);
@@ -149,6 +143,20 @@ export function CityPreferenceGate({
     onOpenChange(false);
     setCitySearch('');
     setDebouncedSearch('');
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search);
+      if (searchParams.has('city')) {
+        if (cityId === CITY_PREFERENCE_ALL) {
+          searchParams.delete('city');
+        } else {
+          searchParams.set('city', cityId);
+        }
+        const qs = searchParams.toString();
+        const target = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
+        router.replace(target);
+        return;
+      }
+    }
     router.refresh();
   };
 
@@ -157,7 +165,13 @@ export function CityPreferenceGate({
   };
 
   const handleDismiss = () => {
-    persistAndClose(selectedId || CITY_PREFERENCE_ALL);
+    if (hasPreference) {
+      onOpenChange(false);
+      setCitySearch('');
+      setDebouncedSearch('');
+    } else {
+      persistAndClose(CITY_PREFERENCE_ALL);
+    }
   };
 
   const handleAllCities = () => {
