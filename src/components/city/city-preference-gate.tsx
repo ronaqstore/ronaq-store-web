@@ -10,9 +10,10 @@ import { CITY_PREFERENCE_ALL } from '@/constants/city-preference';
 import { writeCityPreferenceCookie } from '@/lib/city-preference';
 import {
   getMarketplaceHubsPage,
+  resolveHubByIp,
   resolveNearestHub
 } from '@/features/marketplace/api/service';
-import type { CityPreferenceGateProps, MarketplaceHub } from '@/types/marketplace';
+import type { CityPreferenceGateProps, GeoCoordinates, MarketplaceHub } from '@/types/marketplace';
 import { cn } from '@/lib/utils';
 
 const HUBS_PAGE_SIZE = 20;
@@ -26,6 +27,48 @@ function CityListSkeleton() {
       ))}
     </div>
   );
+}
+
+function getBrowserCoordinates(): Promise<GeoCoordinates> {
+  return new Promise((resolve, reject) => {
+    if (typeof navigator === 'undefined' || !navigator.geolocation) {
+      reject(new Error('Geolocation unavailable'));
+      return;
+    }
+
+    let done = false;
+    const timer = window.setTimeout(() => {
+      if (!done) {
+        done = true;
+        reject(new Error('Geolocation timeout'));
+      }
+    }, 4500);
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        if (!done) {
+          done = true;
+          window.clearTimeout(timer);
+          resolve({
+            latitude: pos.coords.latitude,
+            longitude: pos.coords.longitude
+          });
+        }
+      },
+      (err) => {
+        if (!done) {
+          done = true;
+          window.clearTimeout(timer);
+          reject(err);
+        }
+      },
+      {
+        enableHighAccuracy: false,
+        timeout: 4000,
+        maximumAge: 300_000
+      }
+    );
+  });
 }
 
 export function CityPreferenceGate({
@@ -183,38 +226,34 @@ export function CityPreferenceGate({
     setSelectedId(hub.id);
   };
 
-  const handleUseLocation = () => {
-    if (!navigator.geolocation) {
-      setLocateError(true);
-      return;
-    }
+  const handleUseLocation = async () => {
     setLocating(true);
     setLocateError(false);
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        try {
-          const hub = await resolveNearestHub(
-            position.coords.latitude,
-            position.coords.longitude
-          );
-          if (!hub?.id) {
-            setLocateError(true);
-            setLocating(false);
-            return;
-          }
-          setSelectedId(hub.id);
-          persistAndClose(hub.id);
-        } catch {
-          setLocateError(true);
-          setLocating(false);
-        }
-      },
-      () => {
-        setLocating(false);
+    try {
+      let hub: MarketplaceHub | null = null;
+      try {
+        const coords = await getBrowserCoordinates();
+        hub = await resolveNearestHub(coords.latitude, coords.longitude);
+      } catch {
+        hub = null;
+      }
+
+      if (!hub?.id) {
+        hub = await resolveHubByIp();
+      }
+
+      if (!hub?.id) {
         setLocateError(true);
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 60_000 }
-    );
+        return;
+      }
+
+      setSelectedId(hub.id);
+      persistAndClose(hub.id);
+    } catch {
+      setLocateError(true);
+    } finally {
+      setLocating(false);
+    }
   };
 
   if (!open) return null;
