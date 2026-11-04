@@ -229,6 +229,7 @@ export function TypeaheadSearchBar<T extends TypeaheadItem>({
 
   const handleFormSubmit = (event: FormEvent) => {
     event.preventDefault();
+    event.stopPropagation();
     handleSearchAll();
   };
 
