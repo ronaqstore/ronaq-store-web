@@ -69,6 +69,7 @@ export interface StoreProductListItem {
   totalQuantity: number;
   description?: string | null;
   units?: StoreProductUnit[];
+  updatedAt?: string | null;
 }
 
 export interface StoreProductDetail {
@@ -97,6 +98,7 @@ export interface StoreProductDetail {
   inStock: boolean;
   totalQuantity: number;
   units?: StoreProductUnit[];
+  updatedAt?: string | null;
 }
 
 export interface ProductListQuery {

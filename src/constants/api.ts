@@ -1,25 +1,20 @@
+import { ADMIN_URL, API_URL, SITE_URL } from '@/config/site-config';
 import type { SupportContact } from '@/types/common';
 
-export const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000').replace(
-  /\/+$/,
-  ''
-);
-
-export const APP_BASE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  process.env.NEXT_PUBLIC_APP_URL ??
-  'http://localhost:3007'
-).replace(/\/+$/, '');
-
-export const ADMIN_BASE_URL = (
-  process.env.NEXT_PUBLIC_ADMIN_URL ?? 'http://localhost:3006'
-).replace(/\/+$/, '');
+export const API_BASE_URL = API_URL;
+export const APP_BASE_URL = SITE_URL;
+export const ADMIN_BASE_URL = ADMIN_URL;
 
 export const IP_LOOKUP_URL = 'https://ipwho.is/';
 export const WHATSAPP_BASE_URL = 'https://wa.me';
+export const GOOGLE_TAG_MANAGER_SCRIPT_URL = 'https://www.googletagmanager.com/gtag/js';
 
 export const GOOGLE_MAPS_EMBED_BASE = 'https://maps.google.com/maps';
 export const GOOGLE_MAPS_SEARCH_BASE = 'https://www.google.com/maps/search/';
+
+export function buildGaInitScript(gaId: string): string {
+  return `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${gaId}');`;
+}
 
 export function normalizePakistaniMobile(rawPhone?: string | null): string | null {
   if (!rawPhone || typeof rawPhone !== 'string') return null;
@@ -62,7 +57,6 @@ export function googleMapsSearchUrl(lat: number, lng: number): string {
   return `${GOOGLE_MAPS_SEARCH_BASE}?api=1&query=${lat},${lng}`;
 }
 
-
 export const SUPPORT_CONTACTS: readonly SupportContact[] = [
   {
     phone: '03029825213',
@@ -78,10 +72,6 @@ export const SUPPORT_CONTACTS: readonly SupportContact[] = [
   }
 ] as const;
 
-
-
-
-
 export const SOCIAL_URLS = {
   whatsappSupport:
     'https://wa.me/923029825213?text=Assalam-o-Alaikum%20Ronaq%20Store%20Support',
@@ -92,4 +82,3 @@ export const SOCIAL_URLS = {
   tiktok: 'https://www.tiktok.com/@ronaqstores',
   facebook: 'https://web.facebook.com/ronaqstores'
 } as const;
-

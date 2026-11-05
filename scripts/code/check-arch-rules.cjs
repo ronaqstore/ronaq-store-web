@@ -58,6 +58,7 @@ roots.forEach((root) => {
     }
 
     const isUi = relPath.includes("components/ui");
+    const isOg = relPath.includes("opengraph-image") || relPath.includes("twitter-image");
     const isStyle = relPath.includes("styles");
 
     traverse(ast, {
@@ -98,7 +99,7 @@ roots.forEach((root) => {
 
       JSXAttribute(p) {
         if (p.node.name.name === "style") {
-          if (isUi) return;
+          if (isUi || isOg) return;
 
           const value = p.node.value;
           const isDynamicProgressStyle =
@@ -119,7 +120,7 @@ roots.forEach((root) => {
         }
 
         // Check RTL unsafe classes and hex colors in className
-        if (p.node.name.name === "className" && !isUi) {
+        if (p.node.name.name === "className" && !isUi && !isOg) {
           const strings = extractClassStrings(p.node.value);
           strings.forEach(({ value: str, line }) => {
             if (!str) return;

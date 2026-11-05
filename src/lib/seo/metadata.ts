@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { APP_DESCRIPTION, APP_NAME, SEO_KEYWORDS } from '@/constants/site';
+import { DEFAULT_DESCRIPTION, HREFLANG_MAP, SITE_NAME, SITE_TAGLINE } from '@/config/site-config';
+import { SEO_KEYWORDS } from '@/constants/site';
 import { env } from '@/config/env';
 import { absoluteLocaleUrl, absoluteUrl, getSiteUrl } from '@/lib/seo/site-url';
 import { locales } from '@/i18n/request';
@@ -13,7 +14,8 @@ export const OG_IMAGE_HEIGHT = 630;
 function languageAlternates(path: string): Record<string, string> {
   const languages: Record<string, string> = {};
   for (const locale of locales) {
-    languages[locale] = absoluteLocaleUrl(locale, path);
+    const code = HREFLANG_MAP[locale] ?? locale;
+    languages[code] = absoluteLocaleUrl(locale, path);
   }
   languages['x-default'] = absoluteLocaleUrl('en', path);
   return languages;
@@ -45,12 +47,12 @@ export function buildPageMetadata({
             url: absoluteUrl(DEFAULT_OG_IMAGE),
             width: OG_IMAGE_WIDTH,
             height: OG_IMAGE_HEIGHT,
-            alt: APP_NAME
+            alt: SITE_NAME
           }
         ];
 
-  const safeTitle = title || APP_NAME;
-  const safeDescription = description || APP_DESCRIPTION;
+  const safeTitle = title || SITE_NAME;
+  const safeDescription = description || DEFAULT_DESCRIPTION;
 
   const clippedTitle = safeTitle.length > 60 ? `${safeTitle.slice(0, 57)}...` : safeTitle;
   const clippedDescription =
@@ -70,7 +72,7 @@ export function buildPageMetadata({
       title: clippedTitle,
       description: clippedDescription,
       url: canonical,
-      siteName: APP_NAME,
+      siteName: SITE_NAME,
       locale: ogLocale,
       type,
       images: ogImages
@@ -107,20 +109,20 @@ export function rootMetadataBase(): URL {
 
 export function defaultRootMetadata(): Metadata {
   const siteUrl = getSiteUrl();
-  const verification = env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION?.trim();
+  const googleVerification = env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION?.trim();
 
   return {
     metadataBase: rootMetadataBase(),
     title: {
-      default: `${APP_NAME} — Discover Local Mobile Shops`,
-      template: `%s | ${APP_NAME}`
+      default: `${SITE_NAME} - ${SITE_TAGLINE}`,
+      template: `%s | ${SITE_NAME}`
     },
-    description: APP_DESCRIPTION,
+    description: DEFAULT_DESCRIPTION,
     keywords: SEO_KEYWORDS,
-    applicationName: APP_NAME,
-    authors: [{ name: APP_NAME, url: siteUrl }],
-    creator: APP_NAME,
-    publisher: APP_NAME,
+    applicationName: SITE_NAME,
+    authors: [{ name: SITE_NAME, url: siteUrl }],
+    creator: SITE_NAME,
+    publisher: SITE_NAME,
     formatDetection: {
       telephone: false,
       email: false,
@@ -141,10 +143,10 @@ export function defaultRootMetadata(): Metadata {
       }
     },
     openGraph: {
-      title: APP_NAME,
-      description: APP_DESCRIPTION,
+      title: `${SITE_NAME} - ${SITE_TAGLINE}`,
+      description: DEFAULT_DESCRIPTION,
       url: absoluteLocaleUrl('en', '/'),
-      siteName: APP_NAME,
+      siteName: SITE_NAME,
       locale: 'en_US',
       type: 'website',
       images: [
@@ -152,17 +154,17 @@ export function defaultRootMetadata(): Metadata {
           url: absoluteUrl(DEFAULT_OG_IMAGE),
           width: OG_IMAGE_WIDTH,
           height: OG_IMAGE_HEIGHT,
-          alt: APP_NAME
+          alt: SITE_NAME
         }
       ]
     },
     twitter: {
       card: 'summary_large_image',
-      title: APP_NAME,
-      description: APP_DESCRIPTION,
+      title: `${SITE_NAME} - ${SITE_TAGLINE}`,
+      description: DEFAULT_DESCRIPTION,
       images: [absoluteUrl(DEFAULT_OG_IMAGE)]
     },
-    ...(verification ? { verification: { google: verification } } : {})
+    ...(googleVerification ? { verification: { google: googleVerification } } : {})
   };
 }
 

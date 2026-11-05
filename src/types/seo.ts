@@ -71,3 +71,7 @@ export interface ProductStaticParam {
 export interface RootLayoutProps {
   children: ReactNode;
 }
+
+export interface SitemapAlternates {
+  languages: Record<string, string>;
+}

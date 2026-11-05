@@ -47,7 +47,8 @@ function mapStoreItem(raw: ApiStore): StoreListItem {
     bannerUrl: raw.bannerUrl ?? null,
     productCount: raw.totalProducts ?? 0,
     totalProducts: raw.totalProducts ?? 0,
-    openingHours: raw.openingHours ?? null
+    openingHours: raw.openingHours ?? null,
+    updatedAt: raw.updatedAt ?? null
   };
 }
 
@@ -84,7 +85,8 @@ export function mapStoreProfile(raw: ApiStore | null): StoreProfile | null {
     heroBannerUrl: raw.bannerUrl ?? null,
     bannerUrl: raw.bannerUrl ?? null,
     googleMapsUrl: raw.googleMapsUrl ?? null,
-    openingHours: raw.openingHours ?? null
+    openingHours: raw.openingHours ?? null,
+    updatedAt: raw.updatedAt ?? null
   };
 }
 
@@ -141,6 +143,7 @@ export function mapProduct(raw: ApiProduct): StoreProductListItem {
     inStock: availability !== 'OUT_OF_STOCK',
     totalQuantity: raw.stockCount ?? 0,
     description: raw.description ?? null,
+    updatedAt: raw.updatedAt ?? null,
     units: (raw.units ?? []).map((unit) => ({
       id: unit.id,
       imeiMasked: unit.imeiMasked,

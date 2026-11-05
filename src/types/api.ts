@@ -16,6 +16,7 @@ export interface ApiStore {
   googleMapsUrl?: string | null;
   openingHours?: string | null;
   totalProducts?: number;
+  updatedAt?: string | null;
 }
 
 export interface ApiPaginatedStores {
@@ -51,6 +52,7 @@ export interface ApiProduct {
   description?: string | null;
   specs?: ApiProductSpecs | null;
   units?: ApiStoreUnit[] | null;
+  updatedAt?: string | null;
 }
 
 export interface ApiStoreUnit {

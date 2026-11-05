@@ -138,4 +138,22 @@ describe('sitemap pagination limits', () => {
       globalThis.fetch = originalFetch;
     }
   });
+
+  it('includes language alternates with ur-Latn for every entry', async () => {
+    const { originalFetch } = setupBackendFetchMock();
+    try {
+      const entries = await sitemap();
+      assert.ok(entries.length > 0);
+      for (const entry of entries) {
+        assert.ok(entry.alternates?.languages, 'Entry must include alternates.languages');
+        assert.ok(entry.alternates.languages.en);
+        assert.ok(entry.alternates.languages.ur);
+        assert.ok(entry.alternates.languages.ps);
+        assert.ok(entry.alternates.languages['ur-Latn']);
+        assert.ok(entry.alternates.languages['x-default']);
+      }
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
 });

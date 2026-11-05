@@ -4,7 +4,21 @@ import { getPublicStores } from '@/features/stores/api/service';
 import { getStoreProducts } from '@/features/products/api/service';
 import { absoluteLocaleUrl } from '@/lib/seo/site-url';
 import { productPath } from '@/lib/seo/slug';
+import type { SitemapAlternates } from '@/types/seo';
+
 const MAX_URLS_PER_SITEMAP = 45_000;
+
+function buildSitemapAlternates(path: string): SitemapAlternates {
+  return {
+    languages: {
+      en: absoluteLocaleUrl('en', path),
+      ur: absoluteLocaleUrl('ur', path),
+      ps: absoluteLocaleUrl('ps', path),
+      'ur-Latn': absoluteLocaleUrl('roman', path),
+      'x-default': absoluteLocaleUrl('en', path)
+    }
+  };
+}
 
 async function collectStoreEntries(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = [];
@@ -15,13 +29,15 @@ async function collectStoreEntries(): Promise<MetadataRoute.Sitemap> {
       url: absoluteLocaleUrl(locale, '/'),
       lastModified: now,
       changeFrequency: 'daily',
-      priority: 1
+      priority: 1,
+      alternates: buildSitemapAlternates('/')
     });
     entries.push({
       url: absoluteLocaleUrl(locale, '/shops'),
       lastModified: now,
       changeFrequency: 'daily',
-      priority: 0.9
+      priority: 0.9,
+      alternates: buildSitemapAlternates('/shops')
     });
   }
 
@@ -41,13 +57,16 @@ async function collectStoreEntries(): Promise<MetadataRoute.Sitemap> {
 
   for (const store of allStores) {
     if (!store.slug) continue;
+    const storeLastMod = store.updatedAt ? new Date(store.updatedAt) : now;
+    const storePath = `/shop/${store.slug}`;
 
     for (const locale of locales) {
       entries.push({
-        url: absoluteLocaleUrl(locale, `/shop/${store.slug}`),
-        lastModified: now,
+        url: absoluteLocaleUrl(locale, storePath),
+        lastModified: storeLastMod,
         changeFrequency: 'daily',
-        priority: 0.8
+        priority: 0.8,
+        alternates: buildSitemapAlternates(storePath)
       });
     }
 
@@ -66,13 +85,19 @@ async function collectStoreEntries(): Promise<MetadataRoute.Sitemap> {
     }
 
     for (const product of allProducts) {
+      if (product.availability === 'OUT_OF_STOCK' || product.inStock === false) {
+        continue;
+      }
       const path = productPath(store.slug, product.name, product.id);
+      const productLastMod = product.updatedAt ? new Date(product.updatedAt) : now;
+
       for (const locale of locales) {
         entries.push({
           url: absoluteLocaleUrl(locale, path),
-          lastModified: now,
+          lastModified: productLastMod,
           changeFrequency: 'weekly',
-          priority: 0.6
+          priority: 0.7,
+          alternates: buildSitemapAlternates(path)
         });
       }
     }
@@ -90,7 +115,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: absoluteLocaleUrl(locale, '/'),
       lastModified: now,
       changeFrequency: 'daily' as const,
-      priority: 1
+      priority: 1,
+      alternates: buildSitemapAlternates('/')
     }));
   }
 }

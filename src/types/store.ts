@@ -37,6 +37,7 @@ export interface StoreListItem {
   productCount?: number;
   totalProducts?: number;
   openingHours?: string | null;
+  updatedAt?: string | null;
 }
 
 export interface StoreProfile {
@@ -57,6 +58,7 @@ export interface StoreProfile {
   bannerUrl?: string | null;
   googleMapsUrl: string | null;
   openingHours: string | null;
+  updatedAt?: string | null;
 }
 
 export interface StoreMapEmbedProps {

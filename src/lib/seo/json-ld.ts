@@ -74,6 +74,13 @@ export function breadcrumbJsonLd(locale: string, items: BreadcrumbItem[]): Recor
   };
 }
 
+function schemaCondition(condition?: string | null): string {
+  if (condition?.toUpperCase() === 'USED') {
+    return 'https://schema.org/UsedCondition';
+  }
+  return 'https://schema.org/NewCondition';
+}
+
 function schemaAvailability(availability: StoreProductDetail['availability']): string {
   if (availability === 'OUT_OF_STOCK') return 'https://schema.org/OutOfStock';
   if (availability === 'LOW_STOCK') return 'https://schema.org/LimitedAvailability';
@@ -102,7 +109,7 @@ export function productJsonLd(input: ProductJsonLdInput): Record<string, unknown
     '@type': 'Offer',
     url,
     availability: schemaAvailability(product.availability),
-    itemCondition: 'https://schema.org/NewCondition',
+    itemCondition: schemaCondition(product.condition),
     priceCurrency: 'PKR',
     priceValidUntil: priceValidUntil(),
     seller: {

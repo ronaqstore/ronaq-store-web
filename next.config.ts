@@ -3,6 +3,9 @@ import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
+const isVercelPreview =
+  Boolean(process.env.VERCEL_ENV) && process.env.VERCEL_ENV !== 'production';
+
 const baseConfig: NextConfig = {
   devIndicators: false,
   output: process.env.BUILD_STANDALONE === 'true' ? 'standalone' : undefined,
@@ -48,11 +51,12 @@ const baseConfig: NextConfig = {
             key: 'Permissions-Policy',
             value: 'camera=(), microphone=(), geolocation=(self)'
           },
+          ...(isVercelPreview ? [{ key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' }] : []),
           {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com chrome-extension:",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://www.googletagmanager.com chrome-extension:",
               "style-src 'self' 'unsafe-inline' chrome-extension:",
               "img-src 'self' data: blob: https: chrome-extension:",
               "font-src 'self' data: chrome-extension:",
@@ -112,4 +116,3 @@ const baseConfig: NextConfig = {
 };
 
 export default withNextIntl(baseConfig);
-

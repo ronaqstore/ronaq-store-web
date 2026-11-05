@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Noto_Naskh_Arabic, Noto_Nastaliq_Urdu } from 'next/font/google';
 import localFont from 'next/font/local';
 import { notFound } from 'next/navigation';
+import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { getMessages, setRequestLocale } from 'next-intl/server';
@@ -22,6 +23,8 @@ import {
   PWA_THEME_COLOR_LIGHT
 } from '@/constants/site';
 import { defaultRootMetadata } from '@/lib/seo/metadata';
+import { env } from '@/config/env';
+import { GOOGLE_TAG_MANAGER_SCRIPT_URL, buildGaInitScript } from '@/constants/api';
 import { cn } from '@/lib/utils';
 import '@/styles/globals.css';
 
@@ -133,6 +136,21 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />
+        {env.NEXT_PUBLIC_GA_ID ? (
+          <>
+            <Script
+              src={`${GOOGLE_TAG_MANAGER_SCRIPT_URL}?id=${env.NEXT_PUBLIC_GA_ID}`}
+              strategy='afterInteractive'
+            />
+            <Script
+              id='google-analytics'
+              strategy='afterInteractive'
+              dangerouslySetInnerHTML={{
+                __html: buildGaInitScript(env.NEXT_PUBLIC_GA_ID)
+              }}
+            />
+          </>
+        ) : null}
       </body>
     </html>
   );

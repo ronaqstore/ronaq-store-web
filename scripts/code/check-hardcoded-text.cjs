@@ -24,7 +24,9 @@ const EXCLUDE_PATHS = [
   "__tests__/",
   ".test.",
   ".spec.",
-  ".d.ts"
+  ".d.ts",
+  "opengraph-image",
+  "twitter-image"
 ];
 
 const STRING_PROPS = new Set([

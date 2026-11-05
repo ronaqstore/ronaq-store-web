@@ -135,6 +135,8 @@ function isFrameworkEntryPoint(normFilePath, exportName) {
         "manifest.ts",
         "sitemap.ts",
         "robots.ts",
+        "opengraph-image.tsx",
+        "twitter-image.tsx",
         "sw.ts",
         "sw-network-retry.ts",
       ].includes(basename)
