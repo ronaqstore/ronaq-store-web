@@ -40,10 +40,10 @@ App Router Next.js storefront (`ronaq-store-web`) with locale prefix (`/en`, `/u
 
 | Variable | Example | Purpose |
 |---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | `https://ronaq-store-web.vercel.app` | **Canonical base URL** (single source of truth) |
+| `NEXT_PUBLIC_SITE_URL` | `https://www.ronaqstores.com` | **Canonical base URL** (single source of truth) |
 | `NEXT_PUBLIC_APP_URL` | same as site URL | Backward-compatible fallback |
 | `NEXT_PUBLIC_API_URL` | `https://ronaq-store-backend.vercel.app` | Public API |
-| `NEXT_PUBLIC_ADMIN_URL` | `https://ronaq-store-admin.vercel.app` | Owner portal links (`rel=nofollow`) |
+| `NEXT_PUBLIC_ADMIN_URL` | `https://admin.ronaqstores.com` | Owner portal links (`rel=nofollow`) |
 | `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` | token from Search Console | Optional verification meta |
 
 ## Post-deploy checklist
