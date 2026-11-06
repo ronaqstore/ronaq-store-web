@@ -1,5 +1,11 @@
 import type { Metadata } from 'next';
-import { DEFAULT_DESCRIPTION, HREFLANG_MAP, SITE_NAME, SITE_TAGLINE } from '@/config/site-config';
+import {
+  BING_SITE_VERIFICATION,
+  DEFAULT_DESCRIPTION,
+  HREFLANG_MAP,
+  SITE_NAME,
+  SITE_TAGLINE
+} from '@/config/site-config';
 import { SEO_KEYWORDS } from '@/constants/site';
 import { env } from '@/config/env';
 import { absoluteLocaleUrl, absoluteUrl, getSiteUrl } from '@/lib/seo/site-url';
@@ -164,7 +170,12 @@ export function defaultRootMetadata(): Metadata {
       description: DEFAULT_DESCRIPTION,
       images: [absoluteUrl(DEFAULT_OG_IMAGE)]
     },
-    ...(googleVerification ? { verification: { google: googleVerification } } : {})
+    verification: {
+      ...(googleVerification ? { google: googleVerification } : {}),
+      other: {
+        'msvalidate.01': BING_SITE_VERIFICATION
+      }
+    }
   };
 }
 

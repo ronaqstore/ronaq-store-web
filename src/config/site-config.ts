@@ -26,3 +26,6 @@ export const HREFLANG_MAP: Record<AppLocale, string> = {
   ps: 'ps',
   roman: 'ur-Latn'
 };
+
+export const BING_SITE_VERIFICATION: string =
+  env.NEXT_PUBLIC_BING_SITE_VERIFICATION ?? '8AC3DBAB922BFAC6241A68FDC9D58000';
