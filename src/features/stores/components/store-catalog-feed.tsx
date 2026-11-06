@@ -18,16 +18,11 @@ import type { StoreProductListItem, StoreProductDetail } from '@/types/product';
 import type { ApiPaginatedProducts } from '@/types/api';
 
 const ProductDetailModal = dynamic(
-  () =>
-    import('@/components/products/product-detail-modal').then((mod) => mod.ProductDetailModal),
+  () => import('@/components/products/product-detail-modal').then((mod) => mod.ProductDetailModal),
   { ssr: false }
 );
 
-async function fetchProductsPage(
-  slug: string,
-  filters: StoreCatalogFilters,
-  page: number
-) {
+async function fetchProductsPage(slug: string, filters: StoreCatalogFilters, page: number) {
   const params = new URLSearchParams();
   if (filters.q) params.set('q', filters.q);
   if (filters.category) params.set('category', filters.category);
@@ -67,7 +62,14 @@ export function StoreCatalogFeed({
     setHasMore(initialPage < productsTotalPages);
     setLoadError(false);
     loadingRef.current = false;
-  }, [initialProducts, initialPage, productsTotal, productsTotalPages, filters.category, filters.q]);
+  }, [
+    initialProducts,
+    initialPage,
+    productsTotal,
+    productsTotalPages,
+    filters.category,
+    filters.q
+  ]);
 
   const loadMore = useCallback(async () => {
     if (loadingRef.current || !hasMore) return;
@@ -111,6 +113,35 @@ export function StoreCatalogFeed({
     [allModels, products, filters]
   );
 
+  const visibleModelProducts = useMemo(
+    () =>
+      visibleModels.flatMap((model) => {
+        const variants = products.filter(
+          (product) => product.trackingType === 'SERIALIZED' && product.modelKey === model.key
+        );
+        const availableVariants = variants.filter(
+          (product) => product.availability !== 'OUT_OF_STOCK'
+        );
+        const candidates = availableVariants.length > 0 ? availableVariants : variants;
+        const representative = [...candidates].sort(
+          (first, second) => Number(first.retailPrice) - Number(second.retailPrice)
+        )[0];
+
+        return representative
+          ? [
+              {
+                model,
+                product: {
+                  ...representative,
+                  primaryImageUrl: representative.primaryImageUrl || model.coverImage
+                }
+              }
+            ]
+          : [];
+      }),
+    [products, visibleModels]
+  );
+
   const accessoryProducts = useMemo(
     () => products.filter((p) => p.trackingType !== 'SERIALIZED'),
     [products]
@@ -132,7 +163,7 @@ export function StoreCatalogFeed({
   };
 
   const showEmpty =
-    visibleModels.length === 0 && accessoryProducts.length === 0 && !loadingMore;
+    visibleModelProducts.length === 0 && accessoryProducts.length === 0 && !loadingMore;
 
   return (
     <div className='space-y-5'>
@@ -140,7 +171,7 @@ export function StoreCatalogFeed({
         {t('stores.productsAvailable', { count: total })}
       </p>
 
-      {visibleModels.length > 0 ? (
+      {visibleModelProducts.length > 0 ? (
         <section className='space-y-3' aria-labelledby='phone-models-heading'>
           <h3
             id='phone-models-heading'
@@ -149,11 +180,14 @@ export function StoreCatalogFeed({
             {t('catalog.phoneModels')}
           </h3>
           <div className='grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3 xl:grid-cols-4'>
-            {visibleModels.map((model, index) => (
+            {visibleModelProducts.map(({ model, product }, index) => (
               <ModelCard
-                key={`${model.key}-${index}`}
+                key={model.key}
                 model={model}
+                product={product}
                 storeSlug={store.slug}
+                storeName={store.displayName}
+                storeCity={store.city}
                 priority={index < 4}
               />
             ))}
@@ -166,6 +200,7 @@ export function StoreCatalogFeed({
           products={accessoryProducts}
           storeSlug={store.slug}
           storeName={store.displayName}
+          storeCity={store.city}
           storePhone={resolveStoreWhatsAppNumber(store)}
           onSelectProduct={handleSelectProduct}
         />
@@ -185,10 +220,7 @@ export function StoreCatalogFeed({
         className='flex min-h-10 flex-col items-center justify-center gap-2 py-6'
       >
         {loadingMore ? (
-          <div
-            className='flex items-center gap-2 text-sm text-muted-foreground'
-            aria-live='polite'
-          >
+          <div className='flex items-center gap-2 text-sm text-muted-foreground' aria-live='polite'>
             <Spinner className='size-4' />
             <span>{t('catalog.loadingMore')}</span>
           </div>
@@ -204,7 +236,7 @@ export function StoreCatalogFeed({
         ) : null}
         {!hasMore &&
         !loadingMore &&
-        (visibleModels.length > 0 || accessoryProducts.length > 0) ? (
+        (visibleModelProducts.length > 0 || accessoryProducts.length > 0) ? (
           <p className='text-xs text-muted-foreground'>{t('catalog.endOfList')}</p>
         ) : null}
       </div>

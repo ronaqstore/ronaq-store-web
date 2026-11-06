@@ -31,10 +31,7 @@ export interface StoreProductUnit {
 
 export type ProductConditionDisplay = 'NEW' | 'USED' | 'MIXED';
 
-export type ProductConditionMessageKey =
-  | 'conditionNew'
-  | 'conditionUsed'
-  | 'conditionMixed';
+export type ProductConditionMessageKey = 'conditionNew' | 'conditionUsed' | 'conditionMixed';
 
 export interface ProductConditionInput {
   condition?: string | null;
@@ -143,11 +140,13 @@ export interface ProductCardProps {
   product: StoreProductListItem | import('./marketplace').MarketplaceProduct;
   storeSlug?: string;
   storeName?: string;
+  storeCity?: string;
   storePhone?: string;
   onSelectProduct?: (product: StoreProductListItem) => void;
   priority?: boolean;
   linkToModel?: boolean;
   prefetch?: boolean;
+  priceLabelOverride?: string;
   className?: string;
 }
 
@@ -161,7 +160,10 @@ export interface ModelVariantsClientProps {
 
 export interface ModelCardProps {
   model: StoreModelListItem;
+  product: StoreProductListItem;
   storeSlug: string;
+  storeName: string;
+  storeCity: string;
   priority?: boolean;
 }
 
@@ -176,6 +178,7 @@ export interface ProductGridProps {
   products: StoreProductListItem[];
   storeSlug: string;
   storeName: string;
+  storeCity?: string;
   storePhone: string;
   onSelectProduct?: (product: StoreProductListItem) => void;
   linkToModel?: boolean;

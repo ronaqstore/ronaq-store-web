@@ -15,7 +15,9 @@ export function ProductCardSkeleton({ className }: ProductCardSkeletonProps) {
       )}
       aria-hidden
     >
-      <div className='relative aspect-square w-full shrink-0 overflow-hidden bg-muted/40' />
+      <div className='relative aspect-[4/5] w-full shrink-0 overflow-hidden bg-muted/30'>
+        <div className='absolute inset-s-3 top-3 h-5 w-20 rounded-full bg-muted/60' />
+      </div>
 
       <div className='flex flex-1 flex-col p-3 sm:p-4'>
         <div className='min-h-[1rem] mb-1'>
@@ -27,11 +29,18 @@ export function ProductCardSkeleton({ className }: ProductCardSkeletonProps) {
           <div className='h-3.5 w-3/4 rounded bg-muted/60' />
         </div>
 
-        <div className='h-3 w-2/3 rounded bg-muted/40 my-1.5' />
+        <div className='mt-1.5 flex flex-wrap gap-1'>
+          <div className='h-5 w-14 rounded-md bg-muted/50' />
+          <div className='h-5 w-16 rounded-md bg-muted/50' />
+          <div className='h-5 w-12 rounded-md bg-muted/50' />
+        </div>
 
-        <div className='mt-auto flex items-center justify-between gap-1.5 pt-2.5 border-t border-border/50'>
-          <div className='h-5 w-16 rounded bg-muted/70' />
-          <div className='h-3.5 w-14 rounded-full bg-muted/50' />
+        <div className='h-3 w-2/3 rounded bg-muted/40 pt-0.5 mt-1.5' />
+        <div className='h-3 w-4/5 rounded bg-muted/40 mt-1' />
+
+        <div className='mt-auto flex flex-wrap items-center justify-between gap-x-1.5 gap-y-2 pt-2.5 border-t border-border/50'>
+          <div className='h-5 w-24 rounded bg-muted/70' />
+          <div className='h-5 w-20 rounded-full bg-muted/50' />
         </div>
       </div>
     </div>
