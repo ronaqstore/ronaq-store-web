@@ -150,9 +150,6 @@ export function ProductCard({
   const cardContent = (
     <>
       <div className='relative aspect-[4/5] w-full shrink-0 overflow-hidden bg-muted/30'>
-        {product.ptaStatus ? (
-          <div className='absolute inset-s-3 top-3 z-10 flex flex-wrap gap-1.5'>{statusBadges}</div>
-        ) : null}
         <SmartImage
           src={productImageSrc(product.primaryImageUrl)}
           alt={formatEmpty(title)}
@@ -167,6 +164,10 @@ export function ProductCard({
       </div>
 
       <div className='flex flex-1 flex-col p-3 sm:p-4'>
+        {product.ptaStatus ? (
+          <div className='mb-1 flex flex-wrap gap-1'>{statusBadges}</div>
+        ) : null}
+
         <div className='min-h-[1rem] mb-1'>
           {product.brandName ? (
             <p className='text-[10px] font-bold uppercase tracking-wider text-muted-foreground truncate'>
