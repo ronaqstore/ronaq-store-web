@@ -157,18 +157,18 @@ export function ProductCard({
           priority={priority}
           placeholder={IMAGE_PLACEHOLDER_BLUR}
           blurDataURL={BLUR_PLACEHOLDER}
-          className='object-contain p-3 sm:p-5 transition-transform duration-200 ease-out [@media(hover:hover)]:group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:transform-none select-none'
+          className='object-contain p-2.5 sm:p-5 transition-transform duration-200 ease-out [@media(hover:hover)]:group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:transform-none select-none'
           sizes='(max-width:639px) 50vw, (max-width:1023px) 33vw, (max-width:1535px) 25vw, 20vw'
           fallbackSrc={PLACEHOLDER_PRODUCT_IMAGE}
         />
       </div>
 
-      <div className='flex flex-1 flex-col p-3 sm:p-4'>
+      <div className='flex flex-1 flex-col gap-1 p-2.5 sm:p-4 sm:gap-1.5'>
         {product.ptaStatus ? (
-          <div className='mb-1 flex flex-wrap gap-1'>{statusBadges}</div>
+          <div className='flex flex-wrap gap-1'>{statusBadges}</div>
         ) : null}
 
-        <div className='min-h-[1rem] mb-1'>
+        <div className='min-h-[1rem]'>
           {product.brandName ? (
             <p className='text-[10px] font-bold uppercase tracking-wider text-muted-foreground truncate'>
               {formatTitleCase(product.brandName)}
@@ -176,12 +176,12 @@ export function ProductCard({
           ) : null}
         </div>
 
-        <h3 className='min-h-[2.25rem] text-xs font-semibold leading-snug text-foreground transition-colors duration-200 sm:min-h-[2.5rem] sm:text-sm md:min-h-[2.75rem] [@media(hover:hover)]:group-hover:text-emerald-600 dark:[@media(hover:hover)]:group-hover:text-emerald-400'>
+        <h3 className='min-h-[2rem] text-xs font-semibold leading-snug text-foreground transition-colors duration-200 sm:min-h-[2.5rem] sm:text-sm md:min-h-[2.75rem] [@media(hover:hover)]:group-hover:text-emerald-600 dark:[@media(hover:hover)]:group-hover:text-emerald-400'>
           <TruncateText lines={2}>{title}</TruncateText>
         </h3>
 
         {hasAuthenticity || ramStorageLabel || colorLabel || batteryHealth || conditionLabel ? (
-          <div className='flex flex-wrap items-center gap-1 mt-1.5'>
+          <div className='flex flex-wrap items-center gap-1'>
             {authenticityBadge}
             {ramStorageLabel ? (
               <Badge
@@ -216,8 +216,8 @@ export function ProductCard({
         ) : null}
 
         {shop || storeName ? (
-          <div className='flex items-center gap-1.5 text-xs text-muted-foreground pt-1 pb-1 truncate'>
-            <Icons.store className='h-3.5 w-3.5 shrink-0 text-emerald-600 dark:text-emerald-400' />
+          <div className='flex items-center gap-1.5 text-[11px] text-muted-foreground truncate'>
+            <Icons.store className='h-3 w-3 shrink-0 text-emerald-600 dark:text-emerald-400' />
             <span className='truncate font-medium'>
               {shop?.displayName ?? storeName}
               {(shop?.city ?? storeCity) ? ` · ${shop?.city ?? storeCity}` : ''}
@@ -226,30 +226,30 @@ export function ProductCard({
         ) : null}
 
         {!shop && product.categoryName ? (
-          <p className='text-xs text-muted-foreground truncate pt-0.5 pb-1'>
+          <p className='text-[11px] text-muted-foreground truncate'>
             {formatTitleCase(product.categoryName)}
           </p>
         ) : null}
 
-        <div className='mt-auto flex flex-wrap items-center justify-between gap-x-1.5 gap-y-2 pt-2.5 border-t border-border/50'>
-          <span className='min-w-fit whitespace-nowrap text-xs sm:text-sm md:text-base font-extrabold text-emerald-600 dark:text-emerald-400 tabular-nums'>
+        <div className='mt-auto flex items-center justify-between gap-1.5 pt-2 border-t border-border/50'>
+          <span className='min-w-0 truncate whitespace-nowrap text-xs sm:text-sm md:text-base font-extrabold text-emerald-600 dark:text-emerald-400 tabular-nums'>
             {formattedPrice || t('catalog.price')}
           </span>
 
           {isOutOfStock ? (
-            <div className='ms-auto inline-flex shrink-0 items-center gap-1 text-[11px] font-medium text-muted-foreground'>
+            <div className='inline-flex shrink-0 items-center gap-1 text-[11px] font-medium text-muted-foreground'>
               <span className='h-1.5 w-1.5 rounded-full bg-muted-foreground/60' />
               <span className='hidden min-[360px]:inline'>{t('catalog.outOfStock')}</span>
             </div>
           ) : isLowStock ? (
-            <div className='ms-auto inline-flex shrink-0 items-center gap-1 text-[11px] font-medium text-amber-700 dark:text-amber-300'>
+            <div className='inline-flex shrink-0 items-center gap-1 text-[11px] font-medium text-amber-700 dark:text-amber-300'>
               <span className='h-1.5 w-1.5 rounded-full bg-amber-500' />
               <span className='hidden min-[360px]:inline'>
                 {stockLabel ?? t('catalog.lowStock')}
               </span>
             </div>
           ) : (
-            <div className='ms-auto inline-flex shrink-0 items-center gap-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400'>
+            <div className='inline-flex shrink-0 items-center gap-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400'>
               <span className='h-1.5 w-1.5 rounded-full bg-emerald-500' />
               <span className='hidden min-[360px]:inline'>
                 {stockLabel ?? t('catalog.inStock')}
