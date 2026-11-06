@@ -85,7 +85,7 @@
   },
   "hero": {
     "title": "Find trusted mobile shops near you",
-    "subtitle": "Live stock, PTA status, and WhatsApp contact — from local shops across Pakistan.",
+    "subtitle": "Live stock, PTA status, and WhatsApp contact — from local shops across KPK.",
     "searchPlaceholder": "Search...",
     "popularCities": "Popular Cities:",
     "ctaExplore": "Browse shops",
@@ -219,7 +219,7 @@
     "call": "Call"
   },
   "footer": {
-    "tagline": "Discover local mobile and tech shops across Pakistan. Compare live stock, check PTA status, and order directly on WhatsApp.",
+    "tagline": "Discover local mobile and tech shops across KPK (Timergara, Lower Dir, Swat, Batkhela, Chakdara). Compare live stock, check PTA status, and order directly on WhatsApp.",
     "ownersTitle": "Shop Owners",
     "registerDukan": "Open Your Store",
     "login": "Login to Portal",
@@ -229,12 +229,12 @@
     "allRightsReserved": "All rights reserved."
   },
   "metadata": {
-    "title": "Ronaq Store — Pakistan's Mobile & Electronics Store Directory",
-    "description": "Find local mobile and electronics shops in Lahore, Karachi, Islamabad and all cities of Pakistan. View stock, phones, chargers, and accessories.",
-    "homeTitle": "Find Phones & Accessories in Pakistan",
+    "title": "Ronaq Store — KPK's Mobile & Electronics Store Directory",
+    "description": "Find local mobile and electronics shops in Timergara, Lower Dir, Swat, Chakdara, Batkhela and across KPK. View stock, phones, chargers, and accessories.",
+    "homeTitle": "Find Phones & Accessories in KPK",
     "homeDescription": "Browse live phones, chargers and accessories from local shops. Filter by city, check stock and PTA status — then order on WhatsApp.",
-    "shopsTitle": "Explore Mobile Shops in Pakistan",
-    "shopsDescription": "Browse smartphone shops across Pakistan. Check live stock, PTA status, chargers and accessories — then order on WhatsApp.",
+    "shopsTitle": "Explore Mobile Shops in KPK",
+    "shopsDescription": "Browse smartphone shops across KPK (Timergara, Dir, Swat, Chakdara, Batkhela). Check live stock, PTA status, chargers and accessories — then order on WhatsApp.",
     "shopTitle": "{store} Mobile Shop in {city}",
     "shopDescription": "Shop phones and accessories at {store} in {city}. View live prices, stock status, and chat on WhatsApp via Ronaq Store.",
     "shopFallbackTitle": "Shop Not Found",
@@ -248,7 +248,7 @@
   },
   "faq": {
     "q1": "What is Ronaq Store?",
-    "a1": "Ronaq Store lets you browse phones and accessories from local shops across Pakistan, filter by city, and contact shops on WhatsApp — no buyer account needed.",
+    "a1": "Ronaq Store lets you browse phones and accessories from local shops across KPK, filter by city, and contact shops on WhatsApp — no buyer account needed.",
     "q2": "Are the shops verified?",
     "a2": "Yes. Only shops that pass review and keep their store online appear in the public directory.",
     "q3": "How do I buy a product?",

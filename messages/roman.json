@@ -85,7 +85,7 @@
   },
   "hero": {
     "title": "Apnay qareeb qabil-e-aitmad mobile dukanein talash karein",
-    "subtitle": "Live stock, PTA status, aur direct WhatsApp rabta — Pakistan bhar ki dukano se.",
+    "subtitle": "Live stock, PTA status, aur direct WhatsApp rabta — KPK bhar ki dukano se.",
     "searchPlaceholder": "Talash karein...",
     "popularCities": "Mashhoor Shehar:",
     "ctaExplore": "Dukanein dekhein",
@@ -219,7 +219,7 @@
     "call": "Call"
   },
   "footer": {
-    "tagline": "Pakistan bhar ki local mobile dukanein dekhein, live stock check karein aur WhatsApp par direct order karein.",
+    "tagline": "KPK bhar (Timergara, Lower Dir, Swat, Batkhela, Chakdara) ki local mobile dukanein dekhein, live stock check karein aur WhatsApp par direct order karein.",
     "ownersTitle": "Dukandaron ke liye",
     "registerDukan": "Apni dukan banayein",
     "login": "Portal login",
@@ -229,12 +229,12 @@
     "allRightsReserved": "Tamam huqooq mehfooz hain."
   },
   "metadata": {
-    "title": "Ronaq Store — Pakistan ki Mobile aur Electronics Store Directory",
-    "description": "Peshawar, Timergara, Swat, Lahore, Islamabad aur Pakistan bhar mein mobile aur accessories ki dukanein talash karein. Live stock, phones aur chargers dekhein.",
-    "homeTitle": "Pakistan mein Phones aur Accessories Talash Karein",
+    "title": "Ronaq Store — KPK ki Mobile aur Electronics Store Directory",
+    "description": "Timergara, Lower Dir, Swat, Chakdara, Batkhela aur KPK bhar mein mobile aur accessories ki dukanein talash karein. Live stock, phones aur chargers dekhein.",
+    "homeTitle": "KPK mein Phones aur Accessories Talash Karein",
     "homeDescription": "Muqami dukano se live phones, chargers aur accessories dekhein. Shehar filter karein, stock aur PTA check karein — phir WhatsApp par order karein.",
-    "shopsTitle": "Pakistan mein Mobile Dukanein Dekhein",
-    "shopsDescription": "Pakistan bhar ki smartphone shops dekhein. Live stock, PTA status, chargers aur accessories check karein — phir WhatsApp par rabta karein.",
+    "shopsTitle": "KPK mein Mobile Dukanein Dekhein",
+    "shopsDescription": "KPK bhar (Timergara, Dir, Swat, Chakdara, Batkhela) ki smartphone shops dekhein. Live stock, PTA status, chargers aur accessories check karein — phir WhatsApp par rabta karein.",
     "shopTitle": "{city} mein {store} Mobile Shop",
     "shopDescription": "{city} mein {store} se phones aur accessories khareedein. Live qeematein, stock aur WhatsApp rabta Ronaq Store par dekhein.",
     "shopFallbackTitle": "Dukan nahi mili",
@@ -248,7 +248,7 @@
   },
   "faq": {
     "q1": "Ronaq Store kya hai?",
-    "a1": "Ronaq Store par aap Pakistan bhar ki muqami dukano se phones aur accessories dekh saktay hain, shehar chunein, aur direct WhatsApp par rabta karein — baghair account banaye.",
+    "a1": "Ronaq Store par aap KPK bhar ki muqami dukano se phones aur accessories dekh saktay hain, shehar chunein, aur direct WhatsApp par rabta karein — baghair account banaye.",
     "q2": "Kya dukanein verified hain?",
     "a2": "Jee haan. Sirf wo dukanein jo review pass karein aur online rahein, public directory mein aati hain.",
     "q3": "Product kaise khareedein?",
