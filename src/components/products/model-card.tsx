@@ -57,19 +57,10 @@ export function ModelCard({ model, storeSlug, priority = false }: ModelCardProps
             priority={priority}
             placeholder={IMAGE_PLACEHOLDER_BLUR}
             blurDataURL={BLUR_PLACEHOLDER}
-            className={cn(
-              'object-cover transition-transform duration-200 ease-out [@media(hover:hover)]:group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:transform-none select-none',
-              isOutOfStock ? 'grayscale opacity-80' : ''
-            )}
+            className='object-cover transition-transform duration-200 ease-out [@media(hover:hover)]:group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:transform-none select-none'
             sizes='(max-width:639px) 50vw, (max-width:1023px) 33vw, (max-width:1535px) 25vw, 20vw'
             fallbackSrc={PLACEHOLDER_PRODUCT_IMAGE}
           />
-          {isOutOfStock ? (
-            <span className='absolute inset-s-2 top-2 z-10 inline-flex items-center gap-1 rounded-full border border-border/60 bg-background/90 px-2 py-0.5 text-[11px] font-semibold text-rose-600 shadow-xs backdrop-blur-xs dark:text-rose-400'>
-              <span className='h-1.5 w-1.5 rounded-full bg-rose-500' />
-              <span>{t('catalog.outOfStock')}</span>
-            </span>
-          ) : null}
         </div>
 
         <div className='flex flex-1 flex-col p-3 sm:p-4'>

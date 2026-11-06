@@ -39,8 +39,15 @@ export function ProductCard({
   const t = useTranslations();
 
   const title = formatProductCardTitle(product.name, product.brandName);
-  const storageLabel = formatStorageLabel(product.storage);
-  const colorLabel = formatColorLabel(product.color);
+  const rawStorage = product.storage || product.specs?.storage;
+  const storageLabel = formatStorageLabel(rawStorage);
+  const rawRam = product.ram || product.specs?.ram;
+  const ramLabel = rawRam ? `${rawRam} RAM` : '';
+  const ramStorageLabel = rawRam && storageLabel ? `${rawRam} / ${storageLabel}` : storageLabel || ramLabel;
+  const colorLabel = formatColorLabel(product.color || product.specs?.color);
+  const batteryHealth =
+    product.units?.find((u) => typeof u.batteryHealth === 'number')?.batteryHealth ?? null;
+
   const conditionLabel =
     product.condition === 'NEW'
       ? t('catalog.conditionNew')
@@ -119,19 +126,18 @@ export function ProductCard({
   );
 
   const hasStatusBadges = Boolean(product.ptaStatus);
+  const hasAuthenticity = Boolean(product.authenticity);
 
   const authenticityBadge =
     product.authenticity === 'ORIGINAL' ? (
-      <span className='absolute inset-e-2 top-2 z-10 inline-flex items-center rounded-full border border-border/60 bg-background/90 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 shadow-xs backdrop-blur-xs dark:text-emerald-400'>
+      <Badge variant='success' className='px-1.5 py-0.5 text-[10px] font-semibold'>
         {t('catalog.authenticityOriginal')}
-      </span>
+      </Badge>
     ) : product.authenticity === 'COPY' ? (
-      <span className='absolute inset-e-2 top-2 z-10 inline-flex items-center rounded-full border border-border/60 bg-muted/90 px-2 py-0.5 text-[11px] font-medium text-muted-foreground shadow-xs backdrop-blur-xs'>
+      <Badge variant='secondary' className='px-1.5 py-0.5 text-[10px] font-semibold'>
         {t('catalog.authenticityCopy')}
-      </span>
+      </Badge>
     ) : null;
-
-  const specParts = [storageLabel, colorLabel, conditionLabel].filter(Boolean);
 
   const handleSelectProduct = () => {
     onSelectProduct?.(product);
@@ -147,31 +153,47 @@ export function ProductCard({
           priority={priority}
           placeholder={IMAGE_PLACEHOLDER_BLUR}
           blurDataURL={BLUR_PLACEHOLDER}
-          className={cn(
-            'object-cover transition-transform duration-200 ease-out [@media(hover:hover)]:group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:transform-none select-none',
-            isOutOfStock ? 'grayscale opacity-80' : ''
-          )}
+          className='object-cover transition-transform duration-200 ease-out [@media(hover:hover)]:group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:transform-none select-none'
           sizes='(max-width:639px) 50vw, (max-width:1023px) 33vw, (max-width:1535px) 25vw, 20vw'
           fallbackSrc={PLACEHOLDER_PRODUCT_IMAGE}
         />
-
-        {isOutOfStock ? (
-          <span className='absolute inset-s-2 top-2 z-10 inline-flex items-center gap-1 rounded-full border border-border/60 bg-background/90 px-2 py-0.5 text-[11px] font-semibold text-rose-600 shadow-xs backdrop-blur-xs dark:text-rose-400'>
-            <span className='h-1.5 w-1.5 rounded-full bg-rose-500' />
-            <span>{t('catalog.outOfStock')}</span>
-          </span>
-        ) : isLowStock ? (
-          <span className='absolute inset-s-2 top-2 z-10 inline-flex items-center gap-1 rounded-full border border-amber-500/40 bg-background/90 px-2 py-0.5 text-[11px] font-semibold text-amber-700 shadow-xs backdrop-blur-xs dark:text-amber-300'>
-            <span className='h-1.5 w-1.5 rounded-full bg-amber-500' />
-            <span>{t('catalog.lowStock')}</span>
-          </span>
-        ) : null}
-        {authenticityBadge}
       </div>
 
       <div className='flex flex-1 flex-col p-3 sm:p-4'>
-        {hasStatusBadges ? (
-          <div className='flex flex-wrap items-center gap-1 mb-1.5'>{statusBadges}</div>
+        {hasStatusBadges || hasAuthenticity || ramStorageLabel || colorLabel || batteryHealth ? (
+          <div className='flex flex-wrap items-center gap-1 mb-1.5'>
+            {statusBadges}
+            {authenticityBadge}
+            {ramStorageLabel ? (
+              <Badge
+                variant='outline'
+                className='px-1.5 py-0.5 text-[10px] font-semibold bg-muted/60 text-foreground border-border'
+              >
+                {ramStorageLabel}
+              </Badge>
+            ) : null}
+            {colorLabel ? (
+              <Badge
+                variant='outline'
+                className='px-1.5 py-0.5 text-[10px] font-medium bg-muted/40 text-muted-foreground border-border'
+              >
+                {colorLabel}
+              </Badge>
+            ) : null}
+            {batteryHealth ? (
+              <Badge
+                variant='outline'
+                className='px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 border-emerald-500/30'
+              >
+                {t('catalog.batteryPct', { pct: batteryHealth })}
+              </Badge>
+            ) : null}
+            {conditionLabel && !hasStatusBadges ? (
+              <Badge variant='outline' className='px-1.5 py-0.5 text-[10px] font-medium'>
+                {conditionLabel}
+              </Badge>
+            ) : null}
+          </div>
         ) : null}
 
         <div className='min-h-[1rem] mb-1'>
@@ -187,18 +209,16 @@ export function ProductCard({
         </h3>
 
         {shop ? (
-          <div className='flex items-center gap-1 text-xs text-muted-foreground pt-1 pb-1.5 truncate'>
-            <Icons.store className='h-3.5 w-3.5 shrink-0 text-muted-foreground/70' />
-            <span className='truncate'>
+          <div className='flex items-center gap-1.5 text-xs text-muted-foreground pt-1 pb-1 truncate'>
+            <Icons.store className='h-3.5 w-3.5 shrink-0 text-emerald-600 dark:text-emerald-400' />
+            <span className='truncate font-medium'>
               {shop.displayName}
               {shop.city ? ` · ${shop.city}` : ''}
             </span>
           </div>
-        ) : specParts.length > 0 ? (
-          <p className='text-xs text-muted-foreground truncate pt-0.5 pb-1'>
-            {specParts.join(' · ')}
-          </p>
-        ) : product.categoryName ? (
+        ) : null}
+
+        {!shop && product.categoryName ? (
           <p className='text-xs text-muted-foreground truncate pt-0.5 pb-1'>
             {formatTitleCase(product.categoryName)}
           </p>

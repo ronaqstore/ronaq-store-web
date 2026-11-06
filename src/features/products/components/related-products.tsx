@@ -7,7 +7,6 @@ import { SmartImage } from '@/components/media/smart-image';
 import { PLACEHOLDER_PRODUCT_IMAGE, productImageSrc } from '@/constants/placeholders';
 import { formatPrice, formatEmpty, formatProductCardTitle } from '@/lib/formatters';
 import { productPath } from '@/lib/seo/slug';
-import { cn } from '@/lib/utils';
 import type { RelatedProductsProps } from '@/types/product';
 
 export function RelatedProducts({ products, browseHref }: RelatedProductsProps) {
@@ -60,20 +59,10 @@ export function RelatedProducts({ products, browseHref }: RelatedProductsProps) 
                     alt={formatEmpty(title)}
                     fill
                     priority={index === 0}
-                    className={cn(
-                      'object-cover transition-transform duration-200 ease-out [@media(hover:hover)]:group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:transform-none select-none',
-                      isOutOfStock ? 'grayscale opacity-80' : ''
-                    )}
+                    className='object-cover transition-transform duration-200 ease-out [@media(hover:hover)]:group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:transform-none select-none'
                     sizes='(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw'
                     fallbackSrc={PLACEHOLDER_PRODUCT_IMAGE}
                   />
-
-                  {isOutOfStock ? (
-                    <span className='absolute inset-s-2 top-2 z-10 inline-flex items-center gap-1 rounded-full bg-background/90 px-2 py-0.5 text-[11px] font-semibold text-rose-600 dark:text-rose-400 border border-border/60 shadow-xs backdrop-blur-xs'>
-                      <span className='h-1.5 w-1.5 rounded-full bg-rose-500' />
-                      <span>{t('outOfStock')}</span>
-                    </span>
-                  ) : null}
                 </div>
 
                 <div className='flex flex-1 flex-col p-2.5 sm:p-3.5 md:p-4'>
