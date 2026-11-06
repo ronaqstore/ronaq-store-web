@@ -17,10 +17,7 @@ import {
   formatColorLabel,
   resolveStoreWhatsAppNumber
 } from '@/lib/formatters';
-import {
-  productConditionMessageKey,
-  resolveProductCondition
-} from '@/lib/product-condition';
+import { productConditionMessageKey, resolveProductCondition } from '@/lib/product-condition';
 import { cn } from '@/lib/utils';
 import type { ProductInfoProps } from '@/types/product';
 
@@ -41,14 +38,10 @@ export function ProductInfo({ product, store, slug, crumbs }: ProductInfoProps) 
   const formattedPrice = formatPrice(product.retailPrice);
 
   const condition = resolveProductCondition(product);
-  const conditionLabel = condition
-    ? t(productConditionMessageKey(condition))
-    : null;
+  const conditionLabel = condition ? t(productConditionMessageKey(condition)) : null;
 
   const specDetails = [storageLabel, colorLabel].filter(Boolean).join(', ');
-  const fullProductName = specDetails
-    ? `${displayTitle} (${specDetails})`
-    : displayTitle;
+  const fullProductName = specDetails ? `${displayTitle} (${specDetails})` : displayTitle;
   const whatsappPrice = formattedPrice;
 
   const whatsappMessage = isOutOfStock
@@ -63,9 +56,7 @@ export function ProductInfo({ product, store, slug, crumbs }: ProductInfoProps) 
         price: whatsappPrice
       });
 
-  const whatsappHref = whatsappNumber
-    ? buildWhatsAppLink(whatsappNumber, whatsappMessage)
-    : null;
+  const whatsappHref = whatsappNumber ? buildWhatsAppLink(whatsappNumber, whatsappMessage) : null;
   const contactHref = contactNumber ? `tel:${contactNumber}` : null;
 
   return (
@@ -92,7 +83,10 @@ export function ProductInfo({ product, store, slug, crumbs }: ProductInfoProps) 
           <Link
             href={`/shop/${slug}?category=${encodeURIComponent(product.categoryId || product.categoryName)}`}
           >
-            <Badge variant='outline' className='hover:bg-muted transition-colors cursor-pointer text-[11px] sm:text-xs font-semibold'>
+            <Badge
+              variant='outline'
+              className='hover:bg-muted transition-colors cursor-pointer text-[11px] sm:text-xs font-semibold'
+            >
               {formatEmpty(product.categoryName)}
             </Badge>
           </Link>
@@ -196,7 +190,7 @@ export function ProductInfo({ product, store, slug, crumbs }: ProductInfoProps) 
         </div>
       </div>
 
-      {(ramLabel || storageLabel || colorLabel) ? (
+      {ramLabel || storageLabel || colorLabel ? (
         <div className='mb-4'>
           <span className='block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 rtl:normal-case rtl:tracking-normal'>
             {t('keyHighlights')}
@@ -266,50 +260,6 @@ export function ProductInfo({ product, store, slug, crumbs }: ProductInfoProps) 
             </span>
           </a>
         ) : null}
-      </div>
-
-      <div className='grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-2 rounded-2xl border border-border/80 bg-muted/20 p-3 mt-1 mb-4'>
-        <div className='flex items-center sm:flex-col sm:text-center gap-2.5 sm:gap-1 p-1'>
-          <div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'>
-            <Icons.shieldCheck className='h-4 w-4' />
-          </div>
-          <div className='min-w-0'>
-            <span className='block text-xs font-bold text-foreground leading-tight'>
-              {t('trustQualityChecked')}
-            </span>
-            <span className='text-[10px] sm:text-[11px] text-muted-foreground leading-tight'>
-              {t('trustQualityCheckedDesc')}
-            </span>
-          </div>
-        </div>
-
-        <div className='flex items-center sm:flex-col sm:text-center gap-2.5 sm:gap-1 p-1 sm:border-x border-border/60'>
-          <div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'>
-            <Icons.badgeCheck className='h-4 w-4' />
-          </div>
-          <div className='min-w-0'>
-            <span className='block text-xs font-bold text-foreground leading-tight'>
-              {t('trustPtaVerified')}
-            </span>
-            <span className='text-[10px] sm:text-[11px] text-muted-foreground leading-tight'>
-              {t('trustPtaVerifiedDesc')}
-            </span>
-          </div>
-        </div>
-
-        <div className='flex items-center sm:flex-col sm:text-center gap-2.5 sm:gap-1 p-1'>
-          <div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'>
-            <Icons.truck className='h-4 w-4' />
-          </div>
-          <div className='min-w-0'>
-            <span className='block text-xs font-bold text-foreground leading-tight'>
-              {t('trustShopPickup')}
-            </span>
-            <span className='text-[10px] sm:text-[11px] text-muted-foreground leading-tight'>
-              {t('trustShopPickupDesc')}
-            </span>
-          </div>
-        </div>
       </div>
 
       <SellerCard store={store} slug={slug} />

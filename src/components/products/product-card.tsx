@@ -5,6 +5,7 @@ import { Link } from '@/i18n/navigation';
 import { Icons } from '@/components/icons';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
+import { TruncateText } from '@/components/ui/truncate-text';
 import { SmartImage } from '@/components/media/smart-image';
 import {
   PLACEHOLDER_PRODUCT_IMAGE,
@@ -30,17 +31,28 @@ const BLUR_PLACEHOLDER =
 export function ProductCard({
   product,
   storeSlug,
+  storeName,
+  storeCity,
   onSelectProduct,
   priority = false,
   linkToModel = true,
   prefetch = true,
+  priceLabelOverride,
   className
 }: ProductCardProps) {
   const t = useTranslations();
 
   const title = formatProductCardTitle(product.name, product.brandName);
-  const storageLabel = formatStorageLabel(product.storage);
-  const colorLabel = formatColorLabel(product.color);
+  const rawStorage = product.storage || product.specs?.storage;
+  const storageLabel = formatStorageLabel(rawStorage);
+  const rawRam = product.ram || product.specs?.ram;
+  const ramLabel = rawRam ? `${rawRam} RAM` : '';
+  const ramStorageLabel =
+    rawRam && storageLabel ? `${rawRam} / ${storageLabel}` : storageLabel || ramLabel;
+  const colorLabel = formatColorLabel(product.color || product.specs?.color);
+  const batteryHealth =
+    product.units?.find((u) => typeof u.batteryHealth === 'number')?.batteryHealth ?? null;
+
   const conditionLabel =
     product.condition === 'NEW'
       ? t('catalog.conditionNew')
@@ -50,7 +62,7 @@ export function ProductCard({
           ? formatTitleCase(product.condition)
           : '';
 
-  const formattedPrice = formatPrice(product.retailPrice);
+  const formattedPrice = priceLabelOverride ?? formatPrice(product.retailPrice);
 
   const unitsCount = product.units?.length ?? 0;
   const stockCount =
@@ -118,20 +130,18 @@ export function ProductCard({
     </>
   );
 
-  const hasStatusBadges = Boolean(product.ptaStatus);
+  const hasAuthenticity = Boolean(product.authenticity);
 
   const authenticityBadge =
     product.authenticity === 'ORIGINAL' ? (
-      <span className='absolute inset-e-2 top-2 z-10 inline-flex items-center rounded-full border border-border/60 bg-background/90 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 shadow-xs backdrop-blur-xs dark:text-emerald-400'>
+      <Badge variant='success' className='px-1.5 py-0.5 text-[10px] font-semibold'>
         {t('catalog.authenticityOriginal')}
-      </span>
+      </Badge>
     ) : product.authenticity === 'COPY' ? (
-      <span className='absolute inset-e-2 top-2 z-10 inline-flex items-center rounded-full border border-border/60 bg-muted/90 px-2 py-0.5 text-[11px] font-medium text-muted-foreground shadow-xs backdrop-blur-xs'>
+      <Badge variant='secondary' className='px-1.5 py-0.5 text-[10px] font-semibold'>
         {t('catalog.authenticityCopy')}
-      </span>
+      </Badge>
     ) : null;
-
-  const specParts = [storageLabel, colorLabel, conditionLabel].filter(Boolean);
 
   const handleSelectProduct = () => {
     onSelectProduct?.(product);
@@ -139,7 +149,10 @@ export function ProductCard({
 
   const cardContent = (
     <>
-      <div className='relative aspect-square w-full shrink-0 overflow-hidden bg-muted/20'>
+      <div className='relative aspect-[4/5] w-full shrink-0 overflow-hidden bg-muted/30'>
+        {product.ptaStatus ? (
+          <div className='absolute inset-s-3 top-3 z-10 flex flex-wrap gap-1.5'>{statusBadges}</div>
+        ) : null}
         <SmartImage
           src={productImageSrc(product.primaryImageUrl)}
           alt={formatEmpty(title)}
@@ -147,33 +160,13 @@ export function ProductCard({
           priority={priority}
           placeholder={IMAGE_PLACEHOLDER_BLUR}
           blurDataURL={BLUR_PLACEHOLDER}
-          className={cn(
-            'object-cover transition-transform duration-200 ease-out [@media(hover:hover)]:group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:transform-none select-none',
-            isOutOfStock ? 'grayscale opacity-80' : ''
-          )}
+          className='object-contain p-3 sm:p-5 transition-transform duration-200 ease-out [@media(hover:hover)]:group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:transform-none select-none'
           sizes='(max-width:639px) 50vw, (max-width:1023px) 33vw, (max-width:1535px) 25vw, 20vw'
           fallbackSrc={PLACEHOLDER_PRODUCT_IMAGE}
         />
-
-        {isOutOfStock ? (
-          <span className='absolute inset-s-2 top-2 z-10 inline-flex items-center gap-1 rounded-full border border-border/60 bg-background/90 px-2 py-0.5 text-[11px] font-semibold text-rose-600 shadow-xs backdrop-blur-xs dark:text-rose-400'>
-            <span className='h-1.5 w-1.5 rounded-full bg-rose-500' />
-            <span>{t('catalog.outOfStock')}</span>
-          </span>
-        ) : isLowStock ? (
-          <span className='absolute inset-s-2 top-2 z-10 inline-flex items-center gap-1 rounded-full border border-amber-500/40 bg-background/90 px-2 py-0.5 text-[11px] font-semibold text-amber-700 shadow-xs backdrop-blur-xs dark:text-amber-300'>
-            <span className='h-1.5 w-1.5 rounded-full bg-amber-500' />
-            <span>{t('catalog.lowStock')}</span>
-          </span>
-        ) : null}
-        {authenticityBadge}
       </div>
 
       <div className='flex flex-1 flex-col p-3 sm:p-4'>
-        {hasStatusBadges ? (
-          <div className='flex flex-wrap items-center gap-1 mb-1.5'>{statusBadges}</div>
-        ) : null}
-
         <div className='min-h-[1rem] mb-1'>
           {product.brandName ? (
             <p className='text-[10px] font-bold uppercase tracking-wider text-muted-foreground truncate'>
@@ -182,47 +175,84 @@ export function ProductCard({
           ) : null}
         </div>
 
-        <h3 className='text-xs sm:text-sm font-semibold leading-snug text-foreground line-clamp-2 min-h-[2.25rem] sm:min-h-[2.5rem] md:min-h-[2.75rem] transition-colors duration-200 [@media(hover:hover)]:group-hover:text-emerald-600 dark:[@media(hover:hover)]:group-hover:text-emerald-400'>
-          {title}
+        <h3 className='min-h-[2.25rem] text-xs font-semibold leading-snug text-foreground transition-colors duration-200 sm:min-h-[2.5rem] sm:text-sm md:min-h-[2.75rem] [@media(hover:hover)]:group-hover:text-emerald-600 dark:[@media(hover:hover)]:group-hover:text-emerald-400'>
+          <TruncateText lines={2}>{title}</TruncateText>
         </h3>
 
-        {shop ? (
-          <div className='flex items-center gap-1 text-xs text-muted-foreground pt-1 pb-1.5 truncate'>
-            <Icons.store className='h-3.5 w-3.5 shrink-0 text-muted-foreground/70' />
-            <span className='truncate'>
-              {shop.displayName}
-              {shop.city ? ` · ${shop.city}` : ''}
+        {hasAuthenticity || ramStorageLabel || colorLabel || batteryHealth || conditionLabel ? (
+          <div className='flex flex-wrap items-center gap-1 mt-1.5'>
+            {authenticityBadge}
+            {ramStorageLabel ? (
+              <Badge
+                variant='outline'
+                className='px-1.5 py-0.5 text-[10px] font-semibold bg-muted/60 text-foreground border-border'
+              >
+                {ramStorageLabel}
+              </Badge>
+            ) : null}
+            {colorLabel ? (
+              <Badge
+                variant='outline'
+                className='px-1.5 py-0.5 text-[10px] font-medium bg-muted/40 text-muted-foreground border-border'
+              >
+                {colorLabel}
+              </Badge>
+            ) : null}
+            {batteryHealth ? (
+              <Badge
+                variant='outline'
+                className='px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 border-emerald-500/30'
+              >
+                {t('catalog.batteryPct', { pct: batteryHealth })}
+              </Badge>
+            ) : null}
+            {conditionLabel ? (
+              <Badge variant='outline' className='px-1.5 py-0.5 text-[10px] font-medium'>
+                {conditionLabel}
+              </Badge>
+            ) : null}
+          </div>
+        ) : null}
+
+        {shop || storeName ? (
+          <div className='flex items-center gap-1.5 text-xs text-muted-foreground pt-1 pb-1 truncate'>
+            <Icons.store className='h-3.5 w-3.5 shrink-0 text-emerald-600 dark:text-emerald-400' />
+            <span className='truncate font-medium'>
+              {shop?.displayName ?? storeName}
+              {(shop?.city ?? storeCity) ? ` · ${shop?.city ?? storeCity}` : ''}
             </span>
           </div>
-        ) : specParts.length > 0 ? (
-          <p className='text-xs text-muted-foreground truncate pt-0.5 pb-1'>
-            {specParts.join(' · ')}
-          </p>
-        ) : product.categoryName ? (
+        ) : null}
+
+        {!shop && product.categoryName ? (
           <p className='text-xs text-muted-foreground truncate pt-0.5 pb-1'>
             {formatTitleCase(product.categoryName)}
           </p>
         ) : null}
 
-        <div className='mt-auto flex items-center justify-between gap-1.5 pt-2.5 border-t border-border/50'>
-          <span className='text-xs sm:text-sm md:text-base font-extrabold text-emerald-600 dark:text-emerald-400 tabular-nums'>
+        <div className='mt-auto flex flex-wrap items-center justify-between gap-x-1.5 gap-y-2 pt-2.5 border-t border-border/50'>
+          <span className='min-w-fit whitespace-nowrap text-xs sm:text-sm md:text-base font-extrabold text-emerald-600 dark:text-emerald-400 tabular-nums'>
             {formattedPrice || t('catalog.price')}
           </span>
 
           {isOutOfStock ? (
-            <div className='inline-flex items-center gap-1 text-[11px] font-medium text-muted-foreground'>
+            <div className='ms-auto inline-flex shrink-0 items-center gap-1 text-[11px] font-medium text-muted-foreground'>
               <span className='h-1.5 w-1.5 rounded-full bg-muted-foreground/60' />
               <span className='hidden min-[360px]:inline'>{t('catalog.outOfStock')}</span>
             </div>
           ) : isLowStock ? (
-            <div className='inline-flex items-center gap-1 text-[11px] font-medium text-amber-700 dark:text-amber-300'>
+            <div className='ms-auto inline-flex shrink-0 items-center gap-1 text-[11px] font-medium text-amber-700 dark:text-amber-300'>
               <span className='h-1.5 w-1.5 rounded-full bg-amber-500' />
-              <span className='hidden min-[360px]:inline'>{stockLabel ?? t('catalog.lowStock')}</span>
+              <span className='hidden min-[360px]:inline'>
+                {stockLabel ?? t('catalog.lowStock')}
+              </span>
             </div>
           ) : (
-            <div className='inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400'>
+            <div className='ms-auto inline-flex shrink-0 items-center gap-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400'>
               <span className='h-1.5 w-1.5 rounded-full bg-emerald-500' />
-              <span className='hidden min-[360px]:inline'>{stockLabel ?? t('catalog.inStock')}</span>
+              <span className='hidden min-[360px]:inline'>
+                {stockLabel ?? t('catalog.inStock')}
+              </span>
             </div>
           )}
         </div>

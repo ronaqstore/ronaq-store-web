@@ -7,6 +7,7 @@ export function ProductGrid({
   products,
   storeSlug,
   storeName,
+  storeCity,
   storePhone,
   onSelectProduct,
   linkToModel = true
@@ -32,6 +33,7 @@ export function ProductGrid({
           product={product}
           storeSlug={storeSlug}
           storeName={storeName}
+          storeCity={storeCity}
           storePhone={storePhone}
           onSelectProduct={onSelectProduct}
           priority={index < 2}

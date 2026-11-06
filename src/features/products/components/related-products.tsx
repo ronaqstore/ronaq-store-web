@@ -7,7 +7,6 @@ import { SmartImage } from '@/components/media/smart-image';
 import { PLACEHOLDER_PRODUCT_IMAGE, productImageSrc } from '@/constants/placeholders';
 import { formatPrice, formatEmpty, formatProductCardTitle } from '@/lib/formatters';
 import { productPath } from '@/lib/seo/slug';
-import { cn } from '@/lib/utils';
 import type { RelatedProductsProps } from '@/types/product';
 
 export function RelatedProducts({ products, browseHref }: RelatedProductsProps) {
@@ -25,7 +24,10 @@ export function RelatedProducts({ products, browseHref }: RelatedProductsProps) 
     <section aria-labelledby='related-products-heading' className='w-full space-y-4 pt-2 md:pt-4'>
       <div className='flex flex-col sm:flex-row sm:items-end justify-between gap-2 sm:gap-3'>
         <div>
-          <h2 id='related-products-heading' className='text-lg sm:text-xl md:text-2xl 2xl:text-3xl font-bold tracking-tight text-foreground'>
+          <h2
+            id='related-products-heading'
+            className='text-lg sm:text-xl md:text-2xl 2xl:text-3xl font-bold tracking-tight text-foreground'
+          >
             {t('relatedAccessories')}
           </h2>
         </div>
@@ -54,26 +56,16 @@ export function RelatedProducts({ products, browseHref }: RelatedProductsProps) 
                 href={href}
                 className='flex flex-1 flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 rounded-2xl'
               >
-                <div className='relative aspect-square w-full overflow-hidden bg-muted/20'>
+                <div className='relative aspect-[4/5] w-full overflow-hidden bg-muted/30'>
                   <SmartImage
                     src={productImageSrc(item.primaryImageUrl)}
                     alt={formatEmpty(title)}
                     fill
                     priority={index === 0}
-                    className={cn(
-                      'object-cover transition-transform duration-200 ease-out [@media(hover:hover)]:group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:transform-none select-none',
-                      isOutOfStock ? 'grayscale opacity-80' : ''
-                    )}
+                    className='object-contain p-3 sm:p-5 transition-transform duration-200 ease-out [@media(hover:hover)]:group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:transform-none select-none'
                     sizes='(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw'
                     fallbackSrc={PLACEHOLDER_PRODUCT_IMAGE}
                   />
-
-                  {isOutOfStock ? (
-                    <span className='absolute inset-s-2 top-2 z-10 inline-flex items-center gap-1 rounded-full bg-background/90 px-2 py-0.5 text-[11px] font-semibold text-rose-600 dark:text-rose-400 border border-border/60 shadow-xs backdrop-blur-xs'>
-                      <span className='h-1.5 w-1.5 rounded-full bg-rose-500' />
-                      <span>{t('outOfStock')}</span>
-                    </span>
-                  ) : null}
                 </div>
 
                 <div className='flex flex-1 flex-col p-2.5 sm:p-3.5 md:p-4'>
