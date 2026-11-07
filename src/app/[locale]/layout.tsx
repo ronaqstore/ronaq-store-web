@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { preconnect } from 'react-dom';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import NextTopLoader from 'nextjs-toploader';
 import { isLocale, isRtlLocale, locales, type AppLocale } from '@/i18n/request';
@@ -17,12 +18,9 @@ import { InstallPrompt } from '@/components/pwa/install-prompt';
 import { BottomNav } from '@/components/pwa/bottom-nav';
 import { OfflineBanner } from '@/components/common/offline-banner';
 import type { LocaleLayoutProps } from '@/types/common';
-import {
-  APP_NAME,
-  PWA_THEME_COLOR_DARK,
-  PWA_THEME_COLOR_LIGHT
-} from '@/constants/site';
+import { APP_NAME, PWA_THEME_COLOR_DARK, PWA_THEME_COLOR_LIGHT } from '@/constants/site';
 import { defaultRootMetadata } from '@/lib/seo/metadata';
+import { IMAGE_CDN_ORIGIN } from '@/config/site-config';
 import { env } from '@/config/env';
 import { GOOGLE_TAG_MANAGER_SCRIPT_URL, buildGaInitScript } from '@/constants/api';
 import { cn } from '@/lib/utils';
@@ -96,6 +94,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
 
   const messages = await getMessages();
   const isRtl = isRtlLocale(locale as AppLocale);
+  preconnect(IMAGE_CDN_ORIGIN, { crossOrigin: 'anonymous' });
   const scriptFontClass =
     locale === 'ur'
       ? notoNastaliqUrdu.className
@@ -126,7 +125,10 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
             <OfflineBanner />
             <LiveDataRefresh />
             <Navbar />
-            <main id='main-content' className='flex-1 min-w-0 pb-[calc(4.5rem+env(safe-area-inset-bottom))] md:pb-0'>
+            <main
+              id='main-content'
+              className='flex-1 min-w-0 pb-[calc(4.5rem+env(safe-area-inset-bottom))] md:pb-0'
+            >
               {children}
             </main>
             <Footer />

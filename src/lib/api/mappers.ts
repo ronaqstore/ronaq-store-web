@@ -7,11 +7,7 @@ import type {
   ApiStoreModel,
   ApiStoreModelDetail
 } from '@/types/api';
-import type {
-  PaginatedStoresResponse,
-  StoreListItem,
-  StoreProfile
-} from '@/types/store';
+import type { PaginatedStoresResponse, StoreListItem, StoreProfile } from '@/types/store';
 import type {
   PaginatedProductsResponse,
   StoreCategory,
@@ -120,9 +116,7 @@ export function mapProduct(raw: ApiProduct): StoreProductListItem {
     retailPrice: raw.price == null ? '' : String(raw.price),
     ptaStatus: mapPtaStatus(raw.ptaStatus),
     authenticity:
-      raw.authenticity === 'ORIGINAL' || raw.authenticity === 'COPY'
-        ? raw.authenticity
-        : '',
+      raw.authenticity === 'ORIGINAL' || raw.authenticity === 'COPY' ? raw.authenticity : '',
     condition: raw.condition ?? '',
     warrantyType: '',
     trackingType: raw.trackingType,
@@ -133,9 +127,11 @@ export function mapProduct(raw: ApiProduct): StoreProductListItem {
     storage: raw.specs?.storage ?? null,
     specs,
     primaryImageUrl: raw.images?.[0] ?? null,
+    primaryThumbnailUrl: raw.thumbnailImages?.[0] ?? raw.images?.[0] ?? null,
     images: (raw.images ?? []).map((url, index) => ({
       id: `${raw.id}-${index}`,
       url,
+      thumbnailUrl: raw.thumbnailImages?.[index] ?? url,
       sortOrder: index
     })),
     availability,

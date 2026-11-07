@@ -21,9 +21,9 @@ const SKELETON_ROWS = 6;
 
 function CityListSkeleton() {
   return (
-    <div className='space-y-1.5' aria-busy='true' aria-live='polite'>
+    <div className='grid h-full grid-rows-6 gap-1.5' aria-busy='true' aria-live='polite'>
       {Array.from({ length: SKELETON_ROWS }, (_, index) => (
-        <Skeleton key={index} className='h-11 sm:h-12 w-full rounded-xl sm:rounded-2xl' />
+        <Skeleton key={index} className='h-full w-full rounded-xl sm:rounded-2xl' />
       ))}
     </div>
   );
@@ -108,7 +108,11 @@ export function CityPreferenceGate({
   }, []);
 
   useEffect(() => {
-    if (!initialCityId || initialCityId === CITY_PREFERENCE_ALL || initialCityId.startsWith('area:')) {
+    if (
+      !initialCityId ||
+      initialCityId === CITY_PREFERENCE_ALL ||
+      initialCityId.startsWith('area:')
+    ) {
       setSelectedId(CITY_PREFERENCE_ALL);
       return;
     }
@@ -270,7 +274,8 @@ export function CityPreferenceGate({
         role='dialog'
         aria-modal='true'
         aria-labelledby='city-gate-title'
-        className='relative flex flex-col w-full max-h-[90dvh] rounded-t-2xl border-t border-border bg-card p-3.5 shadow-2xl sm:max-h-[85vh] sm:max-w-md sm:rounded-3xl sm:border sm:p-6 pb-[max(1rem,env(safe-area-inset-bottom))]'
+        id='city-gate'
+        className='relative flex h-[90dvh] max-h-[90dvh] w-full flex-col overflow-hidden rounded-t-2xl border-t border-border bg-card p-3.5 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-2xl sm:h-[min(85dvh,44rem)] sm:max-h-[85dvh] sm:max-w-md sm:rounded-3xl sm:border sm:p-6'
       >
         <div className='mx-auto h-1.5 w-10 sm:w-12 rounded-full bg-muted-foreground/30 mb-2 sm:hidden' />
 
@@ -286,7 +291,10 @@ export function CityPreferenceGate({
         </Button>
 
         <div className='space-y-1 pe-8 shrink-0'>
-          <h2 id='city-gate-title' className='text-base sm:text-xl font-bold tracking-tight text-foreground'>
+          <h2
+            id='city-gate-title'
+            className='text-base sm:text-xl font-bold tracking-tight text-foreground'
+          >
             {t('marketplace.cityGateTitle')}
           </h2>
           <p className='text-xs sm:text-sm text-muted-foreground leading-relaxed'>
@@ -306,10 +314,10 @@ export function CityPreferenceGate({
           />
         </div>
 
-        <div className='relative mt-2.5 sm:mt-3 flex-1 min-h-[120px]'>
+        <div className='relative mt-2.5 flex-1 min-h-[120px] sm:mt-3'>
           <div
             ref={listRef}
-            className='h-full max-h-[36dvh] sm:max-h-72 space-y-1 sm:space-y-1.5 overflow-y-auto pe-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden'
+            className='h-full min-h-0 space-y-1 overflow-y-auto pe-1 sm:space-y-1.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden'
             onScroll={onListScroll}
           >
             {loading ? <CityListSkeleton /> : null}
@@ -346,7 +354,9 @@ export function CityPreferenceGate({
                     )}
                   >
                     <span>{hub.name}</span>
-                    {selectedId === hub.id ? <Icons.check className='h-4 w-4 text-primary' /> : null}
+                    {selectedId === hub.id ? (
+                      <Icons.check className='h-4 w-4 text-primary' />
+                    ) : null}
                   </button>
                 ))}
                 {hubs.length === 0 ? (
@@ -375,7 +385,9 @@ export function CityPreferenceGate({
         </div>
 
         {locateError ? (
-          <p className='mt-2 text-xs text-destructive shrink-0'>{t('marketplace.locationFailed')}</p>
+          <p className='mt-2 text-xs text-destructive shrink-0'>
+            {t('marketplace.locationFailed')}
+          </p>
         ) : null}
 
         <div className='mt-3 sm:mt-4 grid gap-2 sm:gap-2.5 sm:grid-cols-2 shrink-0'>

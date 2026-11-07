@@ -13,7 +13,6 @@ export function shouldSkipImageOptimization(src: string): boolean {
   if (isLocalStaticImage(src)) return true;
   if (/\.svg($|\?)/i.test(src)) return true;
   const lower = src.toLowerCase();
-  if (lower.includes('.r2.dev/')) return true;
   if (lower.includes('picsum.photos')) return true;
   return false;
 }

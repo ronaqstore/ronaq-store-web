@@ -29,7 +29,7 @@ export function StockBadge({ availability, stockCount }: StockBadgeProps) {
   return (
     <Badge
       variant='outline'
-      className='border-emerald-500/30 bg-background/90 text-[10px] text-emerald-600 backdrop-blur-md dark:text-emerald-400'
+      className='border-emerald-500/30 bg-background/90 text-[10px] text-emerald-700 backdrop-blur-md dark:text-emerald-400'
     >
       {stockCount != null ? t('inStockCount', { count: stockCount }) : t('inStock')}
     </Badge>

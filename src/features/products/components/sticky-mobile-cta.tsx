@@ -48,7 +48,7 @@ export function StickyMobileCTA({ product, store }: StickyMobileCTAProps) {
           <span className='text-[10px] font-semibold uppercase tracking-wider text-muted-foreground'>
             {t('price')}
           </span>
-          <span className='text-base sm:text-lg font-extrabold text-emerald-600 dark:text-emerald-400 tabular-nums truncate'>
+          <span className='text-base sm:text-lg font-extrabold text-emerald-700 dark:text-emerald-400 tabular-nums truncate'>
             {formattedPrice || t('price')}
           </span>
         </div>

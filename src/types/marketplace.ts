@@ -141,6 +141,7 @@ export interface ApiMarketplaceProduct {
   trackingType?: 'SERIALIZED' | 'QUANTITY';
   modelKey?: string | null;
   images?: string[];
+  thumbnailImages?: string[];
   description?: string | null;
   specs?: {
     model?: string | null;

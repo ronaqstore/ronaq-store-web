@@ -33,7 +33,7 @@ export function RelatedProducts({ products, browseHref }: RelatedProductsProps) 
         </div>
         <Link
           href={browseHref}
-          className='inline-flex items-center gap-1 text-xs sm:text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:underline shrink-0'
+          className='inline-flex items-center gap-1 text-xs sm:text-sm font-semibold text-emerald-700 dark:text-emerald-400 hover:underline shrink-0'
         >
           <span>{t('browseMoreAccessories')}</span>
           <Icons.chevronRight className='h-4 w-4 rtl:rotate-180' />
@@ -77,7 +77,7 @@ export function RelatedProducts({ products, browseHref }: RelatedProductsProps) 
                     ) : null}
                   </div>
 
-                  <h3 className='text-xs sm:text-sm font-semibold leading-snug text-foreground line-clamp-2 min-h-[2.25rem] sm:min-h-[2.5rem] md:min-h-[2.75rem] transition-colors duration-200 [@media(hover:hover)]:group-hover:text-emerald-600 dark:[@media(hover:hover)]:group-hover:text-emerald-400'>
+                  <h3 className='text-xs sm:text-sm font-semibold leading-snug text-foreground line-clamp-2 min-h-[2.25rem] sm:min-h-[2.5rem] md:min-h-[2.75rem] transition-colors duration-200 [@media(hover:hover)]:group-hover:text-emerald-700 dark:[@media(hover:hover)]:group-hover:text-emerald-400'>
                     {title}
                   </h3>
 
@@ -90,7 +90,7 @@ export function RelatedProducts({ products, browseHref }: RelatedProductsProps) 
                   </div>
 
                   <div className='mt-auto flex items-center justify-between gap-1.5 pt-2.5 border-t border-border/50'>
-                    <span className='text-xs sm:text-sm md:text-base font-extrabold text-emerald-600 dark:text-emerald-400 tabular-nums'>
+                    <span className='text-xs sm:text-sm md:text-base font-extrabold text-emerald-700 dark:text-emerald-400 tabular-nums'>
                       {formattedPrice || t('price')}
                     </span>
 
@@ -100,7 +100,7 @@ export function RelatedProducts({ products, browseHref }: RelatedProductsProps) 
                         <span>{t('outOfStock')}</span>
                       </div>
                     ) : (
-                      <div className='inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400'>
+                      <div className='inline-flex items-center gap-1 text-[11px] font-medium text-emerald-700 dark:text-emerald-400'>
                         <span className='h-1.5 w-1.5 rounded-full bg-emerald-500' />
                         <span>{t('inStock')}</span>
                       </div>

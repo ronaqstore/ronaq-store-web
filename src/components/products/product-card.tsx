@@ -38,6 +38,7 @@ export function ProductCard({
   linkToModel = true,
   prefetch = true,
   priceLabelOverride,
+  imageSizes = '(max-width:639px) calc(50vw - 1.125rem), (max-width:1279px) calc(min(33.333vw, 26.667rem) - 1rem), calc(min(25vw, 20rem) - 1rem)',
   className
 }: ProductCardProps) {
   const t = useTranslations();
@@ -158,15 +159,13 @@ export function ProductCard({
           placeholder={IMAGE_PLACEHOLDER_BLUR}
           blurDataURL={BLUR_PLACEHOLDER}
           className='object-contain p-2.5 sm:p-5 transition-transform duration-200 ease-out [@media(hover:hover)]:group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:transform-none select-none'
-          sizes='(max-width:639px) 50vw, (max-width:1023px) 33vw, (max-width:1535px) 25vw, 20vw'
+          sizes={imageSizes}
           fallbackSrc={PLACEHOLDER_PRODUCT_IMAGE}
         />
       </div>
 
       <div className='flex flex-1 flex-col gap-1 p-2.5 sm:p-4 sm:gap-1.5'>
-        {product.ptaStatus ? (
-          <div className='flex flex-wrap gap-1'>{statusBadges}</div>
-        ) : null}
+        {product.ptaStatus ? <div className='flex flex-wrap gap-1'>{statusBadges}</div> : null}
 
         <div className='min-h-[1rem]'>
           {product.brandName ? (
@@ -176,7 +175,7 @@ export function ProductCard({
           ) : null}
         </div>
 
-        <h3 className='min-h-[2rem] text-xs font-semibold leading-snug text-foreground transition-colors duration-200 sm:min-h-[2.5rem] sm:text-sm md:min-h-[2.75rem] [@media(hover:hover)]:group-hover:text-emerald-600 dark:[@media(hover:hover)]:group-hover:text-emerald-400'>
+        <h3 className='min-h-[2rem] text-xs font-semibold leading-snug text-foreground transition-colors duration-200 sm:min-h-[2.5rem] sm:text-sm md:min-h-[2.75rem] [@media(hover:hover)]:group-hover:text-emerald-700 dark:[@media(hover:hover)]:group-hover:text-emerald-400'>
           <TruncateText lines={2}>{title}</TruncateText>
         </h3>
 
@@ -217,7 +216,7 @@ export function ProductCard({
 
         {shop || storeName ? (
           <div className='flex items-center gap-1.5 text-[11px] text-muted-foreground truncate'>
-            <Icons.store className='h-3 w-3 shrink-0 text-emerald-600 dark:text-emerald-400' />
+            <Icons.store className='h-3 w-3 shrink-0 text-emerald-700 dark:text-emerald-400' />
             <span className='truncate font-medium'>
               {shop?.displayName ?? storeName}
               {(shop?.city ?? storeCity) ? ` · ${shop?.city ?? storeCity}` : ''}
@@ -232,7 +231,7 @@ export function ProductCard({
         ) : null}
 
         <div className='mt-auto flex items-center justify-between gap-1.5 pt-2 border-t border-border/50'>
-          <span className='min-w-0 truncate whitespace-nowrap text-xs sm:text-sm md:text-base font-extrabold text-emerald-600 dark:text-emerald-400 tabular-nums'>
+          <span className='min-w-0 truncate whitespace-nowrap text-xs sm:text-sm md:text-base font-extrabold text-emerald-700 dark:text-emerald-400 tabular-nums'>
             {formattedPrice || t('catalog.price')}
           </span>
 
@@ -249,7 +248,7 @@ export function ProductCard({
               </span>
             </div>
           ) : (
-            <div className='inline-flex shrink-0 items-center gap-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400'>
+            <div className='inline-flex shrink-0 items-center gap-1 text-[11px] font-medium text-emerald-700 dark:text-emerald-400'>
               <span className='h-1.5 w-1.5 rounded-full bg-emerald-500' />
               <span className='hidden min-[360px]:inline'>
                 {stockLabel ?? t('catalog.inStock')}

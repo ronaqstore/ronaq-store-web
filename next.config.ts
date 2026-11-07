@@ -3,8 +3,7 @@ import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
-const isVercelPreview =
-  Boolean(process.env.VERCEL_ENV) && process.env.VERCEL_ENV !== 'production';
+const isVercelPreview = Boolean(process.env.VERCEL_ENV) && process.env.VERCEL_ENV !== 'production';
 
 const baseConfig: NextConfig = {
   devIndicators: false,
@@ -14,7 +13,7 @@ const baseConfig: NextConfig = {
   compress: true,
   images: {
     formats: ['image/avif', 'image/webp'],
-    deviceSizes: [640, 750, 828, 1080, 1200],
+    deviceSizes: [320, 400, 640, 750, 800, 828, 1080, 1200],
     imageSizes: [16, 32, 48, 64, 96, 128, 256],
     minimumCacheTTL: 60 * 60 * 24 * 7,
     qualities: [65, 75],
@@ -32,7 +31,8 @@ const baseConfig: NextConfig = {
 
   allowedDevOrigins: ['127.0.0.1'],
   experimental: {
-    optimizePackageImports: ['@tabler/icons-react']
+    optimizePackageImports: ['@tabler/icons-react'],
+    inlineCss: true
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production'
@@ -44,14 +44,18 @@ const baseConfig: NextConfig = {
         source: '/:path*',
         headers: [
           { key: 'X-DNS-Prefetch-Control', value: 'on' },
-          ...(process.env.NODE_ENV === 'production' ? [{ key: 'X-Frame-Options', value: 'SAMEORIGIN' }] : []),
+          ...(process.env.NODE_ENV === 'production'
+            ? [{ key: 'X-Frame-Options', value: 'SAMEORIGIN' }]
+            : []),
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           {
             key: 'Permissions-Policy',
             value: 'camera=(), microphone=(), geolocation=(self)'
           },
-          ...(isVercelPreview ? [{ key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' }] : []),
+          ...(isVercelPreview
+            ? [{ key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' }]
+            : []),
           {
             key: 'Content-Security-Policy',
             value: [
@@ -70,7 +74,14 @@ const baseConfig: NextConfig = {
               "object-src 'none'"
             ].join('; ')
           },
-          ...(process.env.NODE_ENV === 'production' ? [{ key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' }] : [])
+          ...(process.env.NODE_ENV === 'production'
+            ? [
+                {
+                  key: 'Strict-Transport-Security',
+                  value: 'max-age=63072000; includeSubDomains; preload'
+                }
+              ]
+            : [])
         ]
       },
       {

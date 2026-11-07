@@ -67,7 +67,7 @@ export function ProductInfo({ product, store, slug, crumbs }: ProductInfoProps) 
         <div className='mb-1.5'>
           <Link
             href={`/shop/${slug}?q=${encodeURIComponent(product.brandName)}`}
-            className='inline-block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:text-emerald-600 dark:hover:text-emerald-400 rtl:normal-case rtl:tracking-normal'
+            className='inline-block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:text-emerald-700 dark:hover:text-emerald-400 rtl:normal-case rtl:tracking-normal'
           >
             {formatTitleCase(product.brandName)}
           </Link>
@@ -94,7 +94,7 @@ export function ProductInfo({ product, store, slug, crumbs }: ProductInfoProps) 
 
         {product.ptaStatus === 'APPROVED' ? (
           <Badge variant='success' className='gap-1 text-[11px] sm:text-xs font-semibold'>
-            <Icons.shieldCheck className='h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400' />
+            <Icons.shieldCheck className='h-3.5 w-3.5 text-emerald-700 dark:text-emerald-400' />
             {t('ptaApproved')}
           </Badge>
         ) : null}
@@ -148,7 +148,7 @@ export function ProductInfo({ product, store, slug, crumbs }: ProductInfoProps) 
             {t('price')}
           </span>
           <div className='flex items-baseline gap-2 pt-0.5'>
-            <span className='text-2xl sm:text-2xl md:text-3xl lg:text-3xl 2xl:text-4xl font-extrabold tracking-tight text-emerald-600 dark:text-emerald-400 tabular-nums leading-tight'>
+            <span className='text-2xl sm:text-2xl md:text-3xl lg:text-3xl 2xl:text-4xl font-extrabold tracking-tight text-emerald-700 dark:text-emerald-400 tabular-nums leading-tight'>
               {formattedPrice || t('price')}
             </span>
           </div>

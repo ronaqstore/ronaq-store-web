@@ -20,6 +20,11 @@ export const API_URL: string = (
   env.NEXT_PUBLIC_API_URL ?? 'https://ronaq-store-backend.vercel.app'
 ).replace(/\/+$/, '');
 
+export const R2_PUBLIC_URL_BASE = (
+  env.NEXT_PUBLIC_R2_PUBLIC_URL_BASE ?? 'https://pub-1b242f256029491cb3621f73fbaf3806.r2.dev'
+).replace(/\/+$/, '');
+export const IMAGE_CDN_ORIGIN = new URL(R2_PUBLIC_URL_BASE).origin;
+
 export const HREFLANG_MAP: Record<AppLocale, string> = {
   en: 'en',
   ur: 'ur',

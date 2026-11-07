@@ -28,7 +28,7 @@ export function SellerCard({ store, slug }: SellerCardProps) {
                 fallbackSrc={PLACEHOLDER_SHOP_LOGO}
               />
             ) : (
-              <Icons.store className='h-6 w-6 text-emerald-600 dark:text-emerald-400' />
+              <Icons.store className='h-6 w-6 text-emerald-700 dark:text-emerald-400' />
             )}
           </div>
 
@@ -37,7 +37,7 @@ export function SellerCard({ store, slug }: SellerCardProps) {
               <span className='font-bold text-sm sm:text-base text-foreground break-words line-clamp-1'>
                 {storeName}
               </span>
-              <Icons.circleCheck className='h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400' aria-hidden />
+              <Icons.circleCheck className='h-4 w-4 shrink-0 text-emerald-700 dark:text-emerald-400' aria-hidden />
             </div>
 
             {location ? (

@@ -9,5 +9,5 @@ export const routing = defineRouting({
     name: 'NEXT_LOCALE',
     maxAge: 60 * 60 * 24 * 365 * 5
   },
-  alternateLinks: true
+  alternateLinks: false
 });

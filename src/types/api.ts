@@ -49,6 +49,7 @@ export interface ApiProduct {
   trackingType?: 'SERIALIZED' | 'QUANTITY';
   modelKey?: string | null;
   images?: string[];
+  thumbnailImages?: string[];
   description?: string | null;
   specs?: ApiProductSpecs | null;
   units?: ApiStoreUnit[] | null;

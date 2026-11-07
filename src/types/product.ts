@@ -10,6 +10,7 @@ export interface StoreCategory {
 export interface StoreProductImage {
   id: string;
   url: string;
+  thumbnailUrl?: string;
   sortOrder: number;
 }
 
@@ -59,6 +60,7 @@ export interface StoreProductListItem {
   storage?: string | null;
   specs?: ProductSpecs | null;
   primaryImageUrl: string | null;
+  primaryThumbnailUrl?: string | null;
   images?: StoreProductImage[];
   availability: StoreAvailability;
   stockCount: number | null;
@@ -147,6 +149,7 @@ export interface ProductCardProps {
   linkToModel?: boolean;
   prefetch?: boolean;
   priceLabelOverride?: string;
+  imageSizes?: string;
   className?: string;
 }
 

@@ -16,9 +16,10 @@ export function ProductGallery({ images = [], productName, badgeLabel }: Product
   const t = useTranslations('catalog');
   const tAria = useTranslations('aria');
 
-  const sortedImages = images.length > 0
-    ? [...images].sort((a, b) => a.sortOrder - b.sortOrder)
-    : [{ id: 'placeholder', url: '', sortOrder: 0 }];
+  const sortedImages =
+    images.length > 0
+      ? [...images].sort((a, b) => a.sortOrder - b.sortOrder)
+      : [{ id: 'placeholder', url: '', sortOrder: 0 }];
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
@@ -27,7 +28,8 @@ export function ProductGallery({ images = [], productName, badgeLabel }: Product
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
 
-  const activeImage = sortedImages[Math.min(activeIndex, sortedImages.length - 1)] ?? sortedImages[0];
+  const activeImage =
+    sortedImages[Math.min(activeIndex, sortedImages.length - 1)] ?? sortedImages[0];
   const altText = formatEmpty(productName);
   const hasMultipleImages = sortedImages.length > 1;
   const canPreview = isPreviewableImageSrc(activeImage.url);
@@ -228,7 +230,7 @@ export function ProductGallery({ images = [], productName, badgeLabel }: Product
               >
                 <div className='relative h-full w-full overflow-hidden rounded-[9px] bg-muted/20'>
                   <SmartImage
-                    src={productImageSrc(image.url)}
+                    src={productImageSrc(image.thumbnailUrl || image.url)}
                     alt={altText}
                     fill
                     className='object-cover select-none'

@@ -72,7 +72,7 @@ export function ProductSpecs({ product, store, slug }: ProductSpecsProps) {
             <span
               className={cn(
                 'inline-flex items-center gap-1 font-semibold',
-                product.ptaStatus === 'APPROVED' ? 'text-emerald-600 dark:text-emerald-400' : ''
+                product.ptaStatus === 'APPROVED' ? 'text-emerald-700 dark:text-emerald-400' : ''
               )}
             >
               {product.ptaStatus === 'APPROVED' ? (
@@ -118,7 +118,7 @@ export function ProductSpecs({ product, store, slug }: ProductSpecsProps) {
           className={cn(
             'flex items-center gap-2 border-b-2 py-4 px-4 text-sm font-bold transition-all focus:outline-none min-h-[44px]',
             activeTab === 'specs'
-              ? 'border-emerald-600 text-emerald-600 dark:border-emerald-400 dark:text-emerald-400'
+              ? 'border-emerald-600 text-emerald-700 dark:border-emerald-400 dark:text-emerald-400'
               : 'border-transparent text-muted-foreground hover:text-foreground'
           )}
         >
@@ -136,7 +136,7 @@ export function ProductSpecs({ product, store, slug }: ProductSpecsProps) {
             className={cn(
               'flex items-center gap-2 border-b-2 py-4 px-4 text-sm font-bold transition-all focus:outline-none min-h-[44px]',
               activeTab === 'description'
-                ? 'border-emerald-600 text-emerald-600 dark:border-emerald-400 dark:text-emerald-400'
+                ? 'border-emerald-600 text-emerald-700 dark:border-emerald-400 dark:text-emerald-400'
                 : 'border-transparent text-muted-foreground hover:text-foreground'
             )}
           >
@@ -151,7 +151,7 @@ export function ProductSpecs({ product, store, slug }: ProductSpecsProps) {
           className={cn(
             'flex items-center gap-2 border-b-2 py-4 px-4 text-sm font-bold transition-all focus:outline-none min-h-[44px]',
             activeTab === 'shop'
-              ? 'border-emerald-600 text-emerald-600 dark:border-emerald-400 dark:text-emerald-400'
+              ? 'border-emerald-600 text-emerald-700 dark:border-emerald-400 dark:text-emerald-400'
               : 'border-transparent text-muted-foreground hover:text-foreground'
           )}
         >
@@ -197,7 +197,7 @@ export function ProductSpecs({ product, store, slug }: ProductSpecsProps) {
             <div className='space-y-4'>
               <div>
                 <h3 className='text-base sm:text-lg font-bold text-foreground'>{storeName}</h3>
-                <p className='text-xs text-emerald-600 dark:text-emerald-400 font-semibold inline-flex items-center gap-1 mt-0.5'>
+                <p className='text-xs text-emerald-700 dark:text-emerald-400 font-semibold inline-flex items-center gap-1 mt-0.5'>
                   <Icons.circleCheck className='h-3.5 w-3.5' />
                   {t('verifiedShop')}
                 </p>
@@ -269,7 +269,7 @@ export function ProductSpecs({ product, store, slug }: ProductSpecsProps) {
             className='flex min-h-[48px] w-full items-center justify-between p-4 text-start font-bold text-foreground focus:outline-none'
           >
             <div className='flex items-center gap-2'>
-              <Icons.tag className='h-4 w-4 text-emerald-600' />
+              <Icons.tag className='h-4 w-4 text-emerald-700' />
               <span className='text-sm'>{t('tabSpecs')}</span>
               <span className='rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground font-semibold'>
                 {specRows.length}
@@ -318,7 +318,7 @@ export function ProductSpecs({ product, store, slug }: ProductSpecsProps) {
               className='flex min-h-[48px] w-full items-center justify-between p-4 text-start font-bold text-foreground focus:outline-none'
             >
               <div className='flex items-center gap-2'>
-                <Icons.info className='h-4 w-4 text-emerald-600' />
+                <Icons.info className='h-4 w-4 text-emerald-700' />
                 <span className='text-sm'>{t('tabDescription')}</span>
               </div>
               <Icons.chevronDown
@@ -343,7 +343,7 @@ export function ProductSpecs({ product, store, slug }: ProductSpecsProps) {
             className='flex min-h-[48px] w-full items-center justify-between p-4 text-start font-bold text-foreground focus:outline-none'
           >
             <div className='flex items-center gap-2'>
-              <Icons.store className='h-4 w-4 text-emerald-600' />
+              <Icons.store className='h-4 w-4 text-emerald-700' />
               <span className='text-sm'>{t('tabShopInfo')}</span>
             </div>
             <Icons.chevronDown
@@ -359,7 +359,7 @@ export function ProductSpecs({ product, store, slug }: ProductSpecsProps) {
                 <span className='font-bold text-foreground text-sm'>{storeName}</span>
                 <Link
                   href={`/shop/${slug}`}
-                  className='text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline min-h-[44px] inline-flex items-center'
+                  className='text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:underline min-h-[44px] inline-flex items-center'
                 >
                   {t('visitShop')}
                 </Link>

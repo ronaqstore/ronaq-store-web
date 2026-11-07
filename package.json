@@ -59,6 +59,15 @@
     "@types/react-dom": "19.3.0",
     "postcss": "8.5.29"
   },
+  "browserslist": [
+    "Chrome >= 111",
+    "Edge >= 111",
+    "Firefox >= 128",
+    "Safari >= 16.4",
+    "ios_saf >= 16.4",
+    "and_chr >= 111",
+    "not dead"
+  ],
   "engines": {
     "node": ">=24"
   }
